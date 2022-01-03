@@ -1,0 +1,250 @@
+// fitToWidth 관련 
+html {
+  // overflow: scroll;
+  /* IE scroll 숨김 */
+  -ms-overflow-style: none;
+  overflow: hidden;
+}
+html::-webkit-scrollbar { 
+  display: none;
+  width: 0 !important;
+}
+
+
+
+
+//click시 파란색 outline 방지.
+*:focus { 
+  outline:none; 
+}
+
+ul {
+  list-style: none
+}
+
+#header{
+    margin: 0 auto;
+    max-width:1080px;
+    padding: 10rem 1rem;
+    text-align: center;
+  }
+
+  
+#call{
+  // position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: #282828;
+  text-align: center;
+}
+#call h3{
+  font-size: 30px;
+  color: #bfc8e1;
+}
+
+#participants{
+  position: fixed;
+  overflow: auto;
+  right: 270px;
+}
+// #participants > video{
+//   width: 50%;
+  // height: 300px;
+  // -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+// }
+#participants p{
+  color: #fff;
+}
+#participants::-webkit-scrollbar{
+  width: 10px;
+  height: 10px
+}
+#participants::-webkit-scrollbar-thumb{
+  background: linear-gradient(#bfc8e1, #bfc8e1);
+  border-radius: 5px;
+}
+#participants::-webkit-scrollbar-track{
+  background: grey;
+  border-radius: 5px;
+}
+#participants::-webkit-scrollbar-corner{
+  background: #282828;
+}
+.bigvideo video{
+  position: fixed;
+  width: 50%;
+  top: 64px;
+  left: 100px;
+  max-width: 1200px;
+  // transform: rotateY(180deg);         
+  // -webkit-transform:rotateY(180deg); /* Safari and Chrome */        
+  // -moz-transform:rotateY(180deg); /* Firefox */
+  
+  
+  // transform: scaleX(-1);
+
+}
+.bigvideo p{
+  // color: white;
+  position: fixed;
+  top: 75%;
+  left: 27%;
+}
+
+.participantsVideo video{
+  width: 100%;
+}
+
+
+#call footer{
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #282828;
+}
+#call button{
+  width: 95px;
+  padding: 10px 0 10px;
+  border-radius: 6px;
+  border: solid 1px rgba(0,0,0,.15);
+  background-color: #bfc8e1;
+  margin: 10px 2px;
+  color: #fff;
+}
+#call button:hover{
+  color: #fff;
+  background-color: #939fbe;
+  opacity: 0.9;
+}
+#room{
+  color: #bfc8e1;
+  display: inline-block;
+  width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#num{
+  color: #bfc8e1;
+  display: inline-block;
+  width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.popup3{
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1.1);
+  transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
+}
+.popup_show3{
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1.0);
+  transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
+}
+#popup_setting{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 1rem 4rem;
+  border-radius: 0.5rem;
+  text-align: center;
+}
+#popup_setting h3{
+  width: 250px;
+  font-size: 20px;
+  color: #bfc8e1;
+}
+#btnyes3, #btnno3{
+  width: 110px;
+  padding: 17px 0 15px;
+  border-radius: 6px;
+  border: solid 1px rgba(0,0,0,.15);
+  background-color: #bfc8e1;
+  margin: 20px 2px;
+  font-size: 18px;
+  color: #fff;
+}
+#btnyes3:hover, #btnno3:hover {
+  color: #fff;
+  background-color: #939fbe;
+  opacity: 0.9;
+}
+  
+
+.btn {
+  padding: 0;
+  margin: 0;
+  font-size: 24px;
+  
+}
+
+
+.onLine {
+  color: rgb(70, 113, 255);
+  font-weight: 800;
+}
+
+.offLine {
+  color: rgb(133, 131, 131);
+  font-weight: 100;
+}
+
+
+// 비디오 오버레이 컨테이너
+.videoOverlay_container {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  top: 80%;
+  left: 40%;
+}
+
+// 내 로컬 비디오 오버레이
+.videoOverlay {
+  pointer-events: none;
+}
+
+.videoOverlay > video {
+    width: 150px;
+}
+
+.videoOverlay > p {
+  text-align: center;
+}
+
+// 상대방 비디오 오버레이
+.receiveVideoOverlay {
+  pointer-events: none;
+}
+
+.receiveVideoOverlay > video {
+  width: 150px;
+}
+
+.receiveVideoOverlay > p {
+  text-align: center;
+}
+
+
+
+@media ( max-width: 767px ) {
+  .bigvideo video{
+    position: fixed;
+    width: 100%;
+    top: 64px;
+    left: 100px;
+    max-width: 320px;
+  }
+}

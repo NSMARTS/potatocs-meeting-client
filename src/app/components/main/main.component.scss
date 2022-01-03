@@ -1,0 +1,96 @@
+.realTime_container {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    background-color: #eee;
+}
+
+.header_container {
+    position: fixed;
+    top: 0;
+    z-index: 49;
+    width: 100%;
+
+    *:focus {
+        outline: none
+    }
+}
+
+.sidebar_container {
+    position: fixed;
+
+    
+    background-color: white;
+    // background-color: gray;
+    width: 100px;
+    z-index: 1;
+    
+    // background: lightgray;            
+
+    box-shadow: 4px 4px 14px -1px rgba(20, 0, 20, 0.2);
+    overflow: hidden;
+
+    height: 100vh;
+
+
+
+}
+
+.right_sidebar_container {
+    position: fixed;
+    right: 0;
+
+    
+    background-color: white;
+    width: 250px;
+    
+    // background: lightgray;            
+
+    box-shadow: 4px 4px 14px -1px rgba(20, 0, 20, 0.2);
+    overflow: hidden;
+
+    height: 100vh;
+    // background-color: gray;
+
+}
+
+
+
+.webRtc_container {
+    // position: relative;
+    margin: 0;
+    width: 100%;
+    // min-width: 1180px;
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+
+    height: 100vh;
+
+
+    //click시 파란색 outline 방지.
+    *:focus {
+        outline: none
+    }
+
+    padding-top: 63px;
+    padding-left: 100px;
+    padding-right: 250px;
+    
+}
+
+
+//click시 파란색 outline 방지.
+*:focus {
+    outline: none
+}
+
+
+
+.whiteBoardMode {
+    top: 80px;
+    width: 200px;
+}
+

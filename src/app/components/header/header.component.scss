@@ -1,0 +1,40 @@
+ul {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    padding: 0;
+
+    li {
+        padding: 0 15px;
+    }
+}
+.btn {
+    padding: 0 50px;
+    margin: 0;
+    font-size: 30px;
+    color: white;
+    line-height: 1;
+
+    //click시 파란색 outline 방지.
+    
+}
+
+button {
+    :focus {
+        outline: none
+    }
+}
+
+.toolbarIcon {
+    font-size: 30px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+
+.mat-elevation-z10 {
+    z-index: 100;
+}

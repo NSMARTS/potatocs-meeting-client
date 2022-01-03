@@ -1,0 +1,237 @@
+.comclass-nav {
+    margin-left: 100px;
+    margin-top: 64px;
+    margin-bottom: 0px !important;
+    background-color: #2d2f5f;
+    border-radius: 0px !important;
+    height: 70px;
+    min-width: 1024px; //ipad portrait
+
+    .main-nav {
+        width: 88%;
+    }
+
+    // icon size
+    .mat-icon {
+      font-size:40px;
+    }
+
+    .class-info {
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        height: 70px;
+        width: 150px;
+        margin-right: 10px;
+
+        .class-name {
+            font-size: 18px;
+            color: #eee;
+            width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .student-info {
+            display: flex;
+            align-items: center;
+            color: lightgray;
+            cursor: pointer;
+        }
+    }
+
+
+
+    //click시 파란색 outline 방지.
+    *:focus {
+        outline: none
+    }
+
+    .drawing-config {
+        background-color: #46465e;
+        height: 69px;
+        display: flex;
+        width: 40%;
+        max-width: 600px;
+        min-width: 400px;
+
+
+        .color-set,
+        .width-set {
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            flex: 1 1 auto;
+        }
+
+        .color-set {
+            width: 60%;
+            margin-left: 20px;
+
+            div {
+                display: flex;
+                height: 69px;
+
+                i {
+                    font-size: 22px;
+                }
+
+                i:before {
+                    background-color: #333;
+                    padding: 1px;
+                    border-radius: 50%;
+                }
+            }
+
+            div:first-child, div:nth-child(4) {
+                i:before {
+                    background-color: lightgray;
+                    padding: 1px;
+                    border-radius: 50%;
+                }
+            }
+        }
+
+        .width-set {
+            width: 40%;
+            // margin-left:10px;
+            margin-right: 10px;
+            color: #eee;
+
+            div {
+                display: flex;
+                height: 69px;
+            }
+
+            div:first-child i {
+                font-size: 20px;
+            }
+
+            div:nth-child(2) i {
+                font-size: 30px;
+            }
+
+            div:last-child i {
+                font-size: 40px;
+            }
+        }
+
+        i {
+            cursor: pointer;
+            margin: auto;
+            // margin-left:10px;
+            // margin-right:10px;
+        }
+
+    }
+
+    .tool-items {
+
+        width: 40%;
+        max-width: 500px;
+        min-width: 350px;
+
+        .tool-set {
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+
+            margin-left: 10px;
+            margin-right: 10px;
+            color: lightgray;
+
+            // div {
+            // display:flex;
+            // height:69px;
+            // width:70px;
+            // }
+
+            button {
+                // display: flex;
+                height: 70px;
+                min-width: 70px;
+                padding: 0;
+                margin: 0;
+                background-color:transparent;
+                border: 0;
+                color: white;
+            }
+
+            mat-icon.active {
+              color:yellow;
+            }
+
+            // i {
+            //     cursor: pointer;
+            //     margin: auto;
+            //     font-size: 30px;
+            //     color: lightgray;
+            // }
+
+            // i.active {
+            //     color: #e0e05c;
+            // }
+
+            // i.sync {
+            //     color: #8bc34a;
+            // }
+
+
+        }
+
+    }
+
+    .exit-item {
+        i {
+            color: lightgray;
+            font-size: 40px;
+            padding-top: 15px;
+            cursor: pointer;
+        }
+
+        i.active {
+            color: #e0e05c;
+        }
+
+
+    }
+
+
+    /*
+    Comclass navbar
+    */
+
+    .navbar-nav {
+        flex-direction: unset;
+    }
+
+    .navbar-header,
+    .navbar-nav {
+        float: left;
+        margin: 0;
+        list-style: none;
+    }
+
+    .navbar-right {
+        float: right;
+    }
+
+    .navbar-nav li {
+        float: left;
+    }
+
+    a:not(.current):hover {
+        background-color: #2d2f5f;
+        color: black;
+    }
+
+    .comclassExit {
+        margin-right: 5px;
+    }
+
+}
+
+.navbar {
+    padding: 0px;
+}
