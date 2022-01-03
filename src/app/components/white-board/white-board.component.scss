@@ -1,0 +1,82 @@
+$sidebar-width: 175px;
+$thumbnail-width : 150px;
+$navbar-height: 134px;
+
+// .whiteBoard-container {
+//     position: relative;
+//     margin: 0;
+//     padding: 0;
+//     background-color: #eee;
+// }
+
+.navbar_container {
+    position: fixed;
+    top: 0;
+    z-index: 49;
+    width: 100%;
+    height: 0;
+    
+    *:focus {
+        outline: none
+    }
+}
+
+.sidebar_container {
+    margin-left: 100px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding-top: $navbar-height;
+    z-index: 48; //dialog보다는 작게...
+    background-color: white;
+    width: $sidebar-width;
+    //background: lightgray;
+
+    box-shadow: 4px 4px 14px -1px rgba(20, 0, 20, 0.2);
+    overflow: hidden;
+
+    // height: calc(100vh - #{$navbar-height});
+    height: 100vh;
+
+    background-color: white;
+
+    overflow: hidden;
+    //transition: all 0.2s ease-in-out;
+    // box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+
+.comclass_container {
+    display: block;
+    margin: 0;
+    // min-width: 1180px;
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+
+    //click시 파란색 outline 방지.
+    *:focus {
+        outline: none
+    }
+
+    padding-left: $sidebar-width;
+    padding-top:$navbar-height;
+
+    .comclass-main {
+        height: calc(100vh - #{$navbar-height});
+        // height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+
+        .fabs_container {
+            position: absolute;
+            right: 5%;
+        }
+    }
+}
+
+

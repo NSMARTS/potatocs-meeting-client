@@ -1,0 +1,48 @@
+<div class="whiteBoard-container">
+
+	<!----------------------------------------------------------------
+		board-nav
+	--------------------------------------------------------------- -->
+	<div class="navbar_container">
+		<app-board-nav></app-board-nav>
+	</div>
+
+	<!----------------------------------------------------------------
+		board-slide-view
+	--------------------------------------------------------------- -->
+	<div class="sidebar_container">
+		<app-board-file-view [hidden] = "leftSideView != 'fileList'" (newLocalDocumentFile)="onDocumentOpened($event)" ></app-board-file-view>
+
+    <app-board-slide-view [hidden] ="leftSideView !='thumbnail'" ></app-board-slide-view>
+
+	</div>
+
+	<!----------------------------------------------------------------
+		board-canvas
+	--------------------------------------------------------------- -->
+	<div class="comclass_container">
+		<div class="comclass-main">
+			<app-board-canvas></app-board-canvas>
+
+			<!------------------------------------------
+				Floating Fab buttons
+				- zoom
+				- blind
+				- replay
+			------------------------------------------ -->
+			<div class="fabs_container">
+				<app-board-fabs></app-board-fabs>
+			</div>
+		</div>
+
+	</div>
+
+	<!----------------------------------------------------------------
+		board-fabs
+	--------------------------------------------------------------- -->
+
+	<div id="videoOverlay_container" class="videoOverlay_container">
+		<!-- <div id="receiveRideoOverlay_container" class="receiveRideoOverlay_container"></div> -->
+	</div>
+
+</div>

@@ -1,0 +1,36 @@
+<div class="card-container" fxLayoutAlign="center center" fxLayout="column">
+	<mat-card>
+		<mat-card-header>
+			<mat-card-title>
+				Sign In
+			</mat-card-title>
+		</mat-card-header>
+		<mat-card-content>
+			<form #signInForm="ngForm" class="example-form" (ngSubmit)="(signInForm.form.valid) && signIn()">
+				<mat-form-field class="example-full-width">
+					<input matInput 
+						type="text" 
+						placeholder="email" 
+						[(ngModel)]="signInFormData.email" 
+						name="email" 
+						spellcheck="false" 
+						pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" 
+						required>
+				</mat-form-field>
+
+				<mat-form-field class="example-full-width">
+					<input matInput 
+						type="password" 
+						placeholder="password"
+						[(ngModel)]="signInFormData.password" 
+						name="password" 
+						minlength="4" 
+						maxlength="12"
+						required>
+				</mat-form-field>
+			  
+				<button type="submit" mat-raised-button color="primary" [disabled]="!signInForm.form.valid">Sign In</button>
+			</form>
+		</mat-card-content>
+	</mat-card>
+</div>

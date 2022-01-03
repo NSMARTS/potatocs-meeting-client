@@ -1,0 +1,12 @@
+.fabs-container {
+    .floating-fabs-container {
+        display: flex;
+        flex-direction: column;        
+
+        button {
+            margin: 5px;
+            background-color: rgb(250,250,250);
+            box-shadow: 1px 3px 3px gray;
+        }
+    }
+}

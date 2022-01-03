@@ -1,0 +1,29 @@
+<div class="right_sidebar_container">
+    <div class="right_sidebar_nav" fxFlex fxLayout="row">
+        <ul>
+            <!-- <li>
+                <button>채팅</button>
+            </li> -->
+            <li>
+                Participants
+            </li>
+        </ul>
+    </div>
+    
+    <!-- <div class="participants">
+        <ul>
+            <li *ngFor="let participant_name of participants" >
+                <span> {{participant_name}}</span>
+            </li>
+        </ul>
+    </div>
+
+--------------------------------------- -->
+    <div class="enlistedMembers">
+        <ul>
+            <li  *ngFor="let enlistedMember_name of enlistedMembers" style="padding-left: 25%;">
+                <span #enlistedMember_span> {{enlistedMember_name}}</span>
+            </li>
+        </ul>
+    </div>
+</div>

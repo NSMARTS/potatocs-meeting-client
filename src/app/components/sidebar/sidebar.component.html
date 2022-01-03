@@ -1,0 +1,18 @@
+
+
+<div class="nav" fxFlex fxLayout="row" >
+    <ul class="menu-items">
+        <li>
+            <button #whiteBoardMode class="btn" mat-icon-button (click)="whiteBoardClick()">
+                <mat-icon>{{whiteBoardIcon}}</mat-icon>
+            </button>
+        </li>
+        <li>
+            <button #sharingBtn class="btn" mat-icon-button (click)="handleSharingClick()">
+                <mat-icon >{{shareIcon}}</mat-icon>
+            </button>           
+            <!-- <mat-icon>videocam_off</mat-icon> -->
+        </li>
+       
+    </ul>
+</div>

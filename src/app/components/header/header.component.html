@@ -1,0 +1,35 @@
+<mat-toolbar class="mat-elevation-z10" color="primary" fxLayout="row">
+	
+	<div class="toolbarIcon" fxFlex fxLayout="row">
+
+
+		<button class="btn" mat-icon-button #muteBtn (click)="handleMuteClick()">
+			<mat-icon>{{muteIcon}}</mat-icon>
+		</button>
+
+
+		<button class="btn" mat-icon-button #cameraBtn (click)="handleCameraClick()">
+			<mat-icon>{{cameraIcon}}</mat-icon>
+		</button>
+
+
+		<!-- <div ngIf="!cameraOff">
+			<mat-icon  class="btn" mat-icon-button #cameraBtn (click)="handleCameraClick()">videocam_off</mat-icon>
+		</div> -->
+
+
+		<!-- <mat-icon>videocam_off</mat-icon> -->
+
+
+
+		<!-- bitrate ºÎºÐ-->
+		<!-- <button class="btn" mat-icon-button #bitrateBtn (click)="openDialog()">	
+			<mat-icon>settings</mat-icon>
+		</button> -->
+
+
+		
+	</div>
+
+
+</mat-toolbar>

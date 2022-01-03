@@ -1,0 +1,22 @@
+<!-- <h4> My Video </h4>
+<video #localVideo id="localVideo" autoplay playsinline [srcObject]="localStream$|async" width="320"></video>
+ -->
+<script src="https://cdn.WebRTC-Experiment.com/getScreenId.js"></script>
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+
+<div #container id="container">
+</div>
+    <div #call id="call">
+        <div #video id="video" class="video">
+            <div #participants id="participants"></div>
+        </div>
+        
+        <!-- <footer>
+            <button #mute>Mute</button>
+            <button #cameraBtn (click)="handleCameraClick()">Camera Off</button>
+            <button #sharingBtn (click)="handleSharingClick()"> Screen Sharing</button>
+            <button #setting> Setting</button>
+            <button #leaveBtn (click)="handleLeaveRoomClick()">Leave Room</button>
+        </footer> -->
+    </div>
+
