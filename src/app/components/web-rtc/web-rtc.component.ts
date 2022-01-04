@@ -309,16 +309,12 @@ export class WebRTCComponent implements OnInit {
 			console.log(this.constraints)
 			await navigator.mediaDevices.getUserMedia(this.videoConstraints)
 			.then(async(screenStream) => {
-				
 				// video = screenStream;
-
-				
 				this.localStream = screenStream;
 				console.log('새 장치에 스트림 추출--------------------')
 				console.log(this.localStream)
 				console.log(video.srcObject)
 				video.srcObject = this.localStream;
-				
 			}).catch(function (error) {
 				if(error.name === 'PermissionDeniedError'){
 					console.log('getUserMedia error: ' + error.name, error);
@@ -336,6 +332,7 @@ export class WebRTCComponent implements OnInit {
 		.then(screenStream => {
 			this.localStream = screenStream;
 			video = screenStream;
+			this.eventBusService.emit(new EventData("device_Check","")) 
 		}).catch(function (error) {
 			console.log('getUserMedia error: ' + error.name, error);
 			// callback('cancel');

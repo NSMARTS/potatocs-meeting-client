@@ -70,7 +70,19 @@ export class DeviceCheckComponent implements OnInit {
       this.convertDeviceObject(devices)
       this.checkDevice(devices)
     });
-    
+
+    this.eventBusService.on("device_Check",this.unsubscribe$,(data)=>{
+      navigator.mediaDevices.enumerateDevices().then((devices) => {
+        console.log('-------------------- device list ------------------------');
+        this.miceDevices = []
+        this.videoDevices = []
+        this.speakerDevices = []
+        this.convertDeviceObject(devices)  
+        this.checkDevice(devices)
+      }).catch(function(err) {
+        console.log(err.name + ": " + err.message);
+      });;
+    })
   }
 
   // 모든 미디어 장치 분리해서 Object로 저장
