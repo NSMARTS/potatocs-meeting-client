@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { EventBusService } from 'src/@wb/services/eventBus/event-bus.service';
+import { DevicesInfoService } from 'src/@wb/store/devices-info.service';
 import { EventData } from 'src/@wb/services/eventBus/event.class';
 
 @Component({
@@ -17,7 +18,7 @@ export class DeviceCheckComponent implements OnInit {
   miceDevices: any = [];;
   videoDevices: any = [];
   speakerDevices: any = [];
-
+  devicesInfo:any;
   selectedMiceDevice: any;
   selectedVideoDevice: any;
   selectedSpeakerDevice: any;
@@ -26,7 +27,8 @@ export class DeviceCheckComponent implements OnInit {
   private unsubscribe$ = new Subject<void>();
   constructor(
     private eventBusService: EventBusService,
-    public fb: FormBuilder
+    public fb: FormBuilder,
+    private devicesInfoService: DevicesInfoService,
   ) {
 
   }
@@ -38,7 +40,7 @@ export class DeviceCheckComponent implements OnInit {
       videoDevice: [null],
       speakerDevice: [null],
     });
-    
+
 
 
 
@@ -47,16 +49,24 @@ export class DeviceCheckComponent implements OnInit {
     // https://webrtc.org/getting-started/media-devices#using-promises
     // https://simpl.info/getusermedia/sources/
     // https://levelup.gitconnected.com/share-your-screen-with-webrtc-video-call-with-webrtc-step-5-b3d7890c8747
-    navigator.mediaDevices.enumerateDevices().then((devices) => {
+    navigator.mediaDevices.enumerateDevices().then(async (devices) => {
       console.log('-------------------- device list ------------------------');
       this.convertDeviceObject(devices)
+      this.checkDevice(devices)
 
       console.log(this.miceDevices)
       console.log(this.videoDevices)
       console.log(this.speakerDevices)
-
-      this.checkDevice(devices)
-    }).catch(function(err) {
+      this.devicesInfo = {
+        miceDevices : this.miceDevices,
+        videoDevices : this.videoDevices,
+        speakerDevices : this.speakerDevices,
+      }
+      console.log(this.devicesInfo)
+      this.eventBusService.emit(new EventData('devicesInfo', this.devicesInfo ))
+      this.devicesInfoService.setDevicesInfo(this.devicesInfo);
+      
+    }).catch(function (err) {
       console.log(err.name + ": " + err.message);
     });;
 
@@ -71,22 +81,22 @@ export class DeviceCheckComponent implements OnInit {
       this.checkDevice(devices)
     });
 
-    this.eventBusService.on("device_Check",this.unsubscribe$,(data)=>{
+    this.eventBusService.on("device_Check", this.unsubscribe$, (data) => {
       navigator.mediaDevices.enumerateDevices().then((devices) => {
         console.log('-------------------- device list ------------------------');
         this.miceDevices = []
         this.videoDevices = []
         this.speakerDevices = []
-        this.convertDeviceObject(devices)  
+        this.convertDeviceObject(devices)
         this.checkDevice(devices)
-      }).catch(function(err) {
+      }).catch(function (err) {
         console.log(err.name + ": " + err.message);
       });;
     })
   }
 
   // 모든 미디어 장치 분리해서 Object로 저장
-  convertDeviceObject(devices){
+  convertDeviceObject(devices) {
     devices.forEach((device) => {
       if (device.kind == 'audioinput') {
         this.miceDevices.push({ kind: device.kind, label: device.label, id: device.deviceId });
@@ -102,33 +112,33 @@ export class DeviceCheckComponent implements OnInit {
     this.selectedSpeakerDevice = this.speakerDevices[0];
   }
 
-  checkDevice(devices){
-      // 장치 존재 유무
-      console.log('-------------------- device list ------------------------');
-      console.log(devices);
-      // https://goodmemory.tistory.com/73
-      const speakerDevice = devices.some(item => item.kind == 'audiooutput')
-      // console.log(speakerDevice)
-      // if (!speakerDevice) { alert('스피커 장치가 존재하지 않습니다.') }
-      const videoDevice = devices.some(item => item.kind == 'videoinput')
-      // console.log(videoDevice)
-      // if (!videoDevice) { alert('캠코더 장치가 존재하지 않습니다.') }
-      const miceDevice = devices.some(item => item.kind == 'audioinput')
-      // console.log(miceDevice)
-      // if (!miceDevice) { alert('마이크 장치가 존재하지 않습니다.') }
-      console.log('---------------------------------------------------------');
+  checkDevice(devices) {
+    // 장치 존재 유무
+    console.log('-------------------- device list ------------------------');
+    console.log(devices);
+    // https://goodmemory.tistory.com/73
+    const speakerDevice = devices.some(item => item.kind == 'audiooutput')
+    // console.log(speakerDevice)
+    // if (!speakerDevice) { alert('스피커 장치가 존재하지 않습니다.') }
+    const videoDevice = devices.some(item => item.kind == 'videoinput')
+    // console.log(videoDevice)
+    // if (!videoDevice) { alert('캠코더 장치가 존재하지 않습니다.') }
+    const miceDevice = devices.some(item => item.kind == 'audioinput')
+    // console.log(miceDevice)
+    // if (!miceDevice) { alert('마이크 장치가 존재하지 않습니다.') }
+    console.log('---------------------------------------------------------');
 
-      // 장치 권한 유무 == device.label 이 없으면 권한이 없다.
-      devices.forEach((device) => {
-        if (device.kind == 'audioinput' && !device.label) {
-          // console.log('audio 권한이 없습니다.')
-          // alert('마이크 권한이 없습니다.')
-        } else if (device.kind == 'videoinput' && !device.label) {
-          // console.log('video 권한이 없습니다.')
-          // alert('비디오 권한이 없습니다.')
-        }
-        // console.log(device.kind + ': ' + device.label + ' id = ' + device.deviceId);
-      });
+    // 장치 권한 유무 == device.label 이 없으면 권한이 없다.
+    devices.forEach((device) => {
+      if (device.kind == 'audioinput' && !device.label) {
+        // console.log('audio 권한이 없습니다.')
+        // alert('마이크 권한이 없습니다.')
+      } else if (device.kind == 'videoinput' && !device.label) {
+        // console.log('video 권한이 없습니다.')
+        // alert('비디오 권한이 없습니다.')
+      }
+      // console.log(device.kind + ': ' + device.label + ' id = ' + device.deviceId);
+    });
   }
 
   selectMiceDevice() {

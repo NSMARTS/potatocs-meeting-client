@@ -10,6 +10,7 @@ import { ParticipantsService } from 'src/app/services/participants/participants.
 import { EventBusService } from 'src/@wb/services/eventBus/event-bus.service'; 
 import { ActivatedRoute } from '@angular/router';
 import { MeetingInfoService } from 'src/@wb/store/meeting-info.service';
+import { DevicesInfoService } from 'src/@wb/store/devices-info.service';
 import { EventData } from 'src/@wb/services/eventBus/event.class';
 
 
@@ -34,7 +35,7 @@ export class WebRTCComponent implements OnInit {
 	private unsubscribe$ = new Subject<void>();
 	localStream:any;
 	bitrate:any;
-
+	streamConstraints:any;
 	muted = false;
 	cameraOff = false;
 	sharing = false;
@@ -43,7 +44,7 @@ export class WebRTCComponent implements OnInit {
 	videoDeviceExist = true;
 	videoConstraints:any;
 	whiteBoardMode = false // whiteBoard Mode Check
-
+	options:any;
 	@ViewChild('call') public callRef: ElementRef;
 	get call(): HTMLDivElement {
 		return this.callRef.nativeElement;
@@ -87,6 +88,7 @@ export class WebRTCComponent implements OnInit {
 		private eventBusService: EventBusService,
 		private route: ActivatedRoute,
 		private meetingInfoService: MeetingInfoService,
+		private devicesInfoService: DevicesInfoService,
 	) {
 		this.socket = socketService.socket;
 		// this.localStream$ = this.wetRtcService.localStream$;
@@ -268,27 +270,8 @@ export class WebRTCComponent implements OnInit {
 
 
 	//https://github.com/peterkhang/ionic-demo/blob/a5dc3bef1067eb93c2070b4d8feb233ac6d3427a/src/app/pages/videoCall/video-call.page.ts#L169
-	onExistingParticipants(msg) {
-		if (this.videoDeviceExist == true ){
-			this.videoConstraints = {
-				mandatory: {
-					maxWidth: 320,
-					maxFrameRate: 24,
-					minFrameRate: 24
-				}
-			};
-		} else {
-			this.videoConstraints = false;
-		}
-
-		this.constraints = {
-			audio: this.audioDeviceExist,
-			video: this.videoConstraints
-		};
-
-		
-
-		// console.log(this.constraints)
+	async onExistingParticipants(msg) {
+	
 		var participant = new Participant(this.socketService, this.userName, this.userName, this.participantsElement);
 		this.participants[this.userName] = participant;
 
@@ -296,25 +279,83 @@ export class WebRTCComponent implements OnInit {
 		var video = participant.getVideoElement();
 		this.participantsService.updateMyVideo(video);
 		
+		
+		this.devicesInfoService.state$
+			.pipe(takeUntil(this.unsubscribe$))
+			.subscribe((devicesInfo) => {
+				console.log("aaaaa")
+			console.log(devicesInfo)
+			this.streamConstraints = {
+				audio: { 
+					'echoCancellation': true,
+					// deviceId : devicesInfo.miceDevices[0]?.id 
+				},
+				video: {
+					deviceId : devicesInfo.videoDevices[0]?.id 
+				}
+			};
+				
+		});
+		// "c803f7fabf5102cdfd7203ab1521399bf382123d7ed0b67e6e43e969d5af611c"
+		console.log(this.streamConstraints)
+
+		
+		
+		
+
+		// this.constraints = {
+		// 	audio: this.audioDeviceExist,
+		// 	video: this.videoConstraints
+		// };
+		// getUserDevice
+		// constraints(제약)에 맞는 장치로 부터 데이터 스트림을 가져옴.
+		// https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
+		await navigator.mediaDevices.getUserMedia(this.streamConstraints)
+		.then((screenStream) => {
+			// video.srcObject = screenStream;
+			console.log('aaaa')
+			this.localStream = screenStream;
+			
+			// this.eventBusService.emit(new EventData("device_Check","")) 
+		}).catch(function (error) {
+			console.log('getUserMedia error: ' + error.name, error);
+			// callback('cancel');
+		});
+		
+		console.log(this.localStream)
+		
+		this.options = {
+			// videoStream: null,
+			localVideo: video,
+			// mediaConstraints: this.streamConstraints,
+			mediaConstraints: {audio:true,video:true},
+			onicecandidate: participant.onIceCandidate.bind(participant)
+		}
+		console.log(this.options)
+		
+
 		this.eventBusService.on('selectVideoDevice', this.unsubscribe$ , async ( videoDeviceId )=>{
 			console.log('첫 비디오 스트림---------------------')
+			this.socket.emit("video_device_change","")
 			console.log(video.srcObject)
-			this.videoConstraints = { 
+			this.streamConstraints = { 
 				audio:{ 'echoCancellation': true },
 				video:{
 					deviceId: videoDeviceId,
 				}
 			};
-			console.log(this.videoConstraints)
-			console.log(this.constraints)
-			await navigator.mediaDevices.getUserMedia(this.videoConstraints)
+			// console.log(this.videoConstraints)
+			console.log(this.streamConstraints)
+			await navigator.mediaDevices.getUserMedia(this.streamConstraints)
 			.then(async(screenStream) => {
 				// video = screenStream;
-				this.localStream = screenStream;
+				// this.localStream = screenStream;
 				console.log('새 장치에 스트림 추출--------------------')
 				console.log(this.localStream)
-				console.log(video.srcObject)
-				video.srcObject = this.localStream;
+				this.localStream = screenStream;
+				video.srcObject = this.localStream; 
+				// video.srcObject = screenStream;
+				
 			}).catch(function (error) {
 				if(error.name === 'PermissionDeniedError'){
 					console.log('getUserMedia error: ' + error.name, error);
@@ -322,31 +363,32 @@ export class WebRTCComponent implements OnInit {
 					// callback('cancel');
 				}
 			});
-		
+
+			this.options = {
+				videoStream: this.localStream,
+				localVideo: video,
+				// mediaConstraints: this.streamConstraints,
+				mediaConstraints: {audio:true,video:true},
+				onicecandidate: participant.onIceCandidate.bind(participant)
+			}
+
+			participant.rtcPeer = WebRtcPeer.WebRtcPeerSendonly(this.options,
+				function (error) {
+					if (error) {
+						if (error.name == "NotAllowedError"){
+							return console.log('장치에 입력이 들어오고 있지 않습니다. 다시 한번 확인해주세요.')
+							// alert('장치에 입력이 들어오고 있지 않습니다. 다시 한번 확인해주세요.')
+						}
+						// return console.error(error);
+						
+						// console.log('장치에 입력이 들어오고 있지 않습니다. 다시 한번 확인해주세요.')
+					}
+					this.generateOffer(participant.offerToReceiveVideo.bind(participant));
+				});
 		})
-	
-		// getUserDevice
-		// constraints(제약)에 맞는 장치로 부터 데이터 스트림을 가져옴.
-		// https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
-		navigator.mediaDevices.getUserMedia(this.constraints)
-		.then(screenStream => {
-			this.localStream = screenStream;
-			video = screenStream;
-			this.eventBusService.emit(new EventData("device_Check","")) 
-		}).catch(function (error) {
-			console.log('getUserMedia error: ' + error.name, error);
-			// callback('cancel');
-		});
+		
 
-
-		var options = {
-			// videoStream: this.localStream,
-			localVideo: video,
-			mediaConstraints: this.constraints,
-			onicecandidate: participant.onIceCandidate.bind(participant)
-		}
-		console.log(options)
-		participant.rtcPeer = WebRtcPeer.WebRtcPeerSendonly(options,
+		participant.rtcPeer = WebRtcPeer.WebRtcPeerSendonly(this.options,
 			function (error) {
 				if (error) {
 					if (error.name == "NotAllowedError"){
@@ -359,6 +401,34 @@ export class WebRTCComponent implements OnInit {
 				}
 				this.generateOffer(participant.offerToReceiveVideo.bind(participant));
 			});
+
+		/****************************************
+		*   장치 변경 시 webRTC 오버레이
+		*****************************************/
+
+		
+			// var options = {
+			// 	// videoStream: this.localStream,
+			// 	localVideo: video,
+			// 	// mediaConstraints: this.constraints,
+			// 	mediaConstraints: {audio:true,video:true},
+			// 	onicecandidate: participant.onIceCandidate.bind(participant)
+			// }
+			// console.log(options)
+			// participant.rtcPeer = WebRtcPeer.WebRtcPeerSendonly(options,
+			// 	function (error) {
+			// 		if (error) {
+			// 			if (error.name == "NotAllowedError"){
+			// 				return console.log('장치에 입력이 들어오고 있지 않습니다. 다시 한번 확인해주세요.')
+			// 				// alert('장치에 입력이 들어오고 있지 않습니다. 다시 한번 확인해주세요.')
+			// 			}
+			// 			// return console.error(error);
+						
+			// 			// console.log('장치에 입력이 들어오고 있지 않습니다. 다시 한번 확인해주세요.')
+			// 		}
+			// 		this.generateOffer(participant.offerToReceiveVideo.bind(participant));
+			// 	});
+		
 
 
 		/****************************************
