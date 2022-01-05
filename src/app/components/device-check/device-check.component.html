@@ -1,19 +1,19 @@
 <div>
-  <select #miceDeivce [(ngModel)]="selectedMiceDevice" (change)="selectMiceDevice()">
+  <select #miceDeivce [(ngModel)]="selectedMiceDevice" (change)="selectDevice()">
     <option *ngFor="let miceDevice of miceDevices" [ngValue]="miceDevice">{{miceDevice?.label}}</option>
   </select>
   <div *ngIf="miceDevices?.length < 1 ">" A microphone device is not exists."</div>
   <div *ngIf="!miceDevices[0]?.label && miceDevices[0]?.kind == 'audioinput'">"A microphone device is not allowed."</div>
 </div>
 <div>
-  <select [(ngModel)]="selectedVideoDevice" (ngModelChange)="selectVideoDevice()">
+  <select [(ngModel)]="selectedVideoDevice" (ngModelChange)="selectDevice()">
     <option *ngFor="let videoDevice of videoDevices" [ngValue]="videoDevice">{{videoDevice?.label}}</option>
   </select>
   <div *ngIf="videoDevices?.length < 1 ">" An webcam device is not exists."</div>
   <div *ngIf="!videoDevices[0]?.label && videoDevices[0]?.kind == 'videoinput'">"An webcam device is not allowed"</div>
 </div>
 <div>
-  <select [(ngModel)]="selectedSpeakerDevice" (change)="selectSpeakerDevice()">
+  <select [(ngModel)]="selectedSpeakerDevice" (change)="selectDevice()">
     <option *ngFor="let speakerDevice of speakerDevices" [ngValue]="speakerDevice">{{speakerDevice?.label}}</option>
   </select>
 </div>
