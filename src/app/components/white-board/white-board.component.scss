@@ -104,10 +104,27 @@ $sidebarContainer-Width: 97px;
         background-color: #3f51b5;
     }
     
-    .hiddenVideoMode {
-        display: none;
-    }
+    
+}
+
+.visibleVideo_button {
+    background-color: #b2b2b2;
+    color: white;
+    border-radius: 50%;
+    position: fixed;
+    text-align: center;
+    bottom: 80px;
+    right: 210px;
+    transform: scale(1.5);   
+}
+
+.visibleVideo_button:hover {
+    cursor: pointer;
+    background-color: #3f51b5;
 }
 
 
+.hiddenVideoMode {
+    display: none;
+}
 
