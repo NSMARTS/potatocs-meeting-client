@@ -1,14 +1,14 @@
-// fitToWidth 관련 
-html {
-  // overflow: scroll;
-  /* IE scroll 숨김 */
-  -ms-overflow-style: none;
-  overflow: hidden;
-}
-html::-webkit-scrollbar { 
-  display: none;
-  width: 0 !important;
-}
+// // fitToWidth 관련 
+// html {
+//   // overflow: scroll;
+//   /* IE scroll 숨김 */
+//   -ms-overflow-style: none;
+//   overflow: hidden;
+// }
+// html::-webkit-scrollbar { 
+//   display: none;
+//   width: 0 !important;
+// }
 
 
 
@@ -46,6 +46,8 @@ ul {
   position: fixed;
   overflow: auto;
   right: 270px;
+  height: 90%;
+  overflow-x: hidden
 }
 // #participants > video{
 //   width: 50%;
@@ -87,7 +89,7 @@ ul {
 .bigvideo p{
   // color: white;
   position: fixed;
-  top: 75%;
+  top: 73%;
   left: 27%;
 }
 
