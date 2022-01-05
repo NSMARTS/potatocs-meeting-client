@@ -49,6 +49,19 @@ export class RightSidebarComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
 
+    /***************************************************************
+    *  1.     
+    *  this.enlistedMember_spanRef.toArray()와 현재 접속중인 참여자
+    *  이름 교집합 찾아서 enlistedMember_check 배열에 담기                       
+    *****************************************************************/
+    this.enlistedMember_spanRef.toArray().forEach(element => {
+      
+      const innerText = element.nativeElement.innerText    
+      this.enlistedMember_check.push(innerText)     
+
+      console.log(this.enlistedMember_check)
+    })
+
     // 새로운 참여자가 들어오면
     this.eventBusService.on('updateParticipants', this.unsubscribe$, async (userName) => {
       console.log(userName)
@@ -87,18 +100,7 @@ export class RightSidebarComponent implements OnInit, AfterViewInit {
       })
     })
 
-    /***************************************************************
-    *  1.     
-    *  this.enlistedMember_spanRef.toArray()와 현재 접속중인 참여자
-    *  이름 교집합 찾아서 enlistedMember_check 배열에 담기                       
-    *****************************************************************/
-    this.enlistedMember_spanRef.toArray().forEach(element => {
-      const innerText = element.nativeElement.innerText
-
-      this.enlistedMember_check.push(innerText)
-
-      console.log(this.enlistedMember_check)
-    })
+    
 
 
   }

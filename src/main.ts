@@ -6,6 +6,11 @@ import { environment } from './environments/environment';
 
 if (environment.production) {
   enableProdMode();
+
+  // 빌드 시 모든 console.log 지우기
+  if (window) {
+    window.console.log = function() {};
+  }
 }
 
 platformBrowserDynamic().bootstrapModule(AppModule)

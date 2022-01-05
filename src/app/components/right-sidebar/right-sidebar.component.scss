@@ -7,20 +7,23 @@
     .right_sidebar_nav{
 
         padding-top: 85px;
-        ul, li{
-            list-style: none;
-            display: flex;
-            flex-direction: row;
-            width: 100%;
-            justify-content: space-between;
-           padding: 0 20%;
-        }
     
-        button {
-            background-color: transparent;
-            border: 0;
+        ul {
+            padding: 0;
+
+            li {
+                text-align: center;
+            }
         }
-        
+        margin: auto;
+    }
+    
+    .enlistedMembers {
+
+        ul {
+            padding: 0;
+        }
+        text-align: center;
     }
     
 }

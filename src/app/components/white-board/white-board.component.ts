@@ -37,6 +37,8 @@ import { DataStorageService } from 'src/app/services/dataStorage/data-storage.se
 })
 export class WhiteBoardComponent implements OnInit {
 
+
+
   private unsubscribe$ = new Subject<void>();
   private socket;
   private meetingId;
@@ -357,4 +359,10 @@ export class WhiteBoardComponent implements OnInit {
   }
   ///////////////////////////////////////////////////////////
 
+
+
+  // hiddenVideo 버튼 클릭 시 오버레이 비디오 숨기기
+  hiddenVideo() {
+    
+  }
 }

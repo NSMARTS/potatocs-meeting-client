@@ -207,8 +207,8 @@ ul {
   display: flex;
   flex-direction: row;
   position: absolute;
-  top: 80%;
-  left: 40%;
+  bottom: 0px;
+  left: 45%;
 }
 
 // 내 로컬 비디오 오버레이
@@ -235,6 +235,14 @@ ul {
 
 .receiveVideoOverlay > p {
   text-align: center;
+}
+
+.videoOverlay_wrap {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  bottom: 0px;
+  left: 45%;
 }
 
 
