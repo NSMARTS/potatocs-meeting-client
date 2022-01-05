@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://potatocs.com',
-  socketUrl: 'https://potatocs.com'
+  apiUrl: 'https://test-potatocs.com',
+  socketUrl: 'https://test-potatocs.com'
 };
