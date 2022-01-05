@@ -39,6 +39,7 @@ export class WhiteBoardComponent implements OnInit {
 
   // 화이트보드 비디오 오버레이
   hiddenVideoMode = false;
+  dragOn = true;
 
   private unsubscribe$ = new Subject<void>();
   private socket;

@@ -209,6 +209,19 @@ ul {
   position: absolute;
   bottom: 0px;
   left: 45%;
+  width: 320px;
+  overflow: auto;
+}
+
+// 스크롤바 꾸미기
+.videoOverlay_container::-webkit-scrollbar {
+  height: 5px;
+}
+.videoOverlay_container::-webkit-scrollbar-thumb {
+  background-color: #3f51b5;
+}
+.videoOverlay_container::-webkit-scrollbar-track {
+  background-color: rgb(235, 235, 235);
 }
 
 // 내 로컬 비디오 오버레이
