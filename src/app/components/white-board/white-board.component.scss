@@ -66,7 +66,7 @@ $sidebarContainer-Width: 97px;
     // padding-top:$navbar-height; // 원본
     padding-left: $sidebar-width + $sidebarContainer-Width; // fitToWidth 관련 
     padding-top:$navbar-height;
-    margin: 0 200px 0 auto;
+    margin: 0 300px 0 auto;
 
 
     .comclass-main {
@@ -84,6 +84,19 @@ $sidebarContainer-Width: 97px;
         }
     }
 
+}
+
+
+// fitToWidth 관련 
+.comclass_container {
+  overflow: scroll;
+  /* IE scroll 숨김 */
+  -ms-overflow-style: none;
+  overflow:auto;
+}
+.comclass_container::-webkit-scrollbar { 
+  display: none;
+  width: 0 !important;
 }
 
 .videoOverlay_wrap {
@@ -114,7 +127,7 @@ $sidebarContainer-Width: 97px;
     border-radius: 50%;
     position: fixed;
     bottom: 80px;
-    right: 210px;
+    right: 315px;
     transform: scale(1.5);   
 
 }

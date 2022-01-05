@@ -1,33 +1,38 @@
 .right_sidebar_container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
     z-index: 48;
-    
-    .right_sidebar_nav{
+    padding-top: 65px;
+    margin: 0;
+    position: fixed;
+    right: 0;
+    background-color: white;
+    width: 300px;
+    box-shadow: 4px 4px 14px -1px rgba(20, 0, 20, 0.2);
+    overflow: hidden;
+    height: 100vh;
 
-        padding-top: 85px;
-    
-        ul {
-            padding: 0;
-
-            li {
-                text-align: center;
-            }
-        }
-        margin: auto;
-    }
-    
-    .enlistedMembers {
-
-        ul {
-            padding: 0;
-        }
-        text-align: center;
-    }
     
 }
 
 
 
+::ng-deep .mat-tab-header-pagination-before, .mat-tab-header-rtl {
+    display: none!important;
+}
 
+::ng-deep .mat-tab-header-pagination-after, .mat-tab-header-rtl {
+    display: none!important;
+}
+
+.mat-tab-links {
+    flex-flow: wrap;
+    overflow: auto;
+}
+
+.mat-tab-header {
+    display: none;
+}
+
+.whiteBoardMode {
+    top: 65px;
+    width: 300px;
+}

@@ -17,41 +17,13 @@
 }
 
 .sidebar_container {
-    position: fixed;
-
-    
+    position: fixed;  
     background-color: white;
-    // background-color: gray;
     width: 100px;
     z-index: 1;
-    
-    // background: lightgray;            
-
     box-shadow: 4px 4px 14px -1px rgba(20, 0, 20, 0.2);
     overflow: hidden;
-
     height: 100vh;
-
-
-
-}
-
-.right_sidebar_container {
-    position: fixed;
-    right: 0;
-
-    
-    background-color: white;
-    width: 250px;
-    
-    // background: lightgray;            
-
-    box-shadow: 4px 4px 14px -1px rgba(20, 0, 20, 0.2);
-    overflow: hidden;
-
-    height: 100vh;
-    // background-color: gray;
-
 }
 
 
@@ -89,8 +61,5 @@
 
 
 
-.whiteBoardMode {
-    top: 80px;
-    width: 200px;
-}
+
 
