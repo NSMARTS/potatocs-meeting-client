@@ -289,10 +289,10 @@ export class WebRTCComponent implements OnInit {
 					audio: {
 						'echoCancellation': true,
 						'noiseSuppression': true,
-						deviceId: devicesInfo.miceDevices[0]?.id
+						deviceId: devicesInfo?.miceDevices[0]?.id
 					},
 					video: {
-						deviceId: devicesInfo.videoDevices[0]?.id,
+						deviceId: devicesInfo?.videoDevices[0]?.id,
 						width: 320,
 						framerate: { max: 24, min: 24 }
 					}
@@ -301,18 +301,17 @@ export class WebRTCComponent implements OnInit {
 			});
 		console.log(this.streamConstraints)
 		console.log(this.constraints)
+		
 
 		// getUserDevice
 		// constraints(제약)에 맞는 장치로 부터 데이터 스트림을 가져옴.
 		// https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
 		await navigator.mediaDevices.getUserMedia(this.constraints)
 			.then((screenStream) => {
-				// video.srcObject = screenStream;
 				console.log('aaaa')
 				this.localStream = screenStream;	 
 			}).catch(function (error) {
 				console.log('getUserMedia error: ' + error.name, error);
-				// callback('cancel');
 			});
 		this.eventBusService.emit(new EventData("device_Check",""))
 		console.log(this.localStream)
@@ -353,8 +352,6 @@ export class WebRTCComponent implements OnInit {
 					framerate: { max: 24, min: 24 }
 				}
 			};
-			// console.log(this.videoConstraints)
-			console.log(this.streamConstraints)
 			console.log(this.constraints)
 			await navigator.mediaDevices.getUserMedia(this.constraints)
 				.then(async (screenStream) => {
