@@ -1,6 +1,7 @@
-$sidebar-width: 175px;
+$sidebar-width: 171px;
 $thumbnail-width : 150px;
 $navbar-height: 134px;
+$sidebarContainer-Width: 97px;
 
 // .whiteBoard-container {
 //     position: relative;
@@ -61,8 +62,12 @@ $navbar-height: 134px;
         outline: none
     }
 
-    padding-left: $sidebar-width;
+    // padding-left: $sidebar-width // 원본
+    // padding-top:$navbar-height; // 원본
+    padding-left: $sidebar-width + $sidebarContainer-Width; // fitToWidth 관련 
     padding-top:$navbar-height;
+    margin: 0 300px 0 auto;
+
 
     .comclass-main {
         height: calc(100vh - #{$navbar-height});
@@ -71,12 +76,71 @@ $navbar-height: 134px;
         justify-content: center;
         align-items: center;
         position: relative;
+        // margin-right: 15%;
 
         .fabs_container {
             position: absolute;
             right: 5%;
         }
     }
+
 }
 
+
+// fitToWidth 관련 
+.comclass_container {
+  overflow: scroll;
+  /* IE scroll 숨김 */
+  -ms-overflow-style: none;
+  overflow:auto;
+}
+.comclass_container::-webkit-scrollbar { 
+  display: none;
+  width: 0 !important;
+}
+
+.videoOverlay_wrap {
+
+    .videoOverlay_button {
+        position: relative;
+        bottom: 80px;
+        right: 30px;
+        transform: scale(1.5);
+        border-radius: 50%;
+        background-color: #b2b2b2;
+        line-height: 0;
+        color: white;
+    }
+    
+    .videoOverlay_button:hover {
+        cursor: pointer;
+        background-color: #3f51b5;
+    }
+    
+    
+}
+
+
+.visibleVideo_button {
+    background-color: #b2b2b2;
+    color: white;
+    border-radius: 50%;
+    position: fixed;
+    bottom: 80px;
+    right: 315px;
+    transform: scale(1.5);   
+
+}
+
+
+.visibleVideo_button:hover {
+    cursor: pointer;
+    background-color: #3f51b5;
+}
+
+
+
+.hiddenVideoMode {
+    display: none;
+}
 

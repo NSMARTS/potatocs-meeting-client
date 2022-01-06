@@ -1,0 +1,34 @@
+<div class="chatAllBorder">
+    <div class="chatContainer" #target [scrollTop]="target.scrollHeight">
+        <div class="chatInMeeting" *ngFor="let item of chatInMeeting">            
+            <div class="chatting">
+                <div *ngIf="item.chatMember" fxLayout="row">
+                    <div class="chatting_charMember_name">
+                        {{ item.chatMember }}
+                    </div>
+                    <div class="chatting_createdAt">
+                        {{ item.createdAt}}
+                    </div>
+                </div>
+                <div class="chatContent">
+                    {{ item.chatContent }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="textFormContainer">
+        <form  #f="ngForm" (ngSubmit)="f.form.valid && createChat()" novalidate class="submit-form">
+            <div class="chattingContainer">
+                <div class="chatInput">
+                    <textarea class="textarea-style"  type="text" [(ngModel)]="chatContent" name="first"></textarea>
+                </div>
+                <div class="chatSendBtn"fxLayout="row" fxLayoutAlign="end end" >
+                    <button mat-stroked-button >send</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- <mat-checkbox class="chat-checkBox" color="primary">댓글만 보기</mat-checkbox> -->
+</div>

@@ -241,7 +241,6 @@ export class WebRTCComponent implements OnInit {
 			this.handleMuteClick()
 
 		})
-
 		this.eventBusService.on('handleBitrateClick', this.unsubscribe$, (data) => {
 			console.log('eventBusService')
 			this.handleBitrateClick(data)

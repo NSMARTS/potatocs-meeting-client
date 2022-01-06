@@ -34,5 +34,10 @@ export class ApiService {
     return this.http.get(this.URL + 'whiteBoard' + `/document/` + _id, { responseType: 'blob' });
   }
 
+  deleteMeetingPdfFile(_id) {
+    console.log('[API] -----> get: deleteMeetingPdfFile');
+    return this.http.delete(this.URL + 'whiteBoard' + `/deleteMeetingPdfFile/`);
+  }
+
 
 }

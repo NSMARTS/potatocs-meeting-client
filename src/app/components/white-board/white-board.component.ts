@@ -37,6 +37,10 @@ import { DataStorageService } from 'src/app/services/dataStorage/data-storage.se
 })
 export class WhiteBoardComponent implements OnInit {
 
+  // 화이트보드 비디오 오버레이
+  hiddenVideoMode = false;
+  dragOn = true;
+
   private unsubscribe$ = new Subject<void>();
   private socket;
   private meetingId;
@@ -136,8 +140,6 @@ export class WhiteBoardComponent implements OnInit {
 
     });
     //////////////////////////////////////////////////////////////////
-
-
   }
   ///////////////////////////////////////////////////////////
 
@@ -359,4 +361,18 @@ export class WhiteBoardComponent implements OnInit {
   }
   ///////////////////////////////////////////////////////////
 
+
+
+  // hiddenVideo 버튼 클릭 시 오버레이 비디오 숨기기
+  hiddenVideo() {
+    if (this.hiddenVideoMode == false){
+      this.hiddenVideoMode = true;
+    }
+  }
+
+  visibleVideo() {
+    if (this.hiddenVideoMode == true){
+      this.hiddenVideoMode = false;
+    }
+  }
 }

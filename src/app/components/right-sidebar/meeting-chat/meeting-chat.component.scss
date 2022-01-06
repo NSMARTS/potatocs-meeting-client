@@ -1,0 +1,139 @@
+.chatAllBorder{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+   
+}
+.chatContainer {
+    
+    overflow: auto;
+    font-size: 13px;
+    line-height: 1.4;
+    flex: 1 1;
+}
+
+.chatInMeeting {
+    
+    padding: 10px;
+    border: gray;
+}
+.chatContainer::-webkit-scrollbar-track{
+	background-color: #F5F5F5;
+}
+.chatContainer::-webkit-scrollbar{
+    width: 8px;
+	background-color: #F5F5F5;
+}
+.chatContainer::-webkit-scrollbar-thumb{
+    border-radius: 8px;
+    background-color: #bebebe;
+	border: 1px solid #e2e2e2;
+}
+
+.textFormContainer {
+    position: relative;
+}
+
+
+.deleteChatBtn{
+    bottom: 15px;
+}
+.buttonCover .settingIcon {
+    visibility: hidden;
+}
+
+.buttonCover:hover .settingIcon{
+	visibility: visible;
+}
+
+.chatInMeeting .settingIcon{
+    float: right;
+    visibility: hidden;
+}
+.chatInMeeting:hover .settingIcon{
+    float: right;
+    visibility: visible;
+}
+
+
+.chatting{
+    background-color: white;
+    border: 1px solid gray;
+    border-radius: 10px;
+    max-width: 300px;
+    min-height: 30px;
+    padding: 12px;
+    margin: 12px 0px;
+}
+.chatting_charMember_name{
+    font-weight: bold;
+    font-size: 14px;
+    margin-right: 15px;
+}
+.chatting_createdAt{
+    color: gray;
+    font-size: 12px;
+}
+.chatContent{
+    padding-left: 12px;
+    white-space: pre-line;
+}
+
+.chattingContainer{
+    margin: 10px 10px 0;
+    max-height: 150px;
+    width: 285px;
+    background-color: white;
+    border: 1px solid gray;
+    border-radius: 3px;
+    position: fixed;
+    bottom: 10px;
+}.mat-button{
+    float: right;
+}
+
+
+
+/////////////////
+.chatInput{
+    font-size:13px;
+    flex-shrink: 0;
+    position: relative;
+    border: white;
+    margin-top: 10px;
+    margin-left: 10px;
+    align-content: center;
+    width: 94%;
+    min-height: 80px;
+}
+
+.chatSendBtn{
+    // position: relative;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+.textarea-style{
+    position: relative;
+    resize: none;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-family: "Noto Sans", "Roboto", "Helvetica Neue", sans-serif;
+    overflow:hidden;
+    width: 100%;
+    overflow-wrap: break-word;
+}
+
+.maxHEditted_1 {
+    min-height: 620px;
+    max-height: 620px;
+}
+
+.maxHEditted_2 {
+    max-height: 187px;
+}
+
+.chat-checkBox {
+    padding-left: 16px;
+}
