@@ -33,13 +33,13 @@ export class ParticipantComponent implements OnInit {
         if (meetingInfo) {
           this.enlistedMembers = [];
 
-          console.log(meetingInfo.enlistedMembers)
+          // console.log(meetingInfo.enlistedMembers)
           meetingInfo.enlistedMembers.forEach(element => {
-            console.log(element.name)
+            // console.log(element.name)
             this.enlistedMembers.push(element.name)
 
           });
-          console.log(this.enlistedMembers)
+          // console.log(this.enlistedMembers)
 
         }
       });
@@ -58,7 +58,7 @@ export class ParticipantComponent implements OnInit {
       const innerText = element.nativeElement.innerText    
       this.enlistedMember_check.push(innerText)     
 
-      console.log(this.enlistedMember_check)
+      // console.log(this.enlistedMember_check)
     })
 
     // 새로운 참여자가 들어오면
@@ -75,7 +75,7 @@ export class ParticipantComponent implements OnInit {
       this.checkName = this.enlistedMember_check.filter(userName => this.participants.includes(userName))
 
       // 교집합 결과
-      console.log(this.checkName)
+      // console.log(this.checkName)
 
 
       /***************************************************************   
