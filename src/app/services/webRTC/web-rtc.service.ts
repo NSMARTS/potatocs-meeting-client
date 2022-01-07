@@ -79,11 +79,4 @@ export class WebRTCService {
 
 
 
-	// 채팅 생성
-	createChat(data){
-		// return this.http.post('/api/v1/collab/space/doc/createChat', data)
-	}
-
-
-
 }
