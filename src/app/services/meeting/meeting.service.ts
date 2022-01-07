@@ -43,4 +43,10 @@ export class MeetingService {
 		return this.http.get('/apim/v1/collab/getChat/', {params: meetingId});
 	}
 
+	// 채팅 삭제
+	deleteMeetingChat(chatId) {
+		console.log('[API] -----> deleteMeetingChat');
+		return this.http.delete('/apim/v1/collab/deleteChat/', {params: chatId});
+	}
+
 }
