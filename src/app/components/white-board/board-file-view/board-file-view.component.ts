@@ -2,9 +2,11 @@ import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren, Outp
 
 import { Subject } from 'rxjs';
 import { pluck, takeUntil, distinctUntilChanged } from 'rxjs/operators';
+import { ApiService } from 'src/@wb/services/apiService/api.service';
 
 
 import { RenderingService } from 'src/@wb/services/rendering/rendering.service';
+import { SocketService } from 'src/@wb/services/socket/socket.service';
 import { ViewInfoService } from 'src/@wb/store/view-info.service';
 
 
@@ -20,12 +22,14 @@ import { ViewInfoService } from 'src/@wb/store/view-info.service';
 })
 
 export class BoardFileViewComponent implements OnInit {
-
+  private socket;
   constructor(
     private renderingService: RenderingService,
-    private viewInfoService: ViewInfoService
+    private viewInfoService: ViewInfoService,
+    private apiService: ApiService,
+    private socketService: SocketService,
   ) {
-
+    this.socket = this.socketService.socket;
   }
 
 
@@ -111,5 +115,19 @@ export class BoardFileViewComponent implements OnInit {
     // @OUTPUT -> white-board component로 전달
     this.newLocalDocumentFile.emit(event.target.files[0]);
   }
+
+  deletePdf(_id) {
+    console.log('>> delete PDF : delete Thumbnail');
+    console.log(_id)
+    this.apiService.deleteMeetingPdfFile({_id}).subscribe((data:any)=>{
+      console.log(data.message)
+      console.log(data.meetingId)
+      // document delete 확인 후 socket room안의 모든 User에게 전송 (나 포함)
+      this.socket.emit('check:documents', data.meetingId);
+    })
+    
+    // this.viewInfoService.setViewInfo({ leftSideView: 'fileList' });
+  }
+
 
 }

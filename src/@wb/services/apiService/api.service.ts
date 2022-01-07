@@ -36,7 +36,7 @@ export class ApiService {
 
   deleteMeetingPdfFile(_id) {
     console.log('[API] -----> get: deleteMeetingPdfFile');
-    return this.http.delete(this.URL + 'whiteBoard' + `/deleteMeetingPdfFile/`);
+    return this.http.delete(this.URL + 'whiteBoard' + `/deleteMeetingPdfFile/`,  {params: _id});
   }
 
 
