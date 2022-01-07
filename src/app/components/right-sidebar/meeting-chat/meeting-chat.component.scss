@@ -65,6 +65,27 @@
     padding: 12px;
     margin: 12px 0px;
 }
+
+.myChat {
+    background-color: rgb(222, 240, 252);
+    border: 1px solid gray;
+    border-radius: 10px;
+    max-width: 250px;
+    min-height: 30px;
+    padding: 12px;
+    margin: 14px 0px 0px 30px;
+}
+
+.participantChat {
+    background-color: white;
+    border: 1px solid gray;
+    border-radius: 10px;
+    max-width: 250px;
+    min-height: 30px;
+    padding: 12px;
+    margin: 14px 30px 0px 0px;
+}
+
 .chatting_charMember_name{
     font-weight: bold;
     font-size: 14px;

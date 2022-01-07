@@ -25,6 +25,7 @@ export class MeetingChatComponent implements OnInit {
     public userName;
     public chatContent;
 
+    myChat = false;
 
     @ViewChild('target') private myScrollContainer: ElementRef;
     scrolltop: number = null;
@@ -85,11 +86,19 @@ export class MeetingChatComponent implements OnInit {
             chatContent: this.chatContent
         }
 
+        console.log(data)
+
         this.meetingService.createChat(data).subscribe((data) => {
             this.socket.emit('sendChat', data);
         })
 
         this.chatContent = '';
+
+        // if(this.userName) {
+        //     this.myChat = true;
+        // } else {
+        //     this.myChat = false;
+        // }
     }
 
 

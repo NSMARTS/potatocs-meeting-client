@@ -4,7 +4,7 @@
             <button mat-button class="deleteChatBtn"  (click)="deleteChat(item._id)" *ngIf="item.userId==userId">
                 <mat-icon class="settingIcon ">close</mat-icon>
             </button>   
-            <div class="chatting">
+            <div [ngClass]="item.userId==userId ? 'myChat' : 'participantChat'">
                 <div class="chatting_inner" *ngIf="item.chatMember" fxLayout="row">
                     <div class="chatting_charMember_name">
                         {{ item.chatMember }}
