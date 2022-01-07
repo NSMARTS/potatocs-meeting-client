@@ -1,7 +1,7 @@
 <div class="chatAllBorder">
     <div class="chatContainer" #target [scrollTop]="target.scrollHeight">
         <div class="chatInMeeting" *ngFor="let item of chatInMeeting">         
-            <button mat-button class="deleteChatBtn"  (click)="deleteChat(item)" *ngIf="item.userId==userId">
+            <button mat-button class="deleteChatBtn"  (click)="deleteChat(item._id)" *ngIf="item.userId==userId">
                 <mat-icon class="settingIcon ">close</mat-icon>
             </button>   
             <div class="chatting">
