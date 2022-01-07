@@ -21,12 +21,15 @@ export class RightSidebarComponent implements OnInit, AfterViewInit {
 
   @ViewChildren('enlistedMember_span') public enlistedMember_spanRef: QueryList<ElementRef>;
 
+  selectedIndex = 0;
+
   constructor(
     private eventBusService: EventBusService,
     private meetingInfoService: MeetingInfoService
   ) { }
 
   ngOnInit(): void {
+    this.selectedIndex = 0;
 
     this.eventBusService.on('whiteBoardClick',this.unsubscribe$, () => {
       console.log('eventBus on whiteBoardClick')

@@ -1,13 +1,16 @@
 <div class="chatAllBorder">
     <div class="chatContainer" #target [scrollTop]="target.scrollHeight">
-        <div class="chatInMeeting" *ngFor="let item of chatInMeeting">            
+        <div class="chatInMeeting" *ngFor="let item of chatInMeeting">         
+            <button mat-button class="deleteChatBtn"  (click)="deleteChat(item)" *ngIf="item.userId==userId">
+                <mat-icon class="settingIcon ">close</mat-icon>
+            </button>   
             <div class="chatting">
-                <div *ngIf="item.chatMember" fxLayout="row">
+                <div class="chatting_inner" *ngIf="item.chatMember" fxLayout="row">
                     <div class="chatting_charMember_name">
                         {{ item.chatMember }}
                     </div>
                     <div class="chatting_createdAt">
-                        {{ item.createdAt}}
+                        {{ item.createdAt | date: 'YYYY-MM-dd hh:mm'}}
                     </div>
                 </div>
                 <div class="chatContent">
