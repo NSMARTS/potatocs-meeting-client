@@ -87,8 +87,18 @@ export class BoardSlideViewComponent implements OnInit {
 		// container Scroll, Size, 판서event
 		this.eventBusListeners();
 
+		/*-------------------------------------------
+			page 전환 하는 경우 sync
+		---------------------------------------------*/
+		this.socket.on('sync:pageChange', (pageNum)=> {
+			this.viewInfoService.updateCurrentPageNum(pageNum);
+		})
 
-		this.socket.on('sync:backToFileList', ()=> {
+
+		/*-------------------------------------------
+			doc. List (문서 목록으로) 하는 경우 sync
+		---------------------------------------------*/
+		this.socket.on('sync:backToFileList', () => {
 			this.viewInfoService.setViewInfo({ leftSideView: 'fileList' });
 		})
 	}
@@ -173,8 +183,8 @@ export class BoardSlideViewComponent implements OnInit {
 		zoom, page 전환등을 하는 경우 sync
 		---------------------------------------------*/
 		const data = {
-			meetingId : this.meetingId,
-			pageNum : pageNum
+			meetingId: this.meetingId,
+			pageNum: pageNum
 		}
 		this.socket.emit('sync:page', data)
 	}
@@ -187,7 +197,7 @@ export class BoardSlideViewComponent implements OnInit {
 		this.viewInfoService.setViewInfo({ leftSideView: 'fileList' });
 
 		const data = {
-			meetingId : this.meetingId,
+			meetingId: this.meetingId,
 		}
 		this.socket.emit('sync:FileList', (data))
 	}

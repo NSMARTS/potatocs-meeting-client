@@ -66,7 +66,9 @@ export class BoardFileViewComponent implements OnInit {
             });
 
 
-        // doc 전환 하는 경우 sync
+        /*-------------------------------------------
+            doc 전환 하는 경우 sync
+        ---------------------------------------------*/
         this.socket.on('sync:docChange', (docId) => {
             this.viewInfoService.changeToThumbnailView(docId);
         })
