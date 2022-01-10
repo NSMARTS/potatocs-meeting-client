@@ -49,4 +49,10 @@ export class MeetingService {
 		return this.http.delete('/apim/v1/collab/deleteChat/', {params: chatId});
 	}
 
+	// 미팅 삭제 시 DB에 저장된 채팅 삭제
+	deleteAllOfChat(data) {
+		console.log('[API] -----> deleteAllOfChat');
+		return this.http.delete('/apim/v1/collab/deleteAllOfChat/');
+	}
+
 }

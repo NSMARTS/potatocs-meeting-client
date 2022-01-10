@@ -65,6 +65,7 @@ export class MeetingChatComponent implements OnInit {
             this.chatInMeeting.push(chatData)
         });
 
+        // 지운 사람 외 같은 room 사람들 채팅 실시간 삭제
         this.socket.on('refreshChat', () => {
             this.getMeetingChat();
         })
@@ -88,28 +89,25 @@ export class MeetingChatComponent implements OnInit {
 
         console.log(data)
 
+        // data를 자신을 포함하여 socket emit
         this.meetingService.createChat(data).subscribe((data) => {
             this.socket.emit('sendChat', data);
         })
 
         this.chatContent = '';
-
-        // if(this.userName) {
-        //     this.myChat = true;
-        // } else {
-        //     this.myChat = false;
-        // }
     }
 
 
     // 늦게 들어온 사람도 현재까지 대화 불러오기
     getMeetingChat() {
+        // meetingId로 판단하여 db에 있는 채팅 정보 가져오기
         const meetingId = this.meetingId
         this.meetingService.getMeetingChat({ meetingId }).subscribe((meetingChat) => {
+            // 배열 초기화 시킨 뒤
             this.chatInMeeting = [];
-            // Object로 와서
+            // Object로 와서 value 값만 뽑아내고
             var chat = Object.values(meetingChat);
-
+            // 배열의 길이만큼 chatInMeeting[] 안에 넣어준다.
             chat.forEach(element => {
                 console.log(element)
                 // 받아온 채팅 객체 배열에 넣기
@@ -124,12 +122,12 @@ export class MeetingChatComponent implements OnInit {
     // 본인 채팅 지우기
     deleteChat(chatId) {
         this.meetingService.deleteMeetingChat({ chatId }).subscribe(async (data: any) => {
-
             console.log(data)
+            // 채팅을 지운 뒤 db에 있는 채팅정보 다시 불러오기
             await this.getMeetingChat();
-
-
-            console.log(this.meetingId)
+            console.log(this.meetingId);
+            
+            // 내가 지우면 같은 room의 다른 사람도 실시간으로 채팅 삭제
             this.socket.emit('deleteChat', this.meetingId);
 
             },
@@ -139,7 +137,7 @@ export class MeetingChatComponent implements OnInit {
     }
 
 
-
+    // 마지막 채팅에 스크롤 focus
     scrollToBottom(): void {
         try {
             this.scrolltop = this.myScrollContainer.nativeElement.scrollHeight;
