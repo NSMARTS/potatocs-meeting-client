@@ -1,8 +1,26 @@
 <div class="enlistedMembers">
     <ul>
-        <li  *ngFor="let enlistedMember_name of enlistedMembers">
-            <span #enlistedMember_span>{{enlistedMember_name}}</span>
+        <li class="enlistedMember_wrap" *ngFor="let enlistedMember_name of enlistedMembers">
+            <div>
+                <span class="enlistedMember_name" #enlistedMember_span>{{enlistedMember_name}}</span>
+                <span class="role">{{role}}</span>
+            </div>
+
+            <button mat-button [matMenuTriggerFor]="menuRef">
+                <mat-icon class="settingIcon">more_vert</mat-icon>
+            </button>
+            <mat-menu #menuRef="matMenu" class="menuCustomize">
+                <div fxFlex fxLayout="row" >
+                    <div (click)="chooseRole('Presenter')">
+                        <button mat-menu-item>Presenter</button>
+                    </div>
+                    <div (click)="chooseRole('Participant')">
+                        <button mat-menu-item>Participant</button>
+                    </div>
+                </div>
+            </mat-menu>
         </li>
     </ul>
+    
     
 </div>

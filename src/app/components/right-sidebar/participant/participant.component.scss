@@ -2,17 +2,89 @@
     display: flex;
     flex-direction: column;
     text-align: center;
-    align-items: center;
     width: 100%;
     z-index: 48;
-    padding-top: 35px;
+    
+    ul {
+        padding: 0;
+    }
+    
 }
 
-ul {
-    padding: 0;
+
+
+.enlistedMember_wrap {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 5px 15px 5px 20px;
+    height: 50px;
 }
 
-li {
+.enlistedMember_wrap > div > span{
+    line-height: 40px;
+    vertical-align: middle;
+}
+
+.enlistedMember_name {
+    font-size: 12px;
+}
+
+.role {
+    margin-left: 10px;
+    padding: 4px 5px;
+    border-radius: 4px;
+    background-color: white;
+    border: 1px solid #666;
+    font-size: 11px;
+    font-weight: normal;
+    color: #333;
+}
+
+.user_role_wrap {
     text-align: center;
-    padding: 10px 0;
+}
+
+
+.user_role_wrap > ul{
+    text-align: center;
+    display: none;
+    position: relative;
+    top: 10px;
+    right: 0;
+    box-shadow: 4px 10px 30px rgb(0 0 0 / 10%);
+    background-color: #fff;
+    border-radius: 4px;
+    cursor: default;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.user_role_wrap > ul > li{
+    display:inline-block; 
+    text-align:center;
+    width: 60px;
+    height: 36px;
+    border-right: 1px solid #eee;
+    line-height: 36px
+}
+
+.user_role_wrap > ul > li:hover {
+    background-color: #f4f4f4;
+    font-weight: 500;
+    color: #333;
+}
+
+.user_role {
+    font-size: 12px;
+}
+
+.settingIcon {
+    position: absolute;
+    right: 15px;
+    line-height: 0;
+}
+
+.settingIcon:hover {
+    cursor: pointer;
 }
