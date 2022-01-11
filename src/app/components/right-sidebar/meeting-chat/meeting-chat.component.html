@@ -22,7 +22,7 @@
 
     
     <div class="textFormContainer">
-        <form  #f="ngForm" (ngSubmit)="f.form.valid && createChat()" novalidate class="submit-form">
+        <form  #f="ngForm" (ngSubmit)="f.form.valid && createChat()" (keyup.enter)="createChat()" novalidate class="submit-form">
             <div class="chattingContainer">
                 <div class="chatInput">
                     <textarea class="textarea-style"  type="text" [(ngModel)]="chatContent" name="first"></textarea>

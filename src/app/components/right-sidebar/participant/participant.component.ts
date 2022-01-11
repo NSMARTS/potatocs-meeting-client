@@ -17,6 +17,8 @@ export class ParticipantComponent implements OnInit {
   enlistedMember_check = []; // li의 이름들을 담은 배열
   checkName = []; // li(enlistedMember)와 현재 접속 중인 참여자 비교할 배열
 
+  role: any = 'Participant';
+
   @ViewChildren('enlistedMember_span') public enlistedMember_spanRef: QueryList<ElementRef>;
 
   constructor(
@@ -43,6 +45,8 @@ export class ParticipantComponent implements OnInit {
 
         }
       });
+
+
   }
 
 
@@ -98,9 +102,11 @@ export class ParticipantComponent implements OnInit {
         }
       })
     })
+  }
 
-    
 
-
+  chooseRole(role) {
+    console.log(role)
+    this.role = role
   }
 }
