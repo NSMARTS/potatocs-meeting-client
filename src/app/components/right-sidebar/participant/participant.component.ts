@@ -68,27 +68,6 @@ export class ParticipantComponent implements OnInit {
                     }
                 }
             });
-
-
-
-        // // 실시간으로 meeitngInfo를 바라보고 있다.
-        // this.meetingInfoService.state$
-        //   .pipe(takeUntil(this.unsubscribe$))
-        //   .subscribe((meetingInfo) => {
-        //     if (meetingInfo) {
-        //       this.enlistedMembers = [];
-
-        //       console.log('[[ meetingInfo ]]', meetingInfo)
-
-        //       meetingInfo.enlistedMembers.forEach(element => {
-        //         // console.log(element.name)
-        //         this.member.push(element.name)
-
-        //       });
-        //       console.log(this.enlistedMembers)
-
-        //     }
-        //   });
     }
 
 
@@ -113,6 +92,7 @@ export class ParticipantComponent implements OnInit {
         this.eventBusService.on('updateParticipants', this.unsubscribe$, async (userName) => {
             
             this.itemIndex = [];
+            this.userName = userName;
             this.participants = Object.keys(userName);
        
 
@@ -129,8 +109,10 @@ export class ParticipantComponent implements OnInit {
             *  값이 있으면 클레스네임 추가                      
             *****************************************************************/            
             await this.enlistedMember_spanRef.toArray().forEach(element => {
+                const innerText = element.nativeElement.innerText // 이름
+                const span = element.nativeElement // element <span></span>
 
-                const innerText = element.nativeElement.innerText // 이름                
+                
                 
                 // 교집합과 li.innerText와 비교하여 return 0, -1 
                 const itemIndex = this.checkName.findIndex((item) => item === innerText);
@@ -145,9 +127,8 @@ export class ParticipantComponent implements OnInit {
                             return 'offLine'
                         }
                     
-                }                
+                }
             })
-            
         })
     }
 
