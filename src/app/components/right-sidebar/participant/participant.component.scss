@@ -88,3 +88,15 @@
 .settingIcon:hover {
     cursor: pointer;
 }
+
+.onLine {
+    color: rgb(70, 113, 255);
+    font-size: 12px;
+    font-weight: 800;
+}
+  
+.offLine {
+    color: rgb(133, 131, 131);
+    font-size: 12px;
+    font-weight: 100;
+}
