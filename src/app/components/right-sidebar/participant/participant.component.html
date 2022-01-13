@@ -1,8 +1,26 @@
 <div class="enlistedMembers">
     <ul>
-        <li  *ngFor="let enlistedMember_name of enlistedMembers">
-            <span #enlistedMember_span>{{enlistedMember_name}}</span>
+        <li class="enlistedMember_wrap" *ngFor="let member of members; let i = index">
+            <div>
+                <span [ngClass]="member.onLine ? 'onLine' : 'offLine'" class="enlistedMember_name" #enlistedMember_span>{{member.name}}</span>
+                <span class="role">{{member.role}}</span>
+            </div>
+
+            <button mat-button [matMenuTriggerFor]="menuRef" *ngIf="member.name==myName">
+                <mat-icon class="settingIcon">more_vert</mat-icon>
+            </button>
+            <mat-menu #menuRef="matMenu" class="menuCustomize">
+                <div fxFlex fxLayout="row" >
+                    <div (click)="chooseRole('Presenter', i)">
+                        <button mat-menu-item>Presenter</button>
+                    </div>
+                    <div (click)="chooseRole('Participant', i)">
+                        <button mat-menu-item>Participant</button>
+                    </div>
+                </div>
+            </mat-menu>
         </li>
     </ul>
-    
 </div>
+
+<!-- *ngIf="member.name==myName" -->

@@ -1,6 +1,6 @@
 {
-	"/api": {
-		"target": "http://localhost:3000",
+	"/apim": {
+		"target": "http://localhost:3400",
 		"secure": false
 	}
 }

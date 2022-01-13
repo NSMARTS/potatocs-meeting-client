@@ -21,12 +21,15 @@ export class RightSidebarComponent implements OnInit, AfterViewInit {
 
   @ViewChildren('enlistedMember_span') public enlistedMember_spanRef: QueryList<ElementRef>;
 
+  selectedIndex = 0;
+
   constructor(
     private eventBusService: EventBusService,
-    private meetingInfoService: MeetingInfoService
+    private meetingInfoService: MeetingInfoService,
   ) { }
 
   ngOnInit(): void {
+    this.selectedIndex = 0;
 
     this.eventBusService.on('whiteBoardClick',this.unsubscribe$, () => {
       console.log('eventBus on whiteBoardClick')
@@ -93,7 +96,62 @@ export class RightSidebarComponent implements OnInit, AfterViewInit {
   //   })
 
     
+// /***************************************************************
+        // *  1.     
+        // *  this.enlistedMember_spanRef.toArray()와 현재 접속중인 참여자
+        // *  이름 교집합 찾아서 enlistedMember_check 배열에 담기                       
+        // *****************************************************************/
+        // this.enlistedMember_spanRef.toArray().forEach(element => {
 
+        //     const innerText = element.nativeElement.innerText
+        //     this.enlistedMember_check.push(innerText)
+
+        //     // console.log(this.enlistedMember_check)
+        // })
+
+
+        // // 새로운 참여자가 들어오면
+        // this.eventBusService.on('updateParticipants', this.unsubscribe$, async (userName) => {
+
+        //     this.itemIndex = [];
+        //     this.userName = userName;
+        //     this.participants = Object.keys(userName);
+
+
+        //     /*************************************************************** 
+        //     *  2.    
+        //     *  this.enlistedMember_spanRef.toArray()와 현재 접속중인 참여자
+        //     *  이름 교집합 찾아서 checkName 배열에 담기                       
+        //     *****************************************************************/
+        //     this.checkName = this.enlistedMember_check.filter(userName => this.participants.includes(userName))
+
+        //     /***************************************************************   
+        //     *  3. 
+        //     *  this.enlistedMember_spanRef.toArray()에서 이름 교집합을 찾아서
+        //     *  값이 있으면 클레스네임 추가                      
+        //     *****************************************************************/            
+        //     await this.enlistedMember_spanRef.toArray().forEach(element => {
+        //         const innerText = element.nativeElement.innerText // 이름
+        //         const span = element.nativeElement // element <span></span>
+
+
+
+        //         // 교집합과 li.innerText와 비교하여 return 0, -1 
+        //         const itemIndex = this.checkName.findIndex((item) => item === innerText);
+
+        //         this.itemIndex.push(itemIndex);
+
+        //         // 이름이 있으면 클레스 네임추가
+        //         for (let index = 0; index < this.itemIndex.length; index++){
+        //             if (this.itemIndex[index] >= 0) {
+        //                     return 'onLine'
+        //                 } else {
+        //                     return 'offLine'
+        //                 }
+
+        //         }
+        //     })
+        // })
 
   }
 }
