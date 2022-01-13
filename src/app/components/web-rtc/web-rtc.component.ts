@@ -23,9 +23,17 @@ import { EventData } from 'src/@wb/services/eventBus/event.class';
 export class WebRTCComponent implements OnInit {
 	roomName: any;
 	meetingId: any;
+
 	userName: any;
+	otherName:any;
+
+	userId: any;
 	name: any;
 	userData: any;
+
+	myName:any;
+	participantsName:any;
+
 	private subscription: Subscription;
 	//   private socket: Socket;
 	public localStream$;
@@ -45,6 +53,10 @@ export class WebRTCComponent implements OnInit {
 	videoConstraints: any;
 	whiteBoardMode = false // whiteBoard Mode Check
 	options: any;
+	meetingInfo;
+
+
+
 	@ViewChild('call') public callRef: ElementRef;
 	get call(): HTMLDivElement {
 		return this.callRef.nativeElement;
@@ -130,6 +142,9 @@ export class WebRTCComponent implements OnInit {
 			.pipe(takeUntil(this.unsubscribe$))
 			.subscribe((meetingInfo) => {
 				if (meetingInfo) {
+
+					this.meetingInfo = meetingInfo;
+
 					const userData = {
 						roomName: meetingInfo._id,
 						userId: meetingInfo.userData._id,
@@ -137,11 +152,14 @@ export class WebRTCComponent implements OnInit {
 					}
 					this.roomName = meetingInfo._id
 					this.userName = meetingInfo.userData.name
+					this.userId = meetingInfo.userData._id
 					console.log(userData)
 					this.userData = userData
 
-				}
-			});
+			}
+			console.log(meetingInfo)
+
+		});
 		/////////////////////////////////////////////////////////////////
 		// const userData = {
 		// 	roomName : this.meetingId,
@@ -149,12 +167,14 @@ export class WebRTCComponent implements OnInit {
 		// 	userId : 
 		// }
 
+		
 
 
 		this.socket.emit('userInfo', this.userData)
 
 		// Socket Code
 		this.socket.on("existingParticipants", async (data) => {
+			console.log(data)
 			this.onExistingParticipants(data);
 			this.eventBusService.emit(new EventData('updateParticipants', this.participants))
 		});
@@ -169,10 +189,12 @@ export class WebRTCComponent implements OnInit {
 
 		});
 		this.socket.on("receiveVideoAnswer", async (data) => {
+			console.log(data)
 			this.receiveVideoResponse(data);
 		});
 		this.socket.on("iceCandidate", async (data) => {
-			this.participants[data.name].rtcPeer.addIceCandidate(data.candidate, function (error) {
+			console.log(data)
+			this.participants[data.userId].rtcPeer.addIceCandidate(data.candidate, function (error) {
 				if (error) {
 					console.error("Error adding candidate: " + error);
 					return;
@@ -187,15 +209,14 @@ export class WebRTCComponent implements OnInit {
 				audio: true,
 				video: {
 					mandatory: {
-						maxWidth: 320,
-						maxFrameRate: 24,
-						minFrameRate: 24
+						width: 320,
+						framerate: { max: 24, min: 24 }
 					}
 				}
 			};
 
 			console.log('stream', this.stream, 'sharing', this.sharing)
-			var participant = this.participants[this.userName];
+			var participant = this.participants[this.userId];
 			var video = participant.getVideoElement();
 			console.log(video)
 			if (this.sharing) {
@@ -225,9 +246,9 @@ export class WebRTCComponent implements OnInit {
 
 
 		this.socket.on("updateremoteVideo", (user) => {
-			var participant = this.participants[user.name];
+			var participant = this.participants[user.userId];
 			participant.dispose();
-			delete this.participants[user.name];
+			delete this.participants[user.userId];
 			// this.eventBusService.emit(new EventData('updateParticipants', this.participants))
 		});
 
@@ -246,13 +267,14 @@ export class WebRTCComponent implements OnInit {
 			this.handleBitrateClick(data)
 
 		})
+
 	}
 
 
 	onNewParticipant(request) {
-		this.receiveVideo(request.name);
+		this.receiveVideo(request);
 
-		this.eventBusService.emit(new EventData('newWhiteBoardOverlay', request.name));
+		this.eventBusService.emit(new EventData('newWhiteBoardOverlay', request.userId));
 	}
 
 	/**
@@ -271,10 +293,10 @@ export class WebRTCComponent implements OnInit {
 	//https://github.com/peterkhang/ionic-demo/blob/a5dc3bef1067eb93c2070b4d8feb233ac6d3427a/src/app/pages/videoCall/video-call.page.ts#L169
 	async onExistingParticipants(msg) {
 
-		var participant = new Participant(this.socketService, this.userName, this.userName, this.participantsElement);
-		this.participants[this.userName] = participant;
+		var participant = new Participant(this.socketService, this.userId, this.userId, this.userName,  this.participantsElement);
+		this.participants[this.userId] = participant;
 
-		this.participantsService.updateParticipants(this.participants[this.userName]);
+		this.participantsService.updateParticipants(this.participants[this.userId]);
 		var video = participant.getVideoElement();
 
 
@@ -457,9 +479,13 @@ export class WebRTCComponent implements OnInit {
 	}
 
 	receiveVideo(sender) {
-		var participant = new Participant(this.socketService, this.userName, sender, this.participantsElement);
-		this.participants[sender] = participant;
+
+		var participant = new Participant(this.socketService, this.userId, sender.userId, sender.name, this.participantsElement);
+		this.participants[sender.userId] = participant;
 		var video = participant.getVideoElement();
+
+
+		console.log(sender)
 
 		this.eventBusService.emit(new EventData('updateParticipants', this.participants))
 
@@ -527,51 +553,52 @@ export class WebRTCComponent implements OnInit {
 	}
 
 	receiveVideoResponse(result) {
-		this.participants[result.name].rtcPeer.processAnswer(result.sdpAnswer, function (error) {
+		console.log(result.userId)
+		this.participants[result.userId].rtcPeer.processAnswer(result.sdpAnswer, function (error) {
 			if (error) return console.error(error);
 		});
 		if (this.muted) {
-			this.participants[result.name].rtcPeer.audioEnabled = false;
+			this.participants[result.userId].rtcPeer.audioEnabled = false;
 		}
 		if (this.cameraOff) {
-			this.participants[result.name].rtcPeer.videoEnabled = false;
+			this.participants[result.userId].rtcPeer.videoEnabled = false;
 		}
 
-		var participant = this.participants[result.name];
-		var isExist = participant.getContainer(result.name);
+		var participant = this.participants[result.userId];
+		var isExist = participant.getContainer(result.userId);
 
 
 		if (isExist === "bigvideo") {
-			document.getElementById(this.userName).className = "bigvideo";
+			document.getElementById(this.userId).className = "bigvideo";
 		}
 
 	}
 
 	onParticipantLeft(request) {
-		console.log('Participant ' + request.name + ' left');
-		var participant = this.participants[request.name];
+		console.log('Participant ' + request.userId + ' left');
+		var participant = this.participants[request.userId];
 
 		// var isExist = document.getElementById(request.name).className;
 		// var participantClass = new Participant(this.socketService, request.name, this.participantsElement)
-		var isExist = participant.getContainer(request.name);
+		var isExist = participant.getContainer(request.userId);
 
 		if (this.whiteBoardMode == false) {
 			if (isExist === "bigvideo") {
-				document.getElementById(this.userName).className = "bigvideo";
+				document.getElementById(this.userId).className = "bigvideo";
 			}
 		}
 
-		const filterd = participants_name.filter((data) => data !== request.name)
+		const filterd = participants_name.filter((data) => data !== request.userId)
 		participants_name = filterd;
 		participant.dispose();
-		delete this.participants[request.name];
+		delete this.participants[request.userId];
 
-		console.log('Participant ' + request.name + ' left');
+		console.log('Participant ' + request.userId + ' left');
 	}
 
 	handleLeaveRoomClick() {
 		console.log('leaveRoom 실행')
-		const leaveData = { roomname: this.roomName, username: this.userName }
+		const leaveData = { roomname: this.roomName, username: this.userId }
 		this.socket.emit("leaveRoom", leaveData);
 
 		// 나중에 수정 리다이렉트
@@ -623,18 +650,18 @@ export class WebRTCComponent implements OnInit {
 			console.log('Camera On')
 			this.cameraBtn.innerText = "Camera Off";
 			this.cameraOff = false;
-			this.participants[this.userName].rtcPeer.videoEnabled = true;
+			this.participants[this.userId].rtcPeer.videoEnabled = true;
 		} else {
 			console.log('Camera Off')
 			this.cameraBtn.innerText = "Camera On";
 			this.cameraOff = true;
-			this.participants[this.userName].rtcPeer.videoEnabled = false;
+			this.participants[this.userId].rtcPeer.videoEnabled = false;
 		}
 	}
 
 	// 화면 공유
 	handleSharingClick() {
-		var video = this.call.querySelector('#video-' + this.userName);
+		var video = this.call.querySelector('#video-' + this.userId);
 		console.log('handleSharingClick-------video')
 		console.log(video)
 
@@ -668,12 +695,12 @@ export class WebRTCComponent implements OnInit {
 		if (this.muted) {
 			// this.muteBtn.innerText = "Mute";
 			this.muted = false;
-			this.participants[this.userName].rtcPeer.audioEnabled = true;
+			this.participants[this.userId].rtcPeer.audioEnabled = true;
 			console.log("음소거 해제")
 		} else {
 			// this.muteBtn.innerText = "Unmute";
 			this.muted = true;
-			this.participants[this.userName].rtcPeer.audioEnabled = false;
+			this.participants[this.userId].rtcPeer.audioEnabled = false;
 			console.log("음소거")
 		}
 	}
@@ -694,28 +721,28 @@ export class WebRTCComponent implements OnInit {
 
 var participants_name = [];
 
-function checkClass(names) {
-	names.forEach(name => {
-		var isExist = document.getElementById(name).className;
+function checkClass(userids) {
+	userids.forEach(userid => {
+		var isExist = document.getElementById(userid).className;
 
 		if (isExist === "bigvideo") {
-			document.getElementById(name).classList.remove("bigvideo");
+			document.getElementById(userid).classList.remove("bigvideo");
 		}
 	});
 
-	console.log(names)
+	console.log(userids)
 }
 
 
 
-function Participant(socketService, userName, name, participants) {
+function Participant(socketService, userId, userid, userName, participants) {
 	const socket = socketService.socket;
-	participants_name.push(name);
+	participants_name.push(userid);
 
-	this.name = name;
+	this.userid = userid;
 	var container = document.createElement('div');
 
-	container.id = name;
+	container.id = userid;
 
 	var p = document.createElement('p');
 	var video = document.createElement('video');
@@ -723,14 +750,14 @@ function Participant(socketService, userName, name, participants) {
 	container.appendChild(video);
 	container.appendChild(p);
 
-	if (userName === name) {
+	if (userId === userid) {
 		container.className = "bigvideo";
 	}
 
 	participants.appendChild(container);
 	document.getElementById('participants').appendChild(container);
 
-	p.appendChild(document.createTextNode(name));
+	p.appendChild(document.createTextNode(userName));
 
 	container.onclick = function () {
 		checkClass(participants_name);
@@ -738,7 +765,7 @@ function Participant(socketService, userName, name, participants) {
 	}
 
 
-	video.id = 'video-' + name;
+	video.id = 'video-' + userid;
 	video.autoplay = true;
 	video.controls = false;
 
@@ -750,8 +777,8 @@ function Participant(socketService, userName, name, participants) {
 		return video;
 	}
 
-	this.getContainer = function (name) {
-		var isExist = document.getElementById(name).className;
+	this.getContainer = function (userid) {
+		var isExist = document.getElementById(userid).className;
 		// isExist = 'bigvideo'
 		console.log(isExist)
 		return isExist;
@@ -762,7 +789,7 @@ function Participant(socketService, userName, name, participants) {
 		console.log('Invoking SDP offer callback function');
 		var msg = {
 			id: "receiveVideoFrom",
-			sender: name,
+			sender: userid,
 			sdpOffer: offerSdp
 		};
 		sendMessage(msg);
@@ -775,7 +802,7 @@ function Participant(socketService, userName, name, participants) {
 		var message = {
 			id: 'onIceCandidate',
 			candidate: candidate,
-			sender: name
+			sender: userid
 		};
 		sendMessage(message);
 	}
@@ -783,7 +810,7 @@ function Participant(socketService, userName, name, participants) {
 	Object.defineProperty(this, 'rtcPeer', { writable: true });
 
 	this.dispose = function () {
-		console.log('Disposing participant ' + this.name);
+		console.log('Disposing participant ' + this.userid);
 		this.rtcPeer.dispose();
 		// container.parentNode.removeChild(container);
 		container.parentNode.removeChild(container);

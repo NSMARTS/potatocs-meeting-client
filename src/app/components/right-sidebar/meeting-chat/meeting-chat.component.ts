@@ -87,8 +87,6 @@ export class MeetingChatComponent implements OnInit {
             chatContent: this.chatContent
         }
 
-        console.log(data)
-
         // data를 자신을 포함하여 socket emit
         this.meetingService.createChat(data).subscribe((data) => {
             this.socket.emit('sendChat', data);
@@ -109,7 +107,6 @@ export class MeetingChatComponent implements OnInit {
             var chat = Object.values(meetingChat);
             // 배열의 길이만큼 chatInMeeting[] 안에 넣어준다.
             chat.forEach(element => {
-                console.log(element)
                 // 받아온 채팅 객체 배열에 넣기
                 this.chatInMeeting.push(element)
             });
