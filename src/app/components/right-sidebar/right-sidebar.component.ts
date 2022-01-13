@@ -25,7 +25,7 @@ export class RightSidebarComponent implements OnInit, AfterViewInit {
 
   constructor(
     private eventBusService: EventBusService,
-    private meetingInfoService: MeetingInfoService
+    private meetingInfoService: MeetingInfoService,
   ) { }
 
   ngOnInit(): void {
