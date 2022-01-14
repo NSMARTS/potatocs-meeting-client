@@ -58,10 +58,10 @@ export class MeetingService {
 
 
 	////////////////////////////////////////////////////
-	// 참여자별 권한 가져오기
-	getRole(meetingId) {
-		console.log('[API] -----> getRole');
-		return this.http.get('/apim/v1/collab/getRole/', {params: meetingId});
+	// 참여자별 상태 정보 가져오기
+	getParticipantState(meetingId) {
+		console.log('[API] -----> getParticipantState');
+		return this.http.get('/apim/v1/collab/getParticipantState/', {params: meetingId});
 	}
 
 	// 참여자별 onLine 유무
@@ -74,5 +74,11 @@ export class MeetingService {
 	getOnlineFalse(userOnlineData) {
 		console.log('[API] -----> getOnlineFalse');
 		return this.http.get('/apim/v1/collab/getOnlineFalse/', {params: userOnlineData});
+	}
+
+	// 참여자별 역할 설정
+	getRoleUpdate(userRoleData) {
+		console.log('[API] -----> getRoleUpdate');
+		return this.http.get('/apim/v1/collab/getRoleUpdate/', {params: userRoleData});
 	}
 }

@@ -6,7 +6,7 @@
                 <span class="role">{{currentMember.role}}</span>
             </div>
 
-            <button mat-button [matMenuTriggerFor]="menuRef" *ngIf="currentMember.name==myName">
+            <button mat-button [matMenuTriggerFor]="menuRef" *ngIf="currentMember.member_id==userId">
                 <mat-icon class="settingIcon">more_vert</mat-icon>
             </button>
             <mat-menu #menuRef="matMenu" class="menuCustomize">
