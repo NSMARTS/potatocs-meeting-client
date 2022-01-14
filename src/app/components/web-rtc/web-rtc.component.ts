@@ -183,9 +183,9 @@ export class WebRTCComponent implements OnInit {
 		});
 		// 나중에 구현
 		this.socket.on("participantLeft", async (data) => {
-			console.log("participantLeft---------------")
+			console.log("participantLeft---------------", data)
 			this.onParticipantLeft(data);
-			this.eventBusService.emit(new EventData('updateParticipants', this.participants))
+			this.eventBusService.emit(new EventData('participantLeft', data))
 
 		});
 		this.socket.on("receiveVideoAnswer", async (data) => {
@@ -329,7 +329,6 @@ export class WebRTCComponent implements OnInit {
 		// https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
 		await navigator.mediaDevices.getUserMedia(this.constraints)
 			.then((screenStream) => {
-				console.log('aaaa')
 				this.localStream = screenStream;	 
 			}).catch(function (error) {
 				console.log('getUserMedia error: ' + error.name, error);
@@ -445,7 +444,8 @@ export class WebRTCComponent implements OnInit {
 				console.log('whiteBoard Mode On')
 
 				// 내 local video와 name을 가져오기 위해 container 통째로
-				var videoOverlay = document.getElementById(this.userName)
+				var videoOverlay = document.getElementById(this.userId)
+				console.log(videoOverlay)
 				videoOverlay.className = 'videoOverlay'
 				var videoOverlay_container = document.getElementById('videoOverlay_container')
 				videoOverlay_container.append(videoOverlay)
@@ -454,7 +454,7 @@ export class WebRTCComponent implements OnInit {
 				this.whiteBoardMode = false
 				console.log('whiteBoard Mode Off')
 
-				var video = document.getElementById(this.userName) // 내 local video
+				var video = document.getElementById(this.userId) // 내 local video
 				video.classList.remove("videoOverlay");
 
 				var videoOverlay = document.getElementById('participants')
@@ -515,7 +515,7 @@ export class WebRTCComponent implements OnInit {
 			if (this.whiteBoardMode == true) {
 				console.log('whiteBoard Mode On')
 
-				var receiveVideoOverlay = document.getElementById(sender)
+				var receiveVideoOverlay = document.getElementById(sender.userId)
 				receiveVideoOverlay.className = 'receiveVideoOverlay'
 				var videoOverlay_container = document.getElementById('videoOverlay_container')
 				videoOverlay_container.append(receiveVideoOverlay)
@@ -524,7 +524,7 @@ export class WebRTCComponent implements OnInit {
 				this.whiteBoardMode = false
 				console.log('whiteBoard Mode Off')
 
-				var video = document.getElementById(sender) // 상대방 video
+				var video = document.getElementById(sender.userId) // 상대방 video
 				video.classList.remove("receiveVideoOverlay");
 
 				var receiveVideoOverlay = document.getElementById('participants')
@@ -542,7 +542,7 @@ export class WebRTCComponent implements OnInit {
 
 			if (this.whiteBoardMode == true) {
 				// 내 local video와 name을 가져오기 위해 container 통째로
-				var videoOverlay = document.getElementById(sender)
+				var videoOverlay = document.getElementById(sender.userId)
 				videoOverlay.className = 'videoOverlay'
 				var videoOverlay_container = document.getElementById('videoOverlay_container')
 				videoOverlay_container.append(videoOverlay)

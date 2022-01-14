@@ -30,7 +30,7 @@ export class MeetingService {
 		return this.http.get('/apim/v1/collab/getUserData/' + userId);
 	}
 
-
+	////////////////////////////////////////////////////
 	// 채팅 생성
 	createChat(data) {
 		console.log('[API] -----> createChat');
@@ -54,5 +54,25 @@ export class MeetingService {
 		console.log('[API] -----> deleteAllOfChat');
 		return this.http.delete('/apim/v1/collab/deleteAllOfChat/');
 	}
+	////////////////////////////////////////////////////
 
+
+	////////////////////////////////////////////////////
+	// 참여자별 권한 가져오기
+	getRole(meetingId) {
+		console.log('[API] -----> getRole');
+		return this.http.get('/apim/v1/collab/getRole/', {params: meetingId});
+	}
+
+	// 참여자별 onLine 유무
+	getOnlineTrue(userOnlineData) {
+		console.log('[API] -----> getOnlineTrue');
+		return this.http.get('/apim/v1/collab/getOnlineTrue/', {params: userOnlineData});
+	}
+
+	// 참여자별 onLine 유무
+	getOnlineFalse(userOnlineData) {
+		console.log('[API] -----> getOnlineFalse');
+		return this.http.get('/apim/v1/collab/getOnlineFalse/', {params: userOnlineData});
+	}
 }

@@ -77,8 +77,7 @@ export class MeetingChatComponent implements OnInit {
 
     // 채팅 생성
     createChat() {
-        console.log(this.chatContent)
-
+        
         const data = {
             meetingTitle: this.meetingTitle,
             meetingId: this.meetingId,
