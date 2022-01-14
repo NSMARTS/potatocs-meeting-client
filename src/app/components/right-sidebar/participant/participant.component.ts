@@ -58,25 +58,30 @@ export class ParticipantComponent implements OnInit {
                 }
             });
 
-        // 사용자별 권한 가져오기
-        this.getRole();
+        // 참여자별 상태 정보 가져오기
+        this.getParticipantState();
 
+
+        // 참여자가 나갈 때 체크
         this.eventBusService.on("participantLeft", this.unsubscribe$, (data) => {
-       
+
             // userId와 meetingId를 이용하여 on/offLine 판단
             const userOnlineData = {
-                meetingId : this.meetingId,
-                userId : data.userId
+                meetingId: this.meetingId,
+                userId: data.userId
             }
 
             // 새로 들어온 참여자들 online: false로
-            this.meetingService.getOnlineFalse(userOnlineData).subscribe((data)=> {
+            this.meetingService.getOnlineFalse(userOnlineData).subscribe(() => {
 
-                // 사용자별 권한 다시 가져오기
-                this.getRole();
-
-                console.log(this.currentMembers)
+                // 참여자별 상태 정보 가져오기
+                this.getParticipantState();
             })
+        })
+
+        // 자신의 role 업데이트 시 자신을 제외한 같은 room (meetingId로 판단)에 있는 사람들 role 업데이트
+        this.socket.on('refreshRole', () => {
+            this.getParticipantState();
         })
 
     }
@@ -88,22 +93,41 @@ export class ParticipantComponent implements OnInit {
         this.eventBusService.on('updateParticipants', this.unsubscribe$, async (userId) => {
 
             this.participants = Object.keys(userId);
-            console.log(this.participants)
-
+ 
             // userId와 meetingId를 이용하여 on/offLine 판단
             const userOnlineData = {
-                meetingId : this.meetingId,
-                userId : this.participants
+                meetingId: this.meetingId,
+                userId: this.participants
             }
 
             // 새로 들어온 참여자들 online: true로
-            this.meetingService.getOnlineTrue(userOnlineData).subscribe((data)=> {
+            this.meetingService.getOnlineTrue(userOnlineData).subscribe(() => {
 
-                // 사용자별 권한 다시 가져오기
-                this.getRole();
-
-                console.log(this.currentMembers)
+                // 참여자별 상태 정보 가져오기
+                this.getParticipantState();
             })
+        })
+    }
+
+    // 참여자별 상태 정보 가져오기
+    getParticipantState() {
+
+        const meetingId = this.meetingId
+        this.meetingService.getParticipantState({ meetingId }).subscribe((data) => {
+            this.currentMembers = [];
+
+            this.currentMembers = data[0].currentMembers // console [{…}, {…}, {…}, {…} ...] 
+
+            // meetingInfo.enlistedMembers와 현재 currentMembers의 userId값 비교 후 
+            // 같은 userId를 찾으면 currentMembers[index]에 본인의 이름을 추가해준다.
+            this.meetingInfo.enlistedMembers.forEach((enlistedMembers, index) => {
+                this.currentMembers.forEach(currentMembers => {
+                    if (enlistedMembers._id == currentMembers.member_id) {
+                        this.currentMembers[index].name = this.meetingInfo.enlistedMembers[index].name
+                    }
+
+                });
+            });
         })
     }
 
@@ -111,41 +135,20 @@ export class ParticipantComponent implements OnInit {
 
     // 역할 [ Presenter / Participant ] 을 선택하면 변경
     chooseRole(role, i) {
-        // this.members[i].role = role;
+        this.currentMembers[i].role = role;
 
-        // const meetingInfo = {
-        //     role: this.members
-        // }
-        // console.log(meetingInfo)
+        // userId와 meetingId를 이용하여 on/offLine 판단
+        const userRoleData = {
+            meetingId: this.meetingId,
+            userId: this.userId,
+            role: role
+        }
 
-        // // 역할을 meetingInfo에 저장
-        // this.meetingInfoService.setMeetingInfo(meetingInfo);
+        this.meetingService.getRoleUpdate(userRoleData).subscribe(()=> {
+            // 본인 role 업데이트 시 같은 room의 다른 사람도 실시간으로 상대방 role 업데이트
+            this.socket.emit('roleUpdate', this.meetingId);
 
-        // // 역할 선택 시 onLine / offLine user 판단
-        // this.eventBusService.emit(new EventData('updateParticipants', this.userName));
-        // console.log(this.userName)
-    }
-
-
-    getRole() {
-        
-        const meetingId = this.meetingId
-        this.meetingService.getRole({ meetingId }).subscribe((data) => {
-            this.currentMembers = [];
-
-            // [{…}, {…}, {…}, {…} ...]
-            this.currentMembers = data[0].currentMembers
-   
-            this.meetingInfo.enlistedMembers.forEach((enlistedMembers, index)=> {
-                this.currentMembers.forEach(currentMembers => {
-                    if(enlistedMembers._id == currentMembers.member_id){
-                        this.currentMembers[index].name = this.meetingInfo.enlistedMembers[index].name
-                    }
-                    
-                });
-            });
         })
-
     }
 }
 
