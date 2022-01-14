@@ -51,3 +51,18 @@
 .thumbnail-container::-webkit-scrollbar {
     display: none;
 }
+
+
+/*  cursor: not-allowed와 pointer-events:none은 
+    한 곳에서 사용 못하기 때문에  
+    부모에게는 커서 모양, 자식에게는 클릭 기능 제한
+*/
+.wrap {
+    cursor : not-allowed;
+}
+
+.participant {
+    /* 클릭 불가능 none */
+    pointer-events : none;
+}
+

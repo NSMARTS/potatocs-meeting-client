@@ -26,10 +26,12 @@ export class ParticipantComponent implements OnInit {
     myName;
     userName;
     meetingInfo;
+    
 
     public meetingId;
     public userId;
     public currentMembers;
+    public myRole;
 
     @ViewChildren('enlistedMember_span') public enlistedMember_spanRef: QueryList<ElementRef>;
 
@@ -43,8 +45,6 @@ export class ParticipantComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
-
 
         // 실시간으로 meeitngInfo를 바라보고 있다.
         this.meetingInfoService.state$
@@ -62,6 +62,7 @@ export class ParticipantComponent implements OnInit {
         this.getParticipantState();
 
 
+        /////////////////////////////////////////////////////////////
         // 참여자가 나갈 때 체크
         this.eventBusService.on("participantLeft", this.unsubscribe$, (data) => {
 
@@ -77,23 +78,50 @@ export class ParticipantComponent implements OnInit {
                 // 참여자별 상태 정보 가져오기
                 this.getParticipantState();
             })
-        })
+            
+                
+                // 참여자가 나가면 role 'Presenter'로 초기화
+                const userRoleData = {
+                    meetingId: this.meetingId,
+                    userId: data.userId,
+                    role: 'Presenter'
+                }
 
+                this.meetingService.getRoleUpdate(userRoleData).subscribe(() => {            
+                })
+        })
+        /////////////////////////////////////////////////////////////
+
+        
+
+        /////////////////////////////////////////////////////////////
         // 자신의 role 업데이트 시 자신을 제외한 같은 room (meetingId로 판단)에 있는 사람들 role 업데이트
         this.socket.on('refreshRole', () => {
             this.getParticipantState();
         })
+        /////////////////////////////////////////////////////////////
 
+
+        // 참여자가 나가면 role 'Presenter'로 초기화
+        const userRoleData = {
+            meetingId: this.meetingId,
+            userId: this.userId ,
+            role: 'Presenter'
+        }
+
+        this.meetingService.getRoleUpdate(userRoleData).subscribe(() => {            
+        })
     }
 
 
     ngAfterViewInit(): void {
 
+        /////////////////////////////////////////////////////////////
         // 새로운 참여자가 들어오면 실시간 체크
         this.eventBusService.on('updateParticipants', this.unsubscribe$, async (userId) => {
 
             this.participants = Object.keys(userId);
- 
+
             // userId와 meetingId를 이용하여 on/offLine 판단
             const userOnlineData = {
                 meetingId: this.meetingId,
@@ -107,8 +135,11 @@ export class ParticipantComponent implements OnInit {
                 this.getParticipantState();
             })
         })
+        /////////////////////////////////////////////////////////////
     }
 
+
+    /////////////////////////////////////////////////////////////
     // 참여자별 상태 정보 가져오기
     getParticipantState() {
 
@@ -130,25 +161,45 @@ export class ParticipantComponent implements OnInit {
             });
         })
     }
+    /////////////////////////////////////////////////////////////
 
 
 
-    // 역할 [ Presenter / Participant ] 을 선택하면 변경
+    /////////////////////////////////////////////////////////////
+    // role 변경
     chooseRole(role, i) {
         this.currentMembers[i].role = role;
 
-        // userId와 meetingId를 이용하여 on/offLine 판단
         const userRoleData = {
             meetingId: this.meetingId,
             userId: this.userId,
             role: role
         }
 
-        this.meetingService.getRoleUpdate(userRoleData).subscribe(()=> {
+        // userId와 meetingId를 이용하여 role 업데이트
+        this.meetingService.getRoleUpdate(userRoleData).subscribe(() => {
+
             // 본인 role 업데이트 시 같은 room의 다른 사람도 실시간으로 상대방 role 업데이트
             this.socket.emit('roleUpdate', this.meetingId);
 
+
+            // 본인 state만 찾아서 Participant일 경우 권한 막기
+            this.currentMembers.forEach((element, index) => {
+                if (element.member_id == this.userId) {
+                    const data = {
+                        role : element.role
+                    }
+                    this.myRole = data;
+                    this.eventBusService.emit(new EventData('myRole', data));
+                }
+            });
         })
+
+
     }
+    /////////////////////////////////////////////////////////////
+    
+
+
 }
 

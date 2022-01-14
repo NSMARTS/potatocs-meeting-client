@@ -46,6 +46,7 @@ export class BoardFileViewComponent implements OnInit {
 
     private socket;
     meetingId: any;
+    myRole: any; // 나의 역할(권한)
 
 
     documentInfo = [];
@@ -71,6 +72,14 @@ export class BoardFileViewComponent implements OnInit {
         ---------------------------------------------*/
         this.socket.on('sync:docChange', (docId) => {
             this.viewInfoService.changeToThumbnailView(docId);
+        })
+ 
+        /*-------------------------------------------
+            role에 따라 권한 설정
+        ---------------------------------------------*/
+        this.eventBusService.on('myRole', this.unsubscribe$, (myRole) => {
+            this.myRole = myRole.role
+            console.log(this.myRole)
         })
 
     }

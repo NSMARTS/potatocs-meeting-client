@@ -60,7 +60,6 @@ export class MeetingChatComponent implements OnInit {
 
         // socket에서 받아온 채팅 data
         this.socket.on('receiveChatData', (chatData) => {
-            console.log(chatData)
             // 받아온 채팅 객체 배열에 넣기
             this.chatInMeeting.push(chatData)
         });
@@ -109,8 +108,6 @@ export class MeetingChatComponent implements OnInit {
                 // 받아온 채팅 객체 배열에 넣기
                 this.chatInMeeting.push(element)
             });
-
-            console.log('불러오기', this.chatInMeeting)
         })
     }
 
