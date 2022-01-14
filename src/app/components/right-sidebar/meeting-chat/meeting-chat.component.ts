@@ -68,8 +68,11 @@ export class MeetingChatComponent implements OnInit {
         this.socket.on('refreshChat', () => {
             this.getMeetingChat();
         })
+    }
 
-
+    ngOnDestory(): void {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
 

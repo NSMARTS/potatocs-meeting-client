@@ -18,16 +18,9 @@ export class ParticipantComponent implements OnInit {
 
 
     participants = []; // 현재 접속 중인 참여자
-    enlistedMembers = []; // 미팅에 허가 된 멤버들
-    enlistedMember_check = []; // li의 이름들을 담은 배열
-    checkName = []; // li(enlistedMember)와 현재 접속 중인 참여자 비교할 배열
 
-    members = [];
-    myName;
-    userName;
     meetingInfo;
     
-
     public meetingId;
     public userId;
     public currentMembers;
@@ -54,12 +47,14 @@ export class ParticipantComponent implements OnInit {
                     console.log('[[ meetingInfo ]]', meetingInfo)
                     this.meetingId = meetingInfo._id;
                     this.userId = meetingInfo.userData._id;
-                    this.myName = meetingInfo.userData.name;
                 }
             });
 
+        /////////////////////////////////////////////////////////////
         // 참여자별 상태 정보 가져오기
         this.getParticipantState();
+        /////////////////////////////////////////////////////////////
+
 
 
         /////////////////////////////////////////////////////////////
@@ -79,7 +74,6 @@ export class ParticipantComponent implements OnInit {
                 this.getParticipantState();
             })
             
-                
                 // 참여자가 나가면 role 'Presenter'로 초기화
                 const userRoleData = {
                     meetingId: this.meetingId,
@@ -102,7 +96,10 @@ export class ParticipantComponent implements OnInit {
         /////////////////////////////////////////////////////////////
 
 
-        // 참여자가 나가면 role 'Presenter'로 초기화
+
+
+        /////////////////////////////////////////////////////////////
+        // 새로고침 시 Presenter로 초기화
         const userRoleData = {
             meetingId: this.meetingId,
             userId: this.userId ,
@@ -111,6 +108,13 @@ export class ParticipantComponent implements OnInit {
 
         this.meetingService.getRoleUpdate(userRoleData).subscribe(() => {            
         })
+         /////////////////////////////////////////////////////////////
+    }
+
+
+    ngOnDestory(): void {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
 

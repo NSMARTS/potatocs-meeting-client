@@ -79,7 +79,6 @@ export class BoardFileViewComponent implements OnInit {
         ---------------------------------------------*/
         this.eventBusService.on('myRole', this.unsubscribe$, (myRole) => {
             this.myRole = myRole.role
-            console.log(this.myRole)
         })
 
     }
