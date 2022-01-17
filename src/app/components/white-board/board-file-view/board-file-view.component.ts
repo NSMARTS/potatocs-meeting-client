@@ -61,10 +61,18 @@ export class BoardFileViewComponent implements OnInit {
             .pipe(takeUntil(this.unsubscribe$), pluck('documentInfo'), distinctUntilChanged())
             .subscribe(async (documentInfo) => {
                 this.documentInfo = documentInfo;
+                console.log(this.documentInfo)
                 await new Promise(res => setTimeout(res, 0));
 
                 this.renderFileList(documentInfo);
             });
+
+        /*-------------------------------------------
+            role에 따라 권한 설정
+        ---------------------------------------------*/
+        this.eventBusService.on('myRole', this.unsubscribe$, (myRole) => {
+            this.myRole = myRole.role
+        })
 
 
         /*-------------------------------------------
@@ -73,14 +81,6 @@ export class BoardFileViewComponent implements OnInit {
         this.socket.on('sync:docChange', (docId) => {
             this.viewInfoService.changeToThumbnailView(docId);
         })
- 
-        /*-------------------------------------------
-            role에 따라 권한 설정
-        ---------------------------------------------*/
-        this.eventBusService.on('myRole', this.unsubscribe$, (myRole) => {
-            this.myRole = myRole.role
-        })
-
     }
 
     ngOnDestory(): void {

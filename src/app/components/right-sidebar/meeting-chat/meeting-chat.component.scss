@@ -6,7 +6,7 @@
     // height:calc(100vh - 300px)
 }
 .chatContainer {
-    height:calc(100vh - 300px);
+    height:calc(100vh - 280px);
     overflow: auto;
     font-size: 13px;
     line-height: 1.4;
@@ -164,4 +164,9 @@
 
 .chat-checkBox {
     padding-left: 16px;
+}
+
+.whiteBoardMode {
+    width: 300px;
+    height:calc(100vh - 350px);
 }

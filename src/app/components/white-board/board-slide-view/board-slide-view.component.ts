@@ -89,6 +89,15 @@ export class BoardSlideViewComponent implements OnInit {
 		// container Scroll, Size, 판서event
 		this.eventBusListeners();
 
+
+		/*-------------------------------------------
+            role에 따라 권한 설정
+        ---------------------------------------------*/
+        this.eventBusService.on('myRole', this.unsubscribe$, (myRole) => {
+            this.myRole = myRole.role
+        })
+
+
 		/*-------------------------------------------
 			page 전환 하는 경우 sync
 		---------------------------------------------*/
@@ -194,7 +203,11 @@ export class BoardSlideViewComponent implements OnInit {
 			meetingId: this.meetingId,
 			pageNum: pageNum
 		}
-		this.socket.emit('sync:page', data)
+		
+		// Participant 모드 일 경우 sync 기능 적용 제외
+		if(this.myRole != 'Participant'){
+			this.socket.emit('sync:page', data)
+		}
 	}
 
 
@@ -207,7 +220,11 @@ export class BoardSlideViewComponent implements OnInit {
 		const data = {
 			meetingId: this.meetingId,
 		}
-		this.socket.emit('sync:FileList', (data))
+
+		// Participant 모드 일 경우 sync 기능 적용 제외
+		if(this.myRole != 'Participant'){
+			this.socket.emit('sync:FileList', (data))
+		}
 	}
 
 

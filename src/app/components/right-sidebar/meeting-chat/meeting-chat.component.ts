@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { EventBusService } from 'src/@wb/services/eventBus/event-bus.service';
 import { MeetingInfoService } from 'src/@wb/store/meeting-info.service';
@@ -13,10 +13,11 @@ import { SocketioService } from 'src/app/services/socketio/socketio.service';
     templateUrl: './meeting-chat.component.html',
     styleUrls: ['./meeting-chat.component.scss']
 })
-export class MeetingChatComponent implements OnInit {
+export class MeetingChatComponent implements OnInit, AfterViewChecked {
 
     private socket;
     private unsubscribe$ = new Subject<void>();
+    whiteBoardMode = false;
 
     public chatInMeeting = [];
     public meetingTitle;
@@ -40,6 +41,9 @@ export class MeetingChatComponent implements OnInit {
     }
 
     ngOnInit(): void {
+
+        // 마지막 채팅에 스크롤 focus
+        this.scrollToBottom();
 
         // 현재 meeting에 접속 중인 유저정보, 미팅정보 가져오기
         this.meetingInfoService.state$
@@ -68,6 +72,22 @@ export class MeetingChatComponent implements OnInit {
         this.socket.on('refreshChat', () => {
             this.getMeetingChat();
         })
+
+
+        this.eventBusService.on('whiteBoardClick',this.unsubscribe$, () => {
+            console.log('eventBus on whiteBoardClick')
+            if (this.whiteBoardMode == false) {
+              this.whiteBoardMode = true;
+            } else {
+              this.whiteBoardMode = false
+            }
+          })
+      
+    }
+
+    // 마지막 채팅에 스크롤 focus
+    ngAfterViewChecked() {
+        this.scrollToBottom();
     }
 
     ngOnDestory(): void {
@@ -134,9 +154,11 @@ export class MeetingChatComponent implements OnInit {
 
 
     // 마지막 채팅에 스크롤 focus
+    // http://daplus.net/scroll-angular-2-%EC%95%84%EB%9E%98%EB%A1%9C-%EC%8A%A4%ED%81%AC%EB%A1%A4-%EC%B1%84%ED%8C%85-%EC%8A%A4%ED%83%80%EC%9D%BC/
     scrollToBottom(): void {
         try {
-            this.scrolltop = this.myScrollContainer.nativeElement.scrollHeight;
+            // this.scrolltop = this.myScrollContainer.nativeElement.scrollHeight;
+            this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
         } catch (err) { }
     }
 }

@@ -7,8 +7,8 @@
                 <mat-icon>{{whiteBoardIcon}}</mat-icon>
             </button>
         </li>
-        <li>
-            <button #sharingBtn class="btn" mat-icon-button (click)="handleSharingClick()">
+        <li [ngClass]="myRole == 'Participant' ? 'wrap': '' " >
+            <button [ngClass]="myRole == 'Participant' ? 'participant': '' " #sharingBtn class="btn" mat-icon-button (click)="handleSharingClick()">
                 <mat-icon >{{shareIcon}}</mat-icon>
             </button>           
             <!-- <mat-icon>videocam_off</mat-icon> -->
