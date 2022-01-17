@@ -1,9 +1,9 @@
 <div class="chatAllBorder">
     <div [ngClass]="{'whiteBoardMode': whiteBoardMode === true}" class="chatContainer" #target [scrollTop]="target.scrollHeight">
         <div class="chatInMeeting" *ngFor="let item of chatInMeeting">         
-            <button mat-button class="deleteChatBtn"  (click)="deleteChat(item._id)" *ngIf="item.userId==userId">
+            <!-- <button mat-button class="deleteChatBtn"  (click)="deleteChat(item._id)" *ngIf="item.userId==userId">
                 <mat-icon class="settingIcon ">close</mat-icon>
-            </button>   
+            </button>    -->
             <div [ngClass]="item.userId==userId ? 'myChat' : 'participantChat'">
                 <div class="chatting_inner" *ngIf="item.chatMember" fxLayout="row">
                     <div class="chatting_charMember_name">
@@ -21,8 +21,8 @@
     </div>
 
     
-    <div class="textFormContainer">
-        <form  #f="ngForm" (ngSubmit)="f.form.valid && createChat()" (keyup.enter)="createChat()" novalidate class="submit-form">
+    <div class="textFormContainer" [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
+        <form [ngClass]="myRole == 'Participant' ? 'participant': '' " #f="ngForm" (ngSubmit)="f.form.valid && createChat()" (keyup.enter)="createChat()" novalidate class="submit-form">
             <div class="chattingContainer">
                 <div class="chatInput">
                     <textarea class="textarea-style"  type="text" [(ngModel)]="chatContent" name="first"></textarea>

@@ -25,6 +25,7 @@ export class ParticipantComponent implements OnInit {
     public userId;
     public currentMembers;
     public myRole;
+    public meetingStatus = false;
 
     @ViewChildren('enlistedMember_span') public enlistedMember_spanRef: QueryList<ElementRef>;
 
@@ -109,7 +110,16 @@ export class ParticipantComponent implements OnInit {
 
         this.meetingService.getRoleUpdate(userRoleData).subscribe(() => {            
         })
-         /////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////
+
+
+
+        /////////////////////////////////////////////////////////////
+        // meeting status가 'Close'일 경우 role 변경 버튼 안보이게
+        this.eventBusService.on('Close', this.unsubscribe$, async (userId) => {
+            this.meetingStatus = true;
+        })
+        /////////////////////////////////////////////////////////////
     }
 
 
@@ -203,6 +213,9 @@ export class ParticipantComponent implements OnInit {
 
     }
     /////////////////////////////////////////////////////////////
+
+
+    
     
 
 

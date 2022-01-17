@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { ApiService } from 'src/@wb/services/apiService/api.service';
 import { EventBusService } from 'src/@wb/services/eventBus/event-bus.service';
 import { SocketService } from 'src/@wb/services/socket/socket.service';
@@ -24,6 +24,7 @@ export class MainComponent implements OnInit {
     private unsubscribe$ = new Subject<void>();
     private socket;
 
+    userId: any;
 
     constructor(
         private eventBusService: EventBusService,
@@ -39,12 +40,16 @@ export class MainComponent implements OnInit {
 
     ngOnInit(): void {
 
+        // 실시간으로 meeitngInfo를 바라보고 있다.
+        this.meetingInfoService.state$
+            .pipe(takeUntil(this.unsubscribe$)).subscribe((meetingInfo) => {
+                if (meetingInfo) {
+                    console.log('[[ meetingInfo ]]', meetingInfo)
+                    this.meetingId = meetingInfo._id;
+                    this.userId = meetingInfo.userData._id;
+                }
+            });
 
-        // this.route.params.subscribe(params => {
-        //   this.meetingId = params['id'];
-        //   console.log(this.meetingId)
-        //   this.eventBusService.emit(new EventData('getMeetingId', this.meetingId));
-        // });
 
         this.meetingId = this.route.snapshot.params['id'];
 
@@ -85,7 +90,7 @@ export class MainComponent implements OnInit {
 
         /////////////////////////////////////////////////////////////
         // Meeting status가 'Close'일 경우 모든 권한 제어
-        // this.getMeetingStatus(this.meetingId)
+        this.getMeetingStatus(this.meetingId)
         /////////////////////////////////////////////////////////////
         
     }
@@ -96,9 +101,32 @@ export class MainComponent implements OnInit {
     /////////////////////////////////////////////////////////////
     // Meeting status가 'Close'일 경우 모든 권한 제어
     getMeetingStatus(meetingId) {
+       
+        const data = {
+            meetingId : meetingId
+        }
 
-        this.meetingService.getMeetingStatus({ meetingId }).subscribe(() => {
+
+        this.meetingService.getMeetingStatus(data).subscribe((data:any) => {
             console.log('meeting status')
+            console.log(data)
+
+            if(data.status === 'Close'){
+                // 참여자가 나가면 role 'Presenter'로 초기화
+                const userRoleData = {
+                    meetingId: this.meetingId,
+                    userId: this.userId,
+                    role: 'Participant'
+                }
+
+                this.meetingService.getRoleUpdate(userRoleData).subscribe(() => {      
+                    const data = {
+                        role : 'Participant'
+                    }
+                    this.eventBusService.emit(new EventData('myRole', data));      
+                    this.eventBusService.emit(new EventData('Close', data));
+                })
+            }
         })
     }
     /////////////////////////////////////////////////////////////

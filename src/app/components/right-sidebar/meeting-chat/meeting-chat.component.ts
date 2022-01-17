@@ -27,6 +27,7 @@ export class MeetingChatComponent implements OnInit, AfterViewChecked {
     public chatContent;
 
     myChat = false;
+    myRole: any;
 
     @ViewChild('target') private myScrollContainer: ElementRef;
     scrolltop: number = null;
@@ -58,9 +59,16 @@ export class MeetingChatComponent implements OnInit, AfterViewChecked {
                 }
             });
 
+        /*-------------------------------------------
+                role에 따라 권한 설정
+        ---------------------------------------------*/
+        this.eventBusService.on('myRole', this.unsubscribe$, (myRole) => {
+            this.myRole = myRole.role
+        })
+
+
         // 새로 들어온 사람 채팅 데이터 받기 위해
         this.getMeetingChat();
-
 
         // socket에서 받아온 채팅 data
         this.socket.on('receiveChatData', (chatData) => {

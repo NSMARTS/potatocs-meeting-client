@@ -6,7 +6,7 @@
                 <span [ngClass]="(currentMember.online == true && currentMember.role == 'Presenter' ) ? 'presenter': 'participant'" *ngIf="currentMember.online == true" class="role">{{currentMember.role}}</span>
             </div>
 
-            <button mat-button [matMenuTriggerFor]="menuRef" *ngIf="currentMember.member_id==userId">
+            <button [ngClass]="{'meetingStatus': meetingStatus === true}" mat-button [matMenuTriggerFor]="menuRef" *ngIf="currentMember.member_id==userId">
                 <mat-icon class="settingIcon">more_vert</mat-icon>
             </button>
             <mat-menu #menuRef="matMenu" class="menuCustomize">
