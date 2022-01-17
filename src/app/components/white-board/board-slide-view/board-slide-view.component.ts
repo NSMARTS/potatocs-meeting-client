@@ -44,6 +44,8 @@ export class BoardSlideViewComponent implements OnInit {
 	private socket;
 	private unsubscribe$ = new Subject<void>();
 
+	myRole: any;
+
 	meetingId: any;
 	currentDocId: any;
 	currentDocNum: any; // 선택한 pdf
@@ -90,17 +92,23 @@ export class BoardSlideViewComponent implements OnInit {
 		/*-------------------------------------------
 			page 전환 하는 경우 sync
 		---------------------------------------------*/
-		this.socket.on('sync:pageChange', (pageNum)=> {
-			this.viewInfoService.updateCurrentPageNum(pageNum);
-		})
+		// Participant 모드 일 경우 sync 기능 적용 제외
+        if(this.myRole != 'Participant'){
+			this.socket.on('sync:pageChange', (pageNum)=> {
+				this.viewInfoService.updateCurrentPageNum(pageNum);
+			})
+		}
 
 
 		/*-------------------------------------------
 			doc. List (문서 목록으로) 하는 경우 sync
 		---------------------------------------------*/
-		this.socket.on('sync:backToFileList', () => {
-			this.viewInfoService.setViewInfo({ leftSideView: 'fileList' });
-		})
+		// Participant 모드 일 경우 sync 기능 적용 제외
+        if(this.myRole != 'Participant'){
+			this.socket.on('sync:backToFileList', () => {
+				this.viewInfoService.setViewInfo({ leftSideView: 'fileList' });
+			})
+		}
 	}
 
 

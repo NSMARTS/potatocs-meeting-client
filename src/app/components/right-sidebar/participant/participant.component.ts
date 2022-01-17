@@ -70,6 +70,7 @@ export class ParticipantComponent implements OnInit {
             // 새로 들어온 참여자들 online: false로
             this.meetingService.getOnlineFalse(userOnlineData).subscribe(() => {
 
+                console.log(userOnlineData)
                 // 참여자별 상태 정보 가져오기
                 this.getParticipantState();
             })

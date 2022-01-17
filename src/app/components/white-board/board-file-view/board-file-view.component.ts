@@ -129,7 +129,12 @@ export class BoardFileViewComponent implements OnInit {
             meetingId: this.meetingId,
             docId: docId
         }
-        this.socket.emit('sync:doc', data)
+
+        // Participant 모드 일 경우 sync 기능 적용 제외
+        if(this.myRole != 'Participant'){
+            this.socket.emit('sync:doc', data)
+        }
+        
     }
 
 
