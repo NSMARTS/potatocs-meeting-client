@@ -82,4 +82,14 @@ export class MeetingService {
 		return this.http.get('/apim/v1/collab/getRoleUpdate/', {params: userRoleData});
 	}
 	////////////////////////////////////////////////////
+
+
+	////////////////////////////////////////////////////
+	// 미팅 status가 Close일 경우 모든 권한 막기
+	getMeetingStatus(meetingId) {
+		console.log('[API] -----> getMeetingStatus');
+		return this.http.get('/apim/v1/collab/getMeetingStatus/', {params: meetingId});
+	}
+
+	////////////////////////////////////////////////////
 }
