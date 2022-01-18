@@ -135,6 +135,12 @@ export class BoardSlideViewComponent implements OnInit {
         height: this.thumbArray[this.currentPageNum - 1].height * data.ratio.h + 'px'
       };
 
+      /**
+       * 판서 드로잉 전체 삭제
+      */
+      this.eventBusService.on('rmoveDrawEventThumRendering',this.unsubscribe$,(data)=>{
+        this.renderThumbnails();
+      })
       // console.log('<---[BUS] change:containerSize ::  this.thumbWindowSize : ', this.thumbWindowSize)
     });
 

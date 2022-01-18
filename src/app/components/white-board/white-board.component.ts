@@ -66,7 +66,7 @@ export class WhiteBoardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dataStorageService.meetingId.subscribe((data)=>{
+    this.dataStorageService.meetingId.subscribe((data) => {
       this.id = data
     })
 
@@ -91,6 +91,8 @@ export class WhiteBoardComponent implements OnInit {
     this.socket.on('check:documents', () => {
       console.log('<--- [SOCKET] check:document');
       this.updateDocuments();
+      // this.eventBusService.emit(new EventData('rmoveDrawEventPageRendering',''));
+      // this.eventBusService.emit(new EventData('rmoveDrawEventThumRendering',''));
     });
     ///////////////////////////////////////////
 
@@ -100,8 +102,9 @@ export class WhiteBoardComponent implements OnInit {
       console.log('<---[SOCKET] rx drawEvent :', data);
       // console.log(data.drawingEvent, data.docNum, data.pageNum)
 
-      this.drawStorageService.setDrawEvent(data.docNum, data.pageNum, data.drawingEvent);
-
+      if (data.drawingEvent.tool.type != 'pointer') {
+        this.drawStorageService.setDrawEvent(data.docNum, data.pageNum, data.drawingEvent);
+      }
       this.eventBusService.emit(new EventData('receive:drawEvent', data));
     }))
 
@@ -125,7 +128,9 @@ export class WhiteBoardComponent implements OnInit {
 
       const pageInfo = this.viewInfoService.state.pageInfo;
       // local Store 저장
-      this.drawStorageService.setDrawEvent(pageInfo.currentDocNum, pageInfo.currentPage, data);
+      if (data.tool.type != 'pointer') {
+        this.drawStorageService.setDrawEvent(pageInfo.currentDocNum, pageInfo.currentPage, data);
+      }
 
       const newDataEvent = {
         drawingEvent: data,
@@ -267,7 +272,7 @@ export class WhiteBoardComponent implements OnInit {
   async updatePdfAndDrawStorage(documentData) {
 
     console.log(">> do:update Pdf And Draw Storage");
-    // console.log(documentData)
+    console.log(documentData)
 
     /*---------------------------------------
       pdf 관련 변수 초기화 : 기존의 pdf clear 및 destroy 수행
@@ -276,10 +281,10 @@ export class WhiteBoardComponent implements OnInit {
 
     // 현재 저장된 PDF Array 변수
     let pdfVarArray = this.pdfStorageService.pdfVarArray;
-
+    console.log(pdfVarArray)
     // 문서 개수의 차이
     const diff = documentData.length - pdfVarArray.length;
-
+    console.log('diff : ', diff)
     // document length가 더 긴경우 : 배열 추가
     if (diff > 0) {
       for (let i = 0; i < diff; i++) {
@@ -288,15 +293,16 @@ export class WhiteBoardComponent implements OnInit {
     }
 
     // document length가 더 짧은 경우 (현재는 없음 -> 추후 문서 삭제 등)
-    if (diff < 0) {
-      pdfVarArray = pdfVarArray.splice(0, diff);
+    // splice (a, b) a 번째 자리 수에 b 갯수 만큼 삭제
+    // splice (a, b, 'c') a 번째 자리 수에 b 갯수 만큼 삭제 후 c 추가
+    else if (diff < 0) {
+      pdfVarArray.splice(0, (diff * -1));
     }
 
     for (let i = 0; i < documentData.length; i++) {
-
       //1. Document 별 판서 Event 저장
       this.drawStorageService.setDrawEventSet(i + 1, documentData[i].drawingEventSet);
-
+      console.log(this.drawStorageService.drawVarArray)
       // 2. PDF 관련값 저장 및 PDF 변환
       pdfVarArray[i]._id = documentData[i]._id;
       pdfVarArray[i].fileBuffer = documentData[i].fileBuffer;
@@ -311,6 +317,7 @@ export class WhiteBoardComponent implements OnInit {
 
     //  PDF Docouments storage에 저장
     this.pdfStorageService.setPdfVarArray(pdfVarArray);
+    console.log(this.pdfStorageService.pdfVarArray)
 
     return;
   }
@@ -327,22 +334,25 @@ export class WhiteBoardComponent implements OnInit {
    */
 
   updateViewInfoStore() {
-    const documentInfo = [...this.viewInfoService.state.documentInfo];
-
-    for (let item of this.pdfStorageService.pdfVarArray) {
-      // 기존에 없던 문서인 경우 추가
-      const isExist = documentInfo.some((doc) => doc._id === item._id)
-      if (!isExist) {
-        documentInfo.push({
-          _id: item._id,
-          currentPage: 1,
-          numPages: item.pdfPages.length,
-          fileName: item.fileName
-        });
-      }
-
-    };
-
+    let documentInfo = [...this.viewInfoService.state.documentInfo];
+    const diff = this.pdfStorageService.pdfVarArray.length - documentInfo.length
+    if (diff >= 0) {
+      for (let item of this.pdfStorageService.pdfVarArray) {
+        // 기존에 없던 문서인 경우 추가
+        const isExist = documentInfo.some((doc) => doc._id === item._id)
+        if (!isExist) {
+          documentInfo.push({
+            _id: item._id,
+            currentPage: 1,
+            numPages: item.pdfPages.length,
+            fileName: item.fileName
+          });
+        }
+      };
+    } else if (diff < 0) {    
+      documentInfo = documentInfo.filter((item) => this.pdfStorageService.pdfVarArray.some((element) => element._id == item._id))
+    }
+    
     const obj: any = {
       documentInfo: documentInfo
     }
@@ -365,13 +375,13 @@ export class WhiteBoardComponent implements OnInit {
 
   // hiddenVideo 버튼 클릭 시 오버레이 비디오 숨기기
   hiddenVideo() {
-    if (this.hiddenVideoMode == false){
+    if (this.hiddenVideoMode == false) {
       this.hiddenVideoMode = true;
     }
   }
 
   visibleVideo() {
-    if (this.hiddenVideoMode == true){
+    if (this.hiddenVideoMode == true) {
       this.hiddenVideoMode = false;
     }
   }

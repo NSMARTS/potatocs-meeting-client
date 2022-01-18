@@ -58,4 +58,14 @@
 
 .thumb-item:hover .settingIcon{
 	visibility: visible;
+    background-color: rgb(226, 226, 226);
+    opacity :0.8;
+}
+
+.deleteChatBtn{
+    position: absolute;
+    top: 0px;
+    right: -10px;
+    width: 3px;
+    height: 3px;
 }

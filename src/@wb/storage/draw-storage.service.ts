@@ -30,7 +30,7 @@ export class DrawStorageService {
     const drawingEventSet = this.drawVarArray[docNum-1]?.drawingEventSet;
 
     // 없으면 undefined.
-    return drawingEventSet.find((item) => item.pageNum === pageNum);
+    return drawingEventSet?.find((item) => item.pageNum === pageNum);
   }
 
 
@@ -116,7 +116,7 @@ export class DrawStorageService {
    * @param {number} pageNum 페이지 번호
    */
   clearDrawingEvents(pdfnum, pageNum) {
-    this.drawVarArray[pdfnum].drawingEventSet['p' + pageNum] = [];
+    this.drawVarArray[pdfnum-1].drawingEventSet[pageNum-1] = [];
   }
 
   /**

@@ -39,5 +39,10 @@ export class ApiService {
     return this.http.delete(this.URL + 'whiteBoard' + `/deleteMeetingPdfFile/`,  {params: _id});
   }
 
+  deleteDrawingEvent(_id, currentDocNum, currentPage) {
+    console.log('[API] -----> get: deleteDrawingEvent');
+    return this.http.delete(this.URL + 'whiteBoard' + `/deleteDrawingEvent/`,  {params: {_id, currentDocNum, currentPage}});
+  }
+
 
 }
