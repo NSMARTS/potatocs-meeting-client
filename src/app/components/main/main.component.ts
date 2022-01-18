@@ -124,6 +124,7 @@ export class MainComponent implements OnInit {
                         role : 'Participant'
                     }
                     this.eventBusService.emit(new EventData('myRole', data));      
+                    // meeting status가 'Close'일 경우 role 변경 버튼 안보이게 해서 role 변경 금지
                     this.eventBusService.emit(new EventData('Close', data));
                 })
             }
