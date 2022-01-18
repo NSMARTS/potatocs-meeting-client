@@ -335,6 +335,9 @@ export class WhiteBoardComponent implements OnInit {
 
   updateViewInfoStore() {
     let documentInfo = [...this.viewInfoService.state.documentInfo];
+    console.log(documentInfo)
+    console.log(this.pdfStorageService.pdfVarArray)
+    console.log(this.viewInfoService.state.pageInfo.currentDocId)
     const diff = this.pdfStorageService.pdfVarArray.length - documentInfo.length
     if (diff >= 0) {
       for (let item of this.pdfStorageService.pdfVarArray) {
@@ -349,13 +352,14 @@ export class WhiteBoardComponent implements OnInit {
           });
         }
       };
+
     } else if (diff < 0) {    
       documentInfo = documentInfo.filter((item) => this.pdfStorageService.pdfVarArray.some((element) => element._id == item._id))
     }
-    
     const obj: any = {
       documentInfo: documentInfo
     }
+    
 
     // 최초 load인 경우 document ID는 처음 것으로 설정
     if (!this.viewInfoService.state.pageInfo.currentDocId) {
@@ -365,8 +369,28 @@ export class WhiteBoardComponent implements OnInit {
         currentPage: 1,
         zoomScale: this.zoomService.setInitZoomScale()
       }
+    } 
+    
+    
+    // viewInfoService 현재 바라보는 문서가 있을경우 함수 실행
+    if(this.viewInfoService.state.pageInfo.currentDocId){
+      // 문서 삭제 시 현재 바라보는 문서와 같은 곳일 경우 팝업 창과 함께 첫 화이트보드로 돌아온다.
+      // 현재 바라보는 문서 ID와 DB에서 받아온 문서 ID가 일치하는게 없으면 첫 페이지로 돌아오고 문서가 삭제됐다고 알림
+      const res = this.pdfStorageService.pdfVarArray.filter((x)=> x._id == this.viewInfoService.state.pageInfo.currentDocId);
+      console.log(res)
+      if (res.length == 0){
+        obj.pageInfo = {
+          currentDocId: documentInfo[0]._id,
+          currentDocNum: 1,
+          currentPage: 1,
+          zoomScale: this.zoomService.setInitZoomScale()
+        }
+        obj.leftSideView = 'fileList';
+        alert('The pdf file has been deleted');
+      }
     }
 
+    
     this.viewInfoService.setViewInfo(obj);
   }
   ///////////////////////////////////////////////////////////
