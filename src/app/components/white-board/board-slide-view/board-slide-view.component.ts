@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnChanges, OnInit, QueryList, ViewChild, ViewChildren, Output, EventEmitter } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { Observable, Subject } from 'rxjs';
 import { pluck, takeUntil, distinctUntilChanged, pairwise } from 'rxjs/operators';
@@ -7,25 +8,30 @@ import { pluck, takeUntil, distinctUntilChanged, pairwise } from 'rxjs/operators
 import { CanvasService } from 'src/@wb/services/canvas/canvas.service';
 import { DrawingService } from 'src/@wb/services/drawing/drawing.service';
 import { EventBusService } from 'src/@wb/services/eventBus/event-bus.service';
+import { EventData } from 'src/@wb/services/eventBus/event.class';
 import { RenderingService } from 'src/@wb/services/rendering/rendering.service';
 import { SocketService } from 'src/@wb/services/socket/socket.service';
+
 import { DrawStorageService } from 'src/@wb/storage/draw-storage.service';
+
 
 import { ViewInfoService } from 'src/@wb/store/view-info.service';
 
 
 
 @Component({
-  selector: 'app-board-slide-view',
-  templateUrl: './board-slide-view.component.html',
-  styleUrls: ['./board-slide-view.component.scss']
+	selector: 'app-board-slide-view',
+	templateUrl: './board-slide-view.component.html',
+	styleUrls: ['./board-slide-view.component.scss']
 })
 
 export class BoardSlideViewComponent implements OnInit {
 
+
   private socket;
 
   constructor(
+    private route: ActivatedRoute,
     private canvasService: CanvasService,
     private renderingService: RenderingService,
     private viewInfoService: ViewInfoService,
@@ -33,21 +39,43 @@ export class BoardSlideViewComponent implements OnInit {
     private drawingService: DrawingService,
     private socketService: SocketService,
     private drawStorageService: DrawStorageService,
+    private drawingService: DrawingService,
   ) {
     this.socket = this.socketService.socket;
   }
 
 
-  // Open된 File을 white-board component로 전달
-  @Output() newLocalDocumentFile = new EventEmitter();
+
+	// Open된 File을 white-board component로 전달
+	@Output() newLocalDocumentFile = new EventEmitter();
+
+	private socket;
+	private unsubscribe$ = new Subject<void>();
+
+	meetingId: any;
+	currentDocId: any;
+	currentDocNum: any; // 선택한 pdf
+	currentPageNum: number = 0;
+
+	thumbWindow: HTMLDivElement;
+	thumbWindowSize = {
+		width: '',
+		height: ''
+	};
+
+	thumbArray = []; // page별 thumbnail size
+	scrollRatio: any;
 
 
-  private unsubscribe$ = new Subject<void>();
+	@ViewChildren('thumb') thumRef: QueryList<ElementRef> // 부모 thumb-item 안에 자식 element
+	@ViewChildren('thumbCanvas') thumbCanvasRef: QueryList<ElementRef>
+	@ViewChildren('thumbWindow') thumbWindowRef: QueryList<ElementRef>
 
 
-  currentDocId: any
-  currentDocNum: any; // 선택한 pdf
-  currentPageNum: number = 0;
+	ngOnInit(): void {
+
+		this.meetingId = this.route.snapshot.params['id'];
+
 
   thumbWindow: HTMLDivElement;
   thumbWindowSize = {
@@ -262,5 +290,6 @@ export class BoardSlideViewComponent implements OnInit {
       this.drawingService.drawThumb(data.drawingEvent, thumbCanvas, thumbScale);
     }
   };
+
 
 }
