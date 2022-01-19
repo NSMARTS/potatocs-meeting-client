@@ -25,6 +25,7 @@ export class MainComponent implements OnInit {
     private socket;
 
     userId: any;
+    meetingClose = false;
 
     constructor(
         private eventBusService: EventBusService,
@@ -54,10 +55,15 @@ export class MainComponent implements OnInit {
         this.meetingId = this.route.snapshot.params['id'];
 
 
+        /////////////////////////////////////////////////////////////
+        // Meeting status가 'Close'일 경우 모든 권한 제어
+        this.getMeetingStatus(this.meetingId)
+        /////////////////////////////////////////////////////////////
+
+
         /////////////////////////////////////////////
         // Meeting Info 수신
         // ---> 이 부분은 추후 화상회의 부분에서 적용해야 함
-
         ////////////////////////////////////////////////////////////////////
         if (this.meetingId) {
             this.socket.emit('join:room', this.meetingId);
@@ -88,10 +94,7 @@ export class MainComponent implements OnInit {
 
         })
 
-        /////////////////////////////////////////////////////////////
-        // Meeting status가 'Close'일 경우 모든 권한 제어
-        this.getMeetingStatus(this.meetingId)
-        /////////////////////////////////////////////////////////////
+        
         
     }
 
@@ -106,13 +109,12 @@ export class MainComponent implements OnInit {
             meetingId : meetingId
         }
 
-
+        // meeting의 status를 불러온다.
         this.meetingService.getMeetingStatus(data).subscribe((data:any) => {
-            console.log('meeting status')
-            console.log(data)
-
+  
+            // meeting의 status가 'Close'일 경우 role 변경
             if(data.status === 'Close'){
-                // 참여자가 나가면 role 'Presenter'로 초기화
+
                 const userRoleData = {
                     meetingId: this.meetingId,
                     userId: this.userId,
@@ -123,6 +125,7 @@ export class MainComponent implements OnInit {
                     const data = {
                         role : 'Participant'
                     }
+
                     this.eventBusService.emit(new EventData('myRole', data));      
                     // meeting status가 'Close'일 경우 role 변경 버튼 안보이게 해서 role 변경 금지
                     this.eventBusService.emit(new EventData('Close', data));

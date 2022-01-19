@@ -196,18 +196,18 @@ export class BoardSlideViewComponent implements OnInit {
 		this.viewInfoService.updateCurrentPageNum(pageNum);
 		// this.eventBusService.emit(new EventData('clickPdf', pageNum))
 
-		/*-------------------------------------------
-		zoom, page 전환등을 하는 경우 sync
-		---------------------------------------------*/
-		const data = {
-			meetingId: this.meetingId,
-			pageNum: pageNum
-		}
+		// /*-------------------------------------------
+		// zoom, page 전환등을 하는 경우 sync
+		// ---------------------------------------------*/
+		// const data = {
+		// 	meetingId: this.meetingId,
+		// 	pageNum: pageNum
+		// }
 		
-		// Participant 모드 일 경우 sync 기능 적용 제외
-		if(this.myRole != 'Participant'){
-			this.socket.emit('sync:page', data)
-		}
+		// // Participant 모드 일 경우 sync 기능 적용 제외
+		// if(this.myRole != 'Participant'){
+		// 	this.socket.emit('sync:page', data)
+		// }
 	}
 
 
@@ -217,14 +217,14 @@ export class BoardSlideViewComponent implements OnInit {
 	backToFileList() {
 		this.viewInfoService.setViewInfo({ leftSideView: 'fileList' });
 
-		const data = {
-			meetingId: this.meetingId,
-		}
+		// const data = {
+		// 	meetingId: this.meetingId,
+		// }
 
-		// Participant 모드 일 경우 sync 기능 적용 제외
-		if(this.myRole != 'Participant'){
-			this.socket.emit('sync:FileList', (data))
-		}
+		// // Participant 모드 일 경우 sync 기능 적용 제외
+		// if(this.myRole != 'Participant'){
+		// 	this.socket.emit('sync:FileList', (data))
+		// }
 	}
 
 

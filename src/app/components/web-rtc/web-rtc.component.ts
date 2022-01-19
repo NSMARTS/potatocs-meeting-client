@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Injectable, NgModule, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { pluck, Subject, Subscription, takeUntil } from 'rxjs';
+import { pluck, Subject, takeUntil } from 'rxjs';
 
 import adapter from 'webrtc-adapter';
 import { SocketioService } from '../../services/socketio/socketio.service';
@@ -12,6 +12,8 @@ import { ActivatedRoute } from '@angular/router';
 import { MeetingInfoService } from 'src/@wb/store/meeting-info.service';
 import { DevicesInfoService } from 'src/@wb/store/devices-info.service';
 import { EventData } from 'src/@wb/services/eventBus/event.class';
+import { MeetingService } from 'src/app/services/meeting/meeting.service';
+
 
 
 
@@ -34,7 +36,6 @@ export class WebRTCComponent implements OnInit {
 	myName:any;
 	participantsName:any;
 
-	private subscription: Subscription;
 	//   private socket: Socket;
 	public localStream$;
 	private socket;
@@ -54,6 +55,7 @@ export class WebRTCComponent implements OnInit {
 	whiteBoardMode = false // whiteBoard Mode Check
 	options: any;
 	meetingInfo;
+	meetingStatus = false;
 
 
 
@@ -101,6 +103,7 @@ export class WebRTCComponent implements OnInit {
 		private route: ActivatedRoute,
 		private meetingInfoService: MeetingInfoService,
 		private devicesInfoService: DevicesInfoService,
+		private meetingService: MeetingService,
 	) {
 		this.socket = socketService.socket;
 		// this.localStream$ = this.wetRtcService.localStream$;
@@ -111,8 +114,6 @@ export class WebRTCComponent implements OnInit {
 		// step1: socket connection & join Room & register socket listener
 		// todo: disconnect, reconnect를 위한 루틴 추가 필요
 		this.registerSocketListener();
-
-
 	}
 
 	/**
@@ -120,24 +121,7 @@ export class WebRTCComponent implements OnInit {
 		 *  실제로는 listener 해제도 추가해야함.
 		 */
 	private registerSocketListener() {
-		// function newID() {
-		// 	return Math.random().toString(36).substr(2, 16);
-		// }
-		// const roomName = "testRoom";
-		// const userName = newID();
-		// this.roomName = roomName;
-		// this.userName = userName;
-		// const userData = {
-		// 	roomName: this.roomName,
-		// 	userName: this.userName
-		// }
-		// console.log('유저 정보')
-		// console.log(userData)
-
-		///////////////////////////////////////////////////////////////////
-		// Meeting Info 수신 후 해당 회의 내의
-		// 문서, 판서 data store update
-
+	
 		this.meetingInfoService.state$
 			.pipe(takeUntil(this.unsubscribe$))
 			.subscribe((meetingInfo) => {
@@ -159,15 +143,12 @@ export class WebRTCComponent implements OnInit {
 			}
 			console.log(meetingInfo)
 
+
+			
 		});
 		/////////////////////////////////////////////////////////////////
-		// const userData = {
-		// 	roomName : this.meetingId,
-		// 	userName : //api서비스에서 본인 pop 어쩌구써서 userName 가져오기,
-		// 	userId : 
-		// }
-
 		
+
 
 
 		this.socket.emit('userInfo', this.userData)
@@ -175,6 +156,7 @@ export class WebRTCComponent implements OnInit {
 		// Socket Code
 		this.socket.on("existingParticipants", async (data) => {
 			console.log(data)
+			
 			this.onExistingParticipants(data);
 			this.eventBusService.emit(new EventData('updateParticipants', this.participants))
 		});
@@ -329,7 +311,7 @@ export class WebRTCComponent implements OnInit {
 		// https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
 		await navigator.mediaDevices.getUserMedia(this.constraints)
 			.then((screenStream) => {
-				this.localStream = screenStream;	 
+				this.localStream = screenStream;	
 			}).catch(function (error) {
 				console.log('getUserMedia error: ' + error.name, error);
 			});
@@ -343,15 +325,27 @@ export class WebRTCComponent implements OnInit {
 			onicecandidate: participant.onIceCandidate.bind(participant)
 		}
 		console.log(this.options)
-		participant.rtcPeer = WebRtcPeer.WebRtcPeerSendonly(this.options,
-			function (error) {
-				if (error) {
-					return console.error(error);
-				}
-				this.generateOffer(participant.offerToReceiveVideo.bind(participant));
-			});
 
+		/////////////////////////////////////////////////////////////
+		// meeting의 status가 'Open'일 경우에만 화면 나오게 변경
+		const data = {
+			        meetingId : this.roomName
+		}
+		// meeting의 status 불러오기
+		const result:any = await this.meetingService.getMeetingStatus(data).toPromise();
 
+		// meeting의 status가 'Open'일 경우에만 WebRtcPeer 보내기 전용으로 생성
+        if(result.status === 'Open'){
+			participant.rtcPeer = WebRtcPeer.WebRtcPeerSendonly(this.options,
+				function (error) {
+					if (error) {
+						return console.error(error);
+					}
+					this.generateOffer(participant.offerToReceiveVideo.bind(participant));
+				});
+		}
+		/////////////////////////////////////////////////////////////
+    
 
 		/****************************************
 		*   장치 변경 시 비디오 전환
@@ -479,13 +473,14 @@ export class WebRTCComponent implements OnInit {
 	}
 
 	receiveVideo(sender) {
+		console.log(sender)
 
 		var participant = new Participant(this.socketService, this.userId, sender.userId, sender.name, this.participantsElement);
 		this.participants[sender.userId] = participant;
 		var video = participant.getVideoElement();
 
 
-		console.log(sender)
+		
 
 		this.eventBusService.emit(new EventData('updateParticipants', this.participants))
 
@@ -538,8 +533,9 @@ export class WebRTCComponent implements OnInit {
 		/****************************************
 		*   whiteBoard Mode 시 새로 들어 온 webRTC 상대방 비디오 오버레이
 		*****************************************/
-		this.eventBusService.on('newWhiteBoardOverlay', this.unsubscribe$, (sender) => {
+		this.eventBusService.on('newWhiteBoardOverlay', this.unsubscribe$, () => {
 
+			console.log(sender)
 			if (this.whiteBoardMode == true) {
 				// 내 local video와 name을 가져오기 위해 container 통째로
 				var videoOverlay = document.getElementById(sender.userId)

@@ -122,18 +122,18 @@ export class BoardFileViewComponent implements OnInit {
         console.log('>> click PDF : change to Thumbnail Mode');
         this.viewInfoService.changeToThumbnailView(docId);
 
-        /*-------------------------------------------
-            doc 전환 하는 경우 sync
-        ---------------------------------------------*/
-        const data = {
-            meetingId: this.meetingId,
-            docId: docId
-        }
+        // /*-------------------------------------------
+        //     doc 전환 하는 경우 sync
+        // ---------------------------------------------*/
+        // const data = {
+        //     meetingId: this.meetingId,
+        //     docId: docId
+        // }
 
-        // Participant 모드 일 경우 sync 기능 적용 제외
-        if(this.myRole != 'Participant'){
-            this.socket.emit('sync:doc', data)
-        }
+        // // Participant 모드 일 경우 sync 기능 적용 제외
+        // if(this.myRole != 'Participant'){
+        //     this.socket.emit('sync:doc', data)
+        // }
         
     }
 
