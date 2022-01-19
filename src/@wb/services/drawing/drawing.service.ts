@@ -152,6 +152,7 @@ export class DrawingService {
   }
 
   end(context, points, tool) {
+    console.log(points)
     context.lineCap = "round";
     context.lineJoin = 'round';
     context.lineWidth = tool.width;
@@ -218,6 +219,8 @@ export class DrawingService {
 
   // Thumbnail에 그리기
   drawThumb(data, thumbCanvas, thumbScale) {
+    console.log('drawThumb--------------------------')
+    console.log(data)
     const thumbCtx = thumbCanvas.getContext('2d');
     // prepare scale
     thumbCtx.save();
@@ -229,18 +232,13 @@ export class DrawingService {
   // Thumbnail에 그리기
   clearThumb(data, thumbCanvas, thumbScale) {
     console.log('clearThumb')
+    console.log(thumbCanvas)
+    console.log(thumbScale)
     const thumbCtx = thumbCanvas.getContext('2d');
-    // prepare scale
-    // thumbCtx.save();
-    thumbCtx.scale(thumbScale, thumbScale);
-    this.clear(thumbCtx,thumbCanvas,thumbScale);
-    // thumbCtx.restore();
+    thumbCtx.clearRect(0, 0, thumbCanvas.width/thumbScale, thumbCanvas.height/thumbScale);
+    
   }
 
-  clear(context, thumbCanvas,thumbScale){
-    console.log('clean')
-    context.clearRect(0, 0, thumbCanvas.width/thumbScale, thumbCanvas.height/thumbScale);
-  }
   dataArray: any = [];
   stop: any = null;
 
@@ -389,6 +387,7 @@ export class DrawingService {
    * @param thumbScale
    */
   rxDrawingThumb(data, thumbCanvas, thumbScale) {
+    console.log('drawThumbRX--------------------------')
     const thumbCtx = thumbCanvas.getContext('2d');
     // prepare scale
     thumbCtx.save();

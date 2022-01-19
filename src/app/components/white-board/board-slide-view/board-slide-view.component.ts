@@ -104,6 +104,7 @@ export class BoardSlideViewComponent implements OnInit {
   eventBusListeners() {
     // 내가 그린 Event thumbnail에 그리기
     this.eventBusService.on('gen:newDrawEvent', this.unsubscribe$, async (data) => {
+      console.log(data)
       this.drawThumb(data);
     });
 
@@ -111,8 +112,8 @@ export class BoardSlideViewComponent implements OnInit {
     // 다른 사람이 그린 Event thumbnail에 그리기
     this.eventBusService.on('receive:drawEvent', this.unsubscribe$, async (data) => {
       // data = (data || '');
-      // console.log(data)
-      // console.log(data.drawingEvent);
+      console.log(data)
+      console.log(data.drawingEvent);
       this.drawThumbRx(data);
     });
 
