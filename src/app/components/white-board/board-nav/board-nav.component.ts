@@ -144,15 +144,20 @@ export class BoardNavComponent implements OnInit {
     
     if(editInfo.tool == 'eraser' && tool == 'eraser'){
       console.log('지우개 모드 2번 연달아 눌렀습니다----------------')
-      this.drawStorageService.clearDrawingEvents(this.currentDocNum, this.currentPage);      
-      await this.apiService.deleteDrawingEvent(this.currentDocId, this.currentDocNum, this.currentPage).subscribe(async (data:any)=>{
-        console.log(data.message)
-        console.log(data.meetingId)
-        // document delete 확인 후 socket room안의 모든 User에게 전송 (나 포함)
-        await this.socket.emit('check:documents', data.meetingId);
-      })
-      this.eventBusService.emit(new EventData('rmoveDrawEventPageRendering',''));
-      this.eventBusService.emit(new EventData('rmoveDrawEventThumRendering',''));
+      
+      const data = {
+        docId : this.currentDocId,
+        currentDocNum: this.currentDocNum, 
+        currentPage: this.currentPage
+      }
+
+      // 다른 사람들에게 드로우 이벤트 제거
+      this.socket.emit('clearDrawingEvents', data )
+
+      // 자기자신한테 있는 드로우 이벤트 제거
+      this.drawStorageService.clearDrawingEvents(this.currentDocNum, this.currentPage);       
+      this.eventBusService.emit(new EventData('rmoveDrawEventPageRendering', '' ));
+      this.eventBusService.emit(new EventData('rmoveDrawEventThumRendering', '' ));
     }
     
     editInfo.tool = tool;

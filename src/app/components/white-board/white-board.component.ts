@@ -91,8 +91,6 @@ export class WhiteBoardComponent implements OnInit {
     this.socket.on('check:documents', () => {
       console.log('<--- [SOCKET] check:document');
       this.updateDocuments();
-      // this.eventBusService.emit(new EventData('rmoveDrawEventPageRendering',''));
-      // this.eventBusService.emit(new EventData('rmoveDrawEventThumRendering',''));
     });
     ///////////////////////////////////////////
 
@@ -106,6 +104,15 @@ export class WhiteBoardComponent implements OnInit {
         this.drawStorageService.setDrawEvent(data.docNum, data.pageNum, data.drawingEvent);
       }
       this.eventBusService.emit(new EventData('receive:drawEvent', data));
+    }))
+
+    ////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////
+    // 새로운 판서 Event 수신
+    this.socket.on('clearDrawingEvents', ((data: any) => {
+      this.drawStorageService.clearDrawingEvents(data.currentDocNum, data.currentPage);  
+      this.eventBusService.emit(new EventData('receive:clearDrawEvent', data));
     }))
 
     ////////////////////////////////////////////////
@@ -317,7 +324,7 @@ export class WhiteBoardComponent implements OnInit {
 
     //  PDF Docouments storage에 저장
     this.pdfStorageService.setPdfVarArray(pdfVarArray);
-    console.log(this.pdfStorageService.pdfVarArray)
+    console.log(this.drawStorageService.drawVarArray)
 
     return;
   }
@@ -339,7 +346,7 @@ export class WhiteBoardComponent implements OnInit {
     console.log(this.pdfStorageService.pdfVarArray)
     console.log(this.viewInfoService.state.pageInfo.currentDocId)
     const diff = this.pdfStorageService.pdfVarArray.length - documentInfo.length
-    if (diff >= 0) {
+    if (diff > 0) {
       for (let item of this.pdfStorageService.pdfVarArray) {
         // 기존에 없던 문서인 경우 추가
         const isExist = documentInfo.some((doc) => doc._id === item._id)

@@ -137,7 +137,7 @@ export class RenderingService {
    * @param {Object} drawingEvents 판서 event (tool, points, timeDiff)
    */
   renderBoard(targetCanvas, zoomScale, drawingEvents) {
-    // console.log('>> render Board: ', drawingEvents?.drawingEvent)
+    console.log('>> render Board: ', drawingEvents?.drawingEvent)
     const targetCtx = targetCanvas.getContext('2d');
     const scale = zoomScale || 1;
     targetCtx.clearRect(0, 0, targetCanvas.width / scale, targetCanvas.height / scale);

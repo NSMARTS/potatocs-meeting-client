@@ -226,6 +226,21 @@ export class DrawingService {
     thumbCtx.restore();
   }
 
+  // Thumbnail에 그리기
+  clearThumb(data, thumbCanvas, thumbScale) {
+    console.log('clearThumb')
+    const thumbCtx = thumbCanvas.getContext('2d');
+    // prepare scale
+    // thumbCtx.save();
+    thumbCtx.scale(thumbScale, thumbScale);
+    this.clear(thumbCtx,thumbCanvas,thumbScale);
+    // thumbCtx.restore();
+  }
+
+  clear(context, thumbCanvas,thumbScale){
+    console.log('clean')
+    context.clearRect(0, 0, thumbCanvas.width/thumbScale, thumbCanvas.height/thumbScale);
+  }
   dataArray: any = [];
   stop: any = null;
 

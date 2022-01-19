@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, Renderer2, ViewChild, HostListener } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, Renderer2, ViewChild, HostListener, ɵɵtrustConstantResourceUrl } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { of, Subject, fromEvent } from 'rxjs';
 import { pluck, takeUntil, distinctUntilChanged, debounceTime } from 'rxjs/operators';
@@ -167,6 +167,35 @@ export class BoardCanvasComponent implements OnInit, OnDestroy {
     });
     /////////////////////////////////////////////////////////////
 
+    //~~~ 판서 전체 삭제 루틴:  추가 변경 해야함
+    this.eventBusService.on('rmoveDrawEventPageRendering',this.unsubscribe$,(data)=>{
+      const viewInfo = this.viewInfoService.state;
+      const docNum = viewInfo.pageInfo.currentDocNum;
+      const pageNum = viewInfo.pageInfo.currentPage;
+      const zoomScale = viewInfo.pageInfo.zoomScale;
+
+      if(this.currentDocNum == docNum && this.currentPage == pageNum){
+        this.pageRender(docNum, pageNum, zoomScale)
+      }
+    })
+    ///////////////////////////////////////////////
+
+    /////////////////////////////////////
+    // 다른 참가자가 receive:clearDrawEvent를 발생시켰을때의 Listener
+    // 판서 표시
+    this.eventBusService.on('receive:clearDrawEvent', this.unsubscribe$, async (data) => {
+      const pageInfo = this.viewInfoService.state.pageInfo;
+      //document Number -> 1부터 시작.
+      const docNum = pageInfo.currentDocNum;
+      const pageNum = pageInfo.currentPage;
+      const zoomScale = pageInfo.zoomScale;
+      
+      if (docNum == data.currentDocNum && pageNum == data.currentPage) {      
+        this.pageRender(docNum, pageNum, zoomScale)
+      }
+    });
+    /////////////////////////////////////////////////////////////
+
     ///////////////////////////////////////////////////
     // continer scroll
     // thumbnail의 window 처리 용도
@@ -193,22 +222,7 @@ export class BoardCanvasComponent implements OnInit, OnDestroy {
 
     // });
     
-    //~~~ 판서 전체 삭제 루틴:  추가 변경 해야함
-    this.eventBusService.on('rmoveDrawEventPageRendering',this.unsubscribe$,(data)=>{
-      const viewInfo = this.viewInfoService.state;
-      //document Number -> 1부터 시작.
-      const docNum = viewInfo.pageInfo.currentDocNum;
-      const pageNum = viewInfo.pageInfo.currentPage;
-      const zoomScale = viewInfo.pageInfo.zoomScale;
-      console.log('rmoveDrawEventPageRendering')
-      console.log(viewInfo)
-      console.log(this.currentDocNum)
-      console.log(this.currentPage)
-      if(this.currentDocNum == docNum && this.currentPage == pageNum){
-        this.pageRender(docNum, pageNum, zoomScale)
-      }
-    })
-    ///////////////////////////////////////////////
+
 
   }
   // end of ngOnInit
@@ -271,6 +285,7 @@ export class BoardCanvasComponent implements OnInit, OnDestroy {
 
     // board rendering
     const drawingEvents = this.drawStorageService.getDrawingEvents(currentDocNum, currentPage);
+    console.log(drawingEvents)
     this.renderingService.renderBoard(this.teacherCanvas, zoomScale, drawingEvents);
   }
 
