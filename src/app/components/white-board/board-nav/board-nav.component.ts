@@ -16,9 +16,9 @@ import { SocketService } from 'src/@wb/services/socket/socket.service';
 
 
 @Component({
-  selector: 'app-board-nav',
-  templateUrl: './board-nav.component.html',
-  styleUrls: ['./board-nav.component.scss']
+    selector: 'app-board-nav',
+    templateUrl: './board-nav.component.html',
+    styleUrls: ['./board-nav.component.scss']
 })
 export class BoardNavComponent implements OnInit {
   isSyncMode: boolean;
@@ -49,6 +49,7 @@ export class BoardNavComponent implements OnInit {
     roundedRectangle: this.widthSet.roundedRectangle[0],
   };
   mode: any = 'move';
+  myRole: any; // 나의 역할(권한)
 
   private unsubscribe$ = new Subject<void>();
 
@@ -92,6 +93,18 @@ export class BoardNavComponent implements OnInit {
           roundedRectangle: editInfo.toolsConfig.roundedRectangle.width,
         }
       });
+
+      /*-------------------------------------------
+              role에 따라 권한 설정
+          ---------------------------------------------*/
+          this.eventBusService.on('myRole', this.unsubscribe$, (myRole) => {
+            this.myRole = myRole.role
+            
+            if(this.myRole == 'Participant'){
+                this.changeMode('move')
+            }
+            
+        })
   }
 
 

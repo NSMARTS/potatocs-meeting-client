@@ -44,17 +44,25 @@
             </mat-icon>
           </button>
 
-          <button type="button" (click)="changeTool('pen');" mat-icon-button>
-            <mat-icon [ngClass]="(currentTool == 'pen') && (mode == 'draw')?'active':''">draw</mat-icon>
-          </button>
+          <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
+            <button type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' " (click)="changeTool('pen');" mat-icon-button >
+              <mat-icon [ngClass]="(currentTool == 'pen') && (mode == 'draw')?'active':''">draw</mat-icon>
+            </button>
+          </div>
+          
+          <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
+            <button type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' " (click)="changeTool('eraser');" mat-icon-button>
+              <mat-icon [ngClass]="(currentTool == 'eraser') && (mode == 'draw')?'active':''">crop_square</mat-icon>
+            </button>
+          </div>
+          
+          <div>
+            <button type="button" (click)="changeMode('move');" mat-icon-button>
+              <mat-icon [ngClass]="(mode == 'move')?'active':''"> open_with </mat-icon>
+            </button>
+          </div>
 
-          <button type="button" (click)="changeTool('eraser');" mat-icon-button>
-            <mat-icon [ngClass]="(currentTool == 'eraser') && (mode == 'draw')?'active':''">crop_square</mat-icon>
-          </button>
-
-          <button type="button" (click)="changeMode('move');" mat-icon-button>
-            <mat-icon [ngClass]="(mode == 'move')?'active':''"> open_with </mat-icon>
-          </button>
+          
 
           <button type="button" (click)="changeTool('line');" mat-icon-button mat-button
             [matMenuTriggerFor]="shapeMemu">

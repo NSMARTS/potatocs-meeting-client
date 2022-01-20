@@ -3,14 +3,13 @@
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-   
+    // height:calc(100vh - 300px)
 }
 .chatContainer {
-    
+    height:calc(100vh - 280px);
     overflow: auto;
     font-size: 13px;
     line-height: 1.4;
-    flex: 1 1;
 }
 
 .chatInMeeting {
@@ -37,7 +36,7 @@
 
 
 .deleteChatBtn{
-    bottom: 15px;
+    bottom: 8px;
 }
 .buttonCover .settingIcon {
     visibility: hidden;
@@ -66,23 +65,47 @@
     padding: 12px;
     margin: 12px 0px;
 }
+
+.myChat {
+    background-color: rgb(222, 240, 252);
+    border: 1px solid gray;
+    border-radius: 10px;
+    max-width: 250px;
+    min-height: 30px;
+    padding: 12px;
+    margin: 14px 0px 0px 30px;
+}
+
+.participantChat {
+    background-color: white;
+    border: 1px solid gray;
+    border-radius: 10px;
+    max-width: 250px;
+    min-height: 30px;
+    padding: 12px;
+    margin: 14px 30px 0px 0px;
+}
+
 .chatting_charMember_name{
     font-weight: bold;
     font-size: 14px;
-    margin-right: 15px;
 }
 .chatting_createdAt{
     color: gray;
     font-size: 12px;
 }
 .chatContent{
-    padding-left: 12px;
+    padding: 8px 0px 0px 12px;
     white-space: pre-line;
+    word-break: break-all;
+}
+
+.chatting_inner {
+    justify-content: space-between;
 }
 
 .chattingContainer{
     margin: 10px 10px 0;
-    max-height: 150px;
     width: 285px;
     background-color: white;
     border: 1px solid gray;
@@ -109,9 +132,13 @@
 }
 
 .chatSendBtn{
-    // position: relative;
+    position: absolute;
     margin-right: 10px;
     margin-bottom: 10px;
+    margin-right: 0;
+    justify-content: right;
+    right: 0px;
+    bottom: 0px;
 }
 .textarea-style{
     position: relative;
@@ -122,6 +149,7 @@
     font-family: "Noto Sans", "Roboto", "Helvetica Neue", sans-serif;
     overflow:hidden;
     width: 100%;
+    height: 130px;
     overflow-wrap: break-word;
 }
 
@@ -136,4 +164,23 @@
 
 .chat-checkBox {
     padding-left: 16px;
+}
+
+.whiteBoardMode {
+    width: 300px;
+    height:calc(100vh - 350px);
+}
+
+
+/*  cursor: not-allowed와 pointer-events:none은 
+    한 곳에서 사용 못하기 때문에  
+    부모에게는 커서 모양, 자식에게는 클릭 기능 제한
+*/
+.wrap {
+    cursor : not-allowed;
+}
+
+.participant {
+    /* 클릭 불가능 none */
+    pointer-events : none;
 }
