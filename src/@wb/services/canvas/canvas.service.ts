@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { fromEvent, Subject, merge} from 'rxjs';
+import { takeUntil, throttleTime } from 'rxjs/operators';
 import { PdfStorageService } from '../../storage/pdf-storage.service';
 import { CANVAS_CONFIG } from '../../config/config';
 import { EventData } from '../eventBus/event.class';
 import { DrawingService } from '../drawing/drawing.service';
 import { EventBusService } from '../eventBus/event-bus.service';
+
 
 @Injectable({
 	providedIn: 'root'
@@ -241,6 +243,27 @@ export class CanvasService {
 			
 			drawingService.start(sourceCtx, points, tool, sourceCanvas);
 			// 포인터일 경우 end가 아닌 start와 move 때 socket으로 전송
+			if(tool.type == 'pointer'){
+				eventBusService.emit(new EventData('gen:newDrawEvent', {
+					points: oldPoint,
+					tool
+				}));
+
+				merge(
+					fromEvent(sourceCanvas, 'mousemove'),
+					fromEvent(sourceCanvas, 'touchmove')
+				  ).pipe(
+					takeUntil(fromEvent(sourceCanvas, 'mouseup')),
+					takeUntil(fromEvent(sourceCanvas, 'mouseout')),
+					takeUntil(fromEvent(sourceCanvas, 'touchend')),
+					throttleTime(50)
+				  ).subscribe(()=>{
+					  	eventBusService.emit(new EventData('gen:newDrawEvent', {
+							points: oldPoint,
+							tool
+						}));
+				  });
+			}
 			
 			startTime = Date.now();
 			event.preventDefault();
@@ -256,48 +279,30 @@ export class CanvasService {
 				oldPoint = newPoint;
 				points.push(oldPoint[0]); // x
 				points.push(oldPoint[1]); // y
-
-				drawingService.move(sourceCtx, points, tool, scale, sourceCanvas); // scale: eraser marker 정확히 지우기 위함.
-				
-				// 포인터일 경우 end가 아닌 start와 move 때 socket으로 전송
-				if(tool.type == 'pointer'){
-					console.log('mouse movement')
-					setTimeout(() => {
-						eventBusService.emit(new EventData('gen:newDrawEvent', {
-							points: newPoint,
-							tool
-						}));
-					},100)
-					
-				}
-				
+				drawingService.move(sourceCtx, points, tool, scale, sourceCanvas); // scale: eraser marker 정확히 지우기 위함.	
 				event.preventDefault();
 				// console.log(points)
 			}
 		};
 
-
-		// function throttle(callback, limit = 100) {
-		// 	let waiting = false;
-		// 	return function () {
-		// 	  if (!waiting) {
-		// 		callback.apply(this, arguments);
-		// 		waiting = true;
-		// 		setTimeout(() => {
-		// 		  waiting = false;
-		// 		}, limit);
-		// 	  }
-		// 	};
-		//   }
-		  
 		function upEvent() {
 			
 			if (!isDown) return;
 			isDown = false;
 			isTouch = false;
 			
+			// 레이저 포인트일경우
 			drawingService.end(targetCtx, points, tool);
-			if (tool.type == 'pointer') return;
+			if(tool.type == 'pointer'){
+				tool.type = 'pointerEnd';
+				eventBusService.emit(new EventData('gen:newDrawEvent', {
+					points: newPoint,
+					tool
+				}));
+				tool.type = 'pointer';
+				return clear(sourceCanvas, scale); 
+			}
+			
 			/*----------------------------------------------
 				Drawing Event 정보
 				-> gen:newDrawEvent로 publish.
