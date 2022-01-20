@@ -171,7 +171,7 @@ export class BoardSlideViewComponent implements OnInit {
 			  this.drawingService.clearThumb(data, thumbCanvas, thumbScale);
 			}
 		  });
-
+		//
 		/*--------------------------------------
 			Scroll event에 따라서 thumbnail window 위치/크기 변경
 			--> broadcast from comclass component
