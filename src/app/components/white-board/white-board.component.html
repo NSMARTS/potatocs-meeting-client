@@ -41,8 +41,20 @@
 		board-fabs
 	--------------------------------------------------------------- -->
 
-	<div id="videoOverlay_container" class="videoOverlay_container">
-		<!-- <div id="receiveRideoOverlay_container" class="receiveRideoOverlay_container"></div> -->
+	<div [ngClass]="{'hiddenVideoMode': hiddenVideoMode === true}" class="videoOverlay_wrap">
+		<div class="videoOverlay_button" (click)="hiddenVideo()">
+			<mat-icon >arrow_forward</mat-icon>
+		</div>
+		
+		<div id="videoOverlay_container" class="videoOverlay_container" [dragScroll]="dragOn">
+			<!-- <div id="receiveRideoOverlay_container" class="receiveRideoOverlay_container"></div> -->
+		</div>
+	</div>
+
+
+	<div [ngClass]="{'hiddenVideoMode': hiddenVideoMode === false}" (click)="visibleVideo()" >
+		<mat-icon class="visibleVideo_button">arrow_back</mat-icon>
 	</div>
 
 </div>
+

@@ -1,11 +1,17 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
 import { Subject } from 'rxjs';
-import { takeUntil, distinctUntilChanged } from 'rxjs/operators'
+import { pluck, takeUntil, distinctUntilChanged } from 'rxjs/operators'
 
 import { CANVAS_CONFIG, DRAWING_TYPE } from '../../../../@wb/config/config';
 
 import { EditInfoService } from 'src/@wb/store/edit-info.service';
+import { EventBusService } from 'src/@wb/services/eventBus/event-bus.service';
+import { DrawStorageService } from 'src/@wb/storage/draw-storage.service';
+import { ViewInfoService } from 'src/@wb/store/view-info.service';
+import { EventData } from 'src/@wb/services/eventBus/event.class';
+import { ApiService } from 'src/@wb/services/apiService/api.service';
+import { SocketService } from 'src/@wb/services/socket/socket.service';
 
 
 
@@ -27,24 +33,47 @@ export class BoardNavComponent implements OnInit {
   currentColor = 'black';
   currentTool: string = 'pen';
   menuName: any;
-
-
+  currentDocNum : any;
+  currentPage : any;
+  currentDocId: string;
+  private socket;
   // Width: 3단계 설정
   widthSet = CANVAS_CONFIG.widthSet;
   currentWidth = {
+    pointer: this.widthSet.pointer[0],
     pen: this.widthSet.pen[0],
-    eraser: this.widthSet.eraser[2]
+    eraser: this.widthSet.eraser[2],
+    line: this.widthSet.line[0],
+    circle: this.widthSet.circle[0],
+    rectangle: this.widthSet.rectangle[0],
+    roundedRectangle: this.widthSet.roundedRectangle[0],
   };
   mode: any = 'move';
 
   private unsubscribe$ = new Subject<void>();
 
   constructor(
-    private editInfoService: EditInfoService
-  ) { }
+    private editInfoService: EditInfoService,
+    private eventBusService: EventBusService,
+    private drawStorageService: DrawStorageService,
+    private viewInfoService: ViewInfoService,
+    private apiService: ApiService,
+    private socketService: SocketService,
+  ) {
+    this.socket = this.socketService.socket;
+   }
 
 
   ngOnInit(): void {
+     // 현재 Page 변경
+     this.viewInfoService.state$
+     .pipe(takeUntil(this.unsubscribe$), pluck('pageInfo'), distinctUntilChanged())
+     .subscribe((pageInfo) => {
+        this.currentDocNum = pageInfo.currentDocNum;
+        this.currentPage = pageInfo.currentPage;
+        this.currentDocId = pageInfo.currentDocId;
+      
+     });
 
     this.editInfoService.state$
       .pipe(takeUntil(this.unsubscribe$), distinctUntilChanged())
@@ -54,8 +83,13 @@ export class BoardNavComponent implements OnInit {
         this.currentTool = editInfo.tool;
         this.currentColor = editInfo.toolsConfig.pen.color;
         this.currentWidth = {
+          pointer: editInfo.toolsConfig.pointer.width,
           pen: editInfo.toolsConfig.pen.width,
-          eraser: editInfo.toolsConfig.eraser.width
+          eraser: editInfo.toolsConfig.eraser.width,
+          line: editInfo.toolsConfig.line.width,
+          circle: editInfo.toolsConfig.circle.width,
+          rectangle: editInfo.toolsConfig.rectangle.width,
+          roundedRectangle: editInfo.toolsConfig.roundedRectangle.width,
         }
       });
   }
@@ -70,7 +104,7 @@ export class BoardNavComponent implements OnInit {
    */
   changeColor(color) {
     const editInfo = Object.assign({}, this.editInfoService.state);
-
+    editInfo.mode = 'draw';
     if (editInfo.mode != 'draw' || editInfo.tool!='pen' ) return;
 
     editInfo.toolsConfig.pen.color = color;
@@ -103,10 +137,29 @@ export class BoardNavComponent implements OnInit {
    * @param tool : 'pen', 'eraser'
    *
    */
-  changeTool(tool) {
+  async changeTool(tool) {
     // console.log(tool)
     const editInfo = Object.assign({}, this.editInfoService.state);
     editInfo.mode = 'draw';
+    
+    if(editInfo.tool == 'eraser' && tool == 'eraser'){
+      console.log('지우개 모드 2번 연달아 눌렀습니다----------------')
+      
+      const data = {
+        docId : this.currentDocId,
+        currentDocNum: this.currentDocNum, 
+        currentPage: this.currentPage
+      }
+
+      // 다른 사람들에게 드로우 이벤트 제거
+      this.socket.emit('clearDrawingEvents', data )
+
+      // 자기자신한테 있는 드로우 이벤트 제거
+      this.drawStorageService.clearDrawingEvents(this.currentDocNum, this.currentPage);       
+      this.eventBusService.emit(new EventData('rmoveDrawEventPageRendering', '' ));
+      this.eventBusService.emit(new EventData('rmoveDrawEventThumRendering', '' ));
+    }
+    
     editInfo.tool = tool;
     this.editInfoService.setEditInfo(editInfo);
 

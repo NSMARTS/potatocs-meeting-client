@@ -11,8 +11,13 @@ class InitEditInfo {
   tool = 'pen'; // eraser, ...
 
   toolsConfig = {
+    pointer: { width: 20, color: 'black' },
     pen: { width: 4, color: 'black' },
-    eraser: { width: 60, color: '#ffffff' }
+    eraser: { width: 60, color: '#ffffff' },
+    line: { width: 4, color: 'black' },
+    circle: { width: 4, color: 'black' },
+    rectangle: { width: 4, color: 'black' },
+    roundedRectangle: { width: 4, color: 'black' },
   };
 
   toolDisabled = true; // move인 경우

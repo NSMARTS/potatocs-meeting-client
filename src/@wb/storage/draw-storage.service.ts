@@ -30,7 +30,7 @@ export class DrawStorageService {
     const drawingEventSet = this.drawVarArray[docNum-1]?.drawingEventSet;
 
     // 없으면 undefined.
-    return drawingEventSet.find((item) => item.pageNum === pageNum);
+    return drawingEventSet?.find((item) => item.pageNum === pageNum);
   }
 
 
@@ -79,7 +79,7 @@ export class DrawStorageService {
    */
 
    setDrawEventSet(docNum, serverDrawingEvent) {
-    // console.log(docNum, serverDrawingEvent);
+    console.log(docNum, serverDrawingEvent);
 
     if (!this.drawVarArray[docNum - 1]) {
       this.drawVarArray[docNum - 1] = { drawingEventSet: [] };
@@ -88,25 +88,27 @@ export class DrawStorageService {
       this.drawVarArray[docNum - 1]['drawingEventSet'] = [];
     }
 
+    if (serverDrawingEvent.length > 0 ){
+      for (let i = 0; i < serverDrawingEvent.length; i++) {
 
-    for (let i = 0; i < serverDrawingEvent.length; i++) {
+        // https://stackoverflow.com/questions/60036060/combine-object-array-if-same-key-value-in-javascript
+        const out = serverDrawingEvent.reduce((a, v) => {
+          if (a[v.pageNum]) {
+            a[v.pageNum].drawingEvent.push(v.drawingEvent);
+          } else {
+            a[v.pageNum] = { pageNum: v.pageNum, drawingEvent: [v.drawingEvent] }
+          }
+          return a
+        }, {})
 
-      // https://stackoverflow.com/questions/60036060/combine-object-array-if-same-key-value-in-javascript
-      const out = serverDrawingEvent.reduce((a, v) => {
-        if (a[v.pageNum]) {
-          a[v.pageNum].drawingEvent.push(v.drawingEvent);
-        } else {
-          a[v.pageNum] = { pageNum: v.pageNum, drawingEvent: [v.drawingEvent] }
-        }
-        return a
-      }, {})
+        const outputData = Object.values(out)
 
-      const outputData = Object.values(out)
-
-      this.drawVarArray[docNum-1].drawingEventSet = outputData;
-      // console.log(docNum, this.drawVarArray[docNum-1].drawingEventSet);
-    }
-
+        this.drawVarArray[docNum-1].drawingEventSet = outputData;
+        // console.log(docNum, this.drawVarArray[docNum-1].drawingEventSet);
+      }
+   } else {
+      this.drawVarArray[docNum - 1]['drawingEventSet'] = [];
+   }
   }
 
 
@@ -116,7 +118,8 @@ export class DrawStorageService {
    * @param {number} pageNum 페이지 번호
    */
   clearDrawingEvents(pdfnum, pageNum) {
-    this.drawVarArray[pdfnum].drawingEventSet['p' + pageNum] = [];
+    const res = this.drawVarArray[pdfnum-1].drawingEventSet.filter((x) =>x.pageNum !== pageNum)
+    this.drawVarArray[pdfnum-1].drawingEventSet = res
   }
 
   /**

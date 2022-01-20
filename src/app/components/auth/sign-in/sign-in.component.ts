@@ -68,7 +68,7 @@ export class SignInComponent implements OnInit {
           console.log(data.message);
         }
         alert('successfully signed in');
-        console.log(this.params)
+        // console.log(this.params)
         // this.router.navigateByUrl(this.params.params)
         this.router.navigate([`${this.params.params}`]);
       },

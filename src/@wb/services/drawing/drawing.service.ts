@@ -5,27 +5,49 @@ import { Injectable } from '@angular/core';
 })
 export class DrawingService {
 
+  private sourceCanvas:any;
   constructor() { }
   /**
      * Drawing Start
      */
-  start(context, points, tool) {
-    context.globalCompositeOperation = 'source-over';
-    context.lineCap = "round";
-    context.lineJoin = 'round';
-    context.fillStyle = tool.color;
-    context.strokeStyle = tool.color;
-    context.lineWidth = 1; // check line width 영향...
+  start(context, points, tool, sourceCanvas) {
+    switch (tool.type) {
+      case 'pen':
+        context.globalCompositeOperation = 'source-over';
+        context.lineCap = "round";
+        context.lineJoin = 'round';
+        context.fillStyle = tool.color;
+        context.strokeStyle = tool.color;
+        context.lineWidth = 1; // check line width 영향...
+        context.beginPath();
+        context.arc(points[0], points[1], tool.width / 2, 0, Math.PI * 2, !0);
+        context.fill();
+        console.log('Start')
+        context.closePath();
+        break;
+      case 'eraser':
+          // eraser Marker 표시
+          this.eraserMarker(context, [points[0], points[1]], tool.width);
+        break;
+      // 포인터
+      case 'pointer':
+        context.clearRect(0, 0, sourceCanvas.width, sourceCanvas.height);
+        context.globalCompositeOperation = 'source-over';
+        context.lineCap = "round";
+        context.lineJoin = 'round';
+        context.fillStyle = 'red';
+        context.strokeStyle = 'black';
+        context.lineWidth = 1; // check line width 영향...
+        context.beginPath();
+        context.arc(points[0], points[1], 30 / 2, 0, Math.PI * 2, !0);
+        context.fill();
+        context.stroke();
 
-    context.beginPath();
-    context.arc(points[0], points[1], tool.width / 2, 0, Math.PI * 2, !0);
-    context.fill();
-    console.log('Start')
-    context.closePath();
-
-    if (tool.type === "eraser") {
-      // eraser Marker 표시
-      this.eraserMarker(context, [points[0], points[1]], tool.width);
+        context.closePath();
+        break;
+    
+      default:
+        break;
     }
   }
 
@@ -33,9 +55,9 @@ export class DrawingService {
   /**
    * Drawing Move
    */
-  move(context, points, tool, zoomScale) {
+  move(context, points, tool, zoomScale, sourceCanvas) {
     context.globalCompositeOperation = 'source-over';
-
+    this.sourceCanvas = sourceCanvas
     context.lineCap = "round";
     context.lineJoin = 'round';
     context.lineWidth = tool.width;
@@ -108,6 +130,21 @@ export class DrawingService {
         this.eraserMarker(context, [points[2 * (len - 1)], points[2 * (len - 1) + 1]], tool.width);
         break;
 
+      case 'pointer':
+          context.clearRect(0, 0, sourceCanvas.width, sourceCanvas.height);
+          context.globalCompositeOperation = 'source-over';
+          context.lineCap = "round";
+          context.lineJoin = 'round';
+          context.fillStyle = 'red';
+          context.strokeStyle = 'black';
+          context.lineWidth = 1; // check line width 영향...
+          context.beginPath();
+          context.arc(points[2 * (len - 1)], points[2 * (len - 1) + 1], 30 / 2, 0, Math.PI * 2, !0);
+          context.fill();
+          context.stroke();
+          context.closePath();
+          
+          break;
 
       default:
         break;
@@ -115,6 +152,7 @@ export class DrawingService {
   }
 
   end(context, points, tool) {
+    console.log(points)
     context.lineCap = "round";
     context.lineJoin = 'round';
     context.lineWidth = tool.width;
@@ -128,7 +166,10 @@ export class DrawingService {
     let d;
     const len = points.length / 2;
 
-    if (tool.type === "pen") {
+    if (tool.type === "pointer"){
+      // context.clearRect(0, 0, this.sourceCanvas.width, this.sourceCanvas.height);
+      return
+    } else if (tool.type === "pen") {
       context.globalCompositeOperation = 'source-over';
     }
     else {
@@ -178,12 +219,24 @@ export class DrawingService {
 
   // Thumbnail에 그리기
   drawThumb(data, thumbCanvas, thumbScale) {
+    console.log('drawThumb--------------------------')
+    console.log(data)
     const thumbCtx = thumbCanvas.getContext('2d');
     // prepare scale
     thumbCtx.save();
     thumbCtx.scale(thumbScale, thumbScale);
     this.end(thumbCtx, data.points, data.tool);
     thumbCtx.restore();
+  }
+
+  // Thumbnail에 그리기
+  clearThumb(data, thumbCanvas, thumbScale) {
+    console.log('clearThumb')
+    console.log(thumbCanvas)
+    console.log(thumbScale)
+    const thumbCtx = thumbCanvas.getContext('2d');
+    thumbCtx.clearRect(0, 0, thumbCanvas.width/thumbScale, thumbCanvas.height/thumbScale);
+    
   }
 
   dataArray: any = [];
@@ -200,11 +253,37 @@ export class DrawingService {
     this.dataArray = [];
   }
 
+/**
+   * page 전환 등...--> 기존에 그려지고 있던 event stop.
+   *
+   */
+   async rxPointer(data, sourceCanvas, targetCanvas, scale, docNum, pageNum) {
+      console.log(data)
+      console.log('rxPointer-------------------------')
+      const context = sourceCanvas.getContext("2d"); 
+      context.globalCompositeOperation = 'source-over';
+      context.lineCap = "round";
+      context.lineJoin = 'round';
+      context.fillStyle = 'red';
+      context.strokeStyle = 'black';
+      context.lineWidth = 1; // check line width 영향...
+      context.beginPath();
+      context.clearRect(0, 0, sourceCanvas.width / scale, sourceCanvas.height / scale);
+      context.arc(data.points[0], data.points[1], 30 / 2, 0, Math.PI * 2, !0);
+      context.fill();
+      context.stroke();
+      context.closePath();
+      return;
+  
+  }
+
+
   /**
    * page 전환 등...--> 기존에 그려지고 있던 event stop.
    *
    */
-  rxDrawing(data, sourceCanvas, targetCanvas, scale, docNum, pageNum) {
+  async rxDrawing(data, sourceCanvas, targetCanvas, scale, docNum, pageNum) {
+    console.log('rxDrawing---------------------------------------------')
     const tmpData = {
       data,
       sourceCanvas,
@@ -222,11 +301,11 @@ export class DrawingService {
   }
 
 
-  rxDrawingFunc() {
-
+  async rxDrawingFunc() {
+    console.log('rxDrawingFunc~~~~~~~~~~')
     if (this.dataArray.length === 0) return;
 
-    const data = this.dataArray[0].data;
+    const data = await this.dataArray[0].data;
     const pointsLength = data.points.length / 2;
 
     const sourceCanvas = this.dataArray[0].sourceCanvas;
@@ -237,31 +316,20 @@ export class DrawingService {
 
     const scale = this.dataArray[0].scale;
 
-
     context.lineCap = "round";
     context.lineJoin = 'round';
     context.lineWidth = data.tool.width;
 
-    // if (data.tool.type === "pen") {
-    //   context.globalCompositeOperation = 'source-over';
-    //   context.strokeStyle = data.tool.color;
-    //   context.fillStyle = data.tool.color;
-    // }
-    // else {
-    //   context.globalCompositeOperation = 'destination-out';
-    //   context.strokeStyle = "rgba(0, 0, 0, 1)";
-    //   context.fillStyle = "rgba(0, 0, 0, 1)";
-    // }
     if (data.tool.type === "pen") {
       context.globalCompositeOperation = 'source-over';
       context.strokeStyle = data.tool.color;
       context.fillStyle = data.tool.color;
     }
-    else {
-      context.globalCompositeOperation = 'source-over'
+    else if (data.tool.type === "eraser"){
+      context.globalCompositeOperation = 'source-over';
       context.strokeStyle = "rgba(255, 255, 255, 1)";
       context.fillStyle = "rgba(255, 255, 255, 1)";
-    }
+    } 
 
     if (pointsLength < 3) {
       context.beginPath();
@@ -308,6 +376,7 @@ export class DrawingService {
       }
 
     }, data.timeDiff / pointsLength);
+
   }
 
   /**
@@ -318,6 +387,7 @@ export class DrawingService {
    * @param thumbScale
    */
   rxDrawingThumb(data, thumbCanvas, thumbScale) {
+    console.log('drawThumbRX--------------------------')
     const thumbCtx = thumbCanvas.getContext('2d');
     // prepare scale
     thumbCtx.save();

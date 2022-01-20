@@ -34,6 +34,8 @@ import { MeetingGuard } from './services/meeting/auth/meeting.guard';
 import { SignInComponent } from './components/auth/sign-in/sign-in.component';
 import { RightSidebarComponent } from './components/right-sidebar/right-sidebar.component';
 import { DeviceCheckComponent } from './components/device-check/device-check.component';
+import { MeetingChatComponent } from './components/right-sidebar/meeting-chat/meeting-chat.component';
+import { ParticipantComponent } from './components/right-sidebar/participant/participant.component';
 
 
 
@@ -60,6 +62,8 @@ export function tokenGetter() {
     RightSidebarComponent,
     DialogUpdateBitrateComponent,
     DeviceCheckComponent,
+    MeetingChatComponent,
+    ParticipantComponent,
   ],
   imports: [
     MatToolbarModule,

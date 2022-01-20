@@ -8,6 +8,8 @@ import { CanvasService } from 'src/@wb/services/canvas/canvas.service';
 import { DrawingService } from 'src/@wb/services/drawing/drawing.service';
 import { EventBusService } from 'src/@wb/services/eventBus/event-bus.service';
 import { RenderingService } from 'src/@wb/services/rendering/rendering.service';
+import { SocketService } from 'src/@wb/services/socket/socket.service';
+import { DrawStorageService } from 'src/@wb/storage/draw-storage.service';
 
 import { ViewInfoService } from 'src/@wb/store/view-info.service';
 
@@ -21,14 +23,18 @@ import { ViewInfoService } from 'src/@wb/store/view-info.service';
 
 export class BoardSlideViewComponent implements OnInit {
 
+  private socket;
+
   constructor(
     private canvasService: CanvasService,
     private renderingService: RenderingService,
     private viewInfoService: ViewInfoService,
     private eventBusService: EventBusService,
     private drawingService: DrawingService,
-
+    private socketService: SocketService,
+    private drawStorageService: DrawStorageService,
   ) {
+    this.socket = this.socketService.socket;
   }
 
 
@@ -96,9 +102,9 @@ export class BoardSlideViewComponent implements OnInit {
    * 판서 Event 관련
    */
   eventBusListeners() {
-
     // 내가 그린 Event thumbnail에 그리기
     this.eventBusService.on('gen:newDrawEvent', this.unsubscribe$, async (data) => {
+      console.log(data)
       this.drawThumb(data);
     });
 
@@ -106,9 +112,29 @@ export class BoardSlideViewComponent implements OnInit {
     // 다른 사람이 그린 Event thumbnail에 그리기
     this.eventBusService.on('receive:drawEvent', this.unsubscribe$, async (data) => {
       // data = (data || '');
-      // console.log(data)
-      // console.log(data.drawingEvent);
+      console.log(data)
+      console.log(data.drawingEvent);
       this.drawThumbRx(data);
+    });
+
+    
+    /**
+     * 자신이 보고있는 판서 드로잉 삭제
+    */
+     this.eventBusService.on('rmoveDrawEventThumRendering',this.unsubscribe$,(data)=>{
+      if (this.viewInfoService.state.leftSideView == 'fileList') return;
+        const thumbCanvas = this.thumbCanvasRef.toArray()[this.currentPageNum - 1].nativeElement;
+        const thumbScale = this.thumbArray[this.currentPageNum - 1].scale;
+        this.drawingService.clearThumb(data, thumbCanvas, thumbScale);
+    })
+    // 다른 사림이 보고있는 판서 드로잉 삭제 
+    this.eventBusService.on('receive:clearDrawEvent', this.unsubscribe$, async (data) => {
+      if (this.viewInfoService.state.leftSideView == 'fileList') return;
+      if(this.currentDocId == data.docId){
+        const thumbCanvas = this.thumbCanvasRef.toArray()[data.currentPage - 1].nativeElement;
+        const thumbScale = this.thumbArray[data.currentPage - 1].scale;
+        this.drawingService.clearThumb(data, thumbCanvas, thumbScale);
+      }
     });
 
 

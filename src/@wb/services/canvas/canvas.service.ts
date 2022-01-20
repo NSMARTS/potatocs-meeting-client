@@ -238,8 +238,10 @@ export class CanvasService {
 
 			oldPoint = getPoint(isTouch ? event.touches[0] : event, this, scale);
 			points = oldPoint;
-
-			drawingService.start(sourceCtx, points, tool);
+			
+			drawingService.start(sourceCtx, points, tool, sourceCanvas);
+			// 포인터일 경우 end가 아닌 start와 move 때 socket으로 전송
+			
 			startTime = Date.now();
 			event.preventDefault();
 		};
@@ -255,18 +257,47 @@ export class CanvasService {
 				points.push(oldPoint[0]); // x
 				points.push(oldPoint[1]); // y
 
-				drawingService.move(sourceCtx, points, tool, scale); // scale: eraser marker 정확히 지우기 위함.
+				drawingService.move(sourceCtx, points, tool, scale, sourceCanvas); // scale: eraser marker 정확히 지우기 위함.
+				
+				// 포인터일 경우 end가 아닌 start와 move 때 socket으로 전송
+				if(tool.type == 'pointer'){
+					console.log('mouse movement')
+					setTimeout(() => {
+						eventBusService.emit(new EventData('gen:newDrawEvent', {
+							points: newPoint,
+							tool
+						}));
+					},100)
+					
+				}
+				
 				event.preventDefault();
 				// console.log(points)
 			}
 		};
 
+
+		// function throttle(callback, limit = 100) {
+		// 	let waiting = false;
+		// 	return function () {
+		// 	  if (!waiting) {
+		// 		callback.apply(this, arguments);
+		// 		waiting = true;
+		// 		setTimeout(() => {
+		// 		  waiting = false;
+		// 		}, limit);
+		// 	  }
+		// 	};
+		//   }
+		  
 		function upEvent() {
+			
 			if (!isDown) return;
 			isDown = false;
 			isTouch = false;
+			
 			drawingService.end(targetCtx, points, tool);
-
+			if (tool.type == 'pointer') return;
 			/*----------------------------------------------
 				Drawing Event 정보
 				-> gen:newDrawEvent로 publish.
@@ -278,7 +309,7 @@ export class CanvasService {
 				timeDiff: endTime - startTime
 			};
 
-      // Generate Event Emitter: new Draw 알림
+      		// Generate Event Emitter: new Draw 알림
 			eventBusService.emit(new EventData('gen:newDrawEvent', drawingEvent));
 
 			// 3. cover canvas 초기화

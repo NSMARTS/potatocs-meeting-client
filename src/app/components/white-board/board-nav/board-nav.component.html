@@ -39,8 +39,12 @@
       <li class="tool-items">
 
         <div class="tool-set">
+          <button type="button" (click)="changeTool('pointer');" mat-icon-button>
+            <mat-icon [ngClass]="(currentTool == 'pointer') && (mode == 'draw')?'active':''"> radio_button_checked
+            </mat-icon>
+          </button>
 
-          <button type="button" (click)="changeTool('pen');" mat-icon-button >
+          <button type="button" (click)="changeTool('pen');" mat-icon-button>
             <mat-icon [ngClass]="(currentTool == 'pen') && (mode == 'draw')?'active':''">draw</mat-icon>
           </button>
 
@@ -52,16 +56,28 @@
             <mat-icon [ngClass]="(mode == 'move')?'active':''"> open_with </mat-icon>
           </button>
 
+          <button type="button" (click)="changeTool('line');" mat-icon-button mat-button
+            [matMenuTriggerFor]="shapeMemu">
+            <mat-icon
+              [ngClass]="(currentTool == 'line' || currentTool == 'circle'  ||currentTool == 'rectangle' || currentTool == 'roundedRectangle' ) && (mode == 'draw')?'active':''">
+              draw </mat-icon>
+          </button>
+          <mat-menu #shapeMemu="matMenu" class="menuCustomize" fxLayout="column">
+            <button type="button" (click)="changeTool('line');" mat-icon-button>
+              <mat-icon [ngClass]="(currentTool == 'line') && (mode == 'draw')?'active':''"> remove icon </mat-icon>
+            </button>
+            <button type="button" (click)="changeTool('circle');" mat-icon-button>
+              <mat-icon [ngClass]="(currentTool == 'circle') && (mode == 'draw')?'active':''"> circle </mat-icon>
+            </button>
+            <button type="button" (click)="changeTool('rectangle');" mat-icon-button>
+              <mat-icon [ngClass]="(currentTool == 'rectangle') && (mode == 'draw')?'active':''"> rectangle </mat-icon>
+            </button>
+            <button type="button" (click)="changeTool('roundedRectangle');" mat-icon-button>
+              <mat-icon [ngClass]="(currentTool == 'roundedRectangle') && (mode == 'draw')?'active':''"> crop_3_2
+              </mat-icon>
+            </button>
+          </mat-menu>
 
-          <!-- sync button -->
-          <!-- <button type="button" (click)="changeSyncState($event);" mat-icon-button aria-label="link">
-            <i class="fas fa-2x" [ngClass]="isSyncMode ? 'fa-link sync':'fa-unlink'">
-            </i>
-          </button> -->
-
-          <!-- <button type="button" mat-icon-button color="white">
-            <mat-icon style="color: white;">delete_forever</mat-icon>
-          </button> -->
 
         </div>
       </li>

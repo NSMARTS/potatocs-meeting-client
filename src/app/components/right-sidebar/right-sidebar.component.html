@@ -1,29 +1,27 @@
-<div class="right_sidebar_container">
+<!-- <div class="right_sidebar_container">
     <div class="right_sidebar_nav" fxFlex fxLayout="row">
         <ul>
-            <!-- <li>
-                <button>채팅</button>
-            </li> -->
             <li>
                 Participants
             </li>
         </ul>
     </div>
     
-    <!-- <div class="participants">
-        <ul>
-            <li *ngFor="let participant_name of participants" >
-                <span> {{participant_name}}</span>
-            </li>
-        </ul>
-    </div>
-
---------------------------------------- -->
     <div class="enlistedMembers">
         <ul>
-            <li  *ngFor="let enlistedMember_name of enlistedMembers" style="padding-left: 25%;">
-                <span #enlistedMember_span> {{enlistedMember_name}}</span>
+            <li  *ngFor="let enlistedMember_name of enlistedMembers">
+                <span #enlistedMember_span>{{enlistedMember_name}}</span>
             </li>
         </ul>
     </div>
+</div> -->
+<div class="right_sidebar_container" [ngClass]="{'whiteBoardMode': whiteBoardMode === true}">
+    <mat-tab-group class="mat-tab-group" dynamicHeight mat-align-tabs="start">
+        <mat-tab label="Chat"> 
+            <app-meeting-chat></app-meeting-chat> 
+        </mat-tab>
+        <mat-tab label="Participant"> 
+            <app-participant></app-participant> 
+        </mat-tab>
+    </mat-tab-group>
 </div>

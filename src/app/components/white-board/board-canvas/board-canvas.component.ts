@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, Renderer2, ViewChild, HostListener } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, Renderer2, ViewChild, HostListener, ɵɵtrustConstantResourceUrl } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { of, Subject, fromEvent } from 'rxjs';
 import { pluck, takeUntil, distinctUntilChanged, debounceTime } from 'rxjs/operators';
@@ -42,6 +42,9 @@ export class BoardCanvasComponent implements OnInit, OnDestroy {
     width: '',
   };
 
+  private currentDocNum: any;
+  private currentPage :any;
+
   // ************* Subject
   canvasClearBoardA$;
 
@@ -62,6 +65,7 @@ export class BoardCanvasComponent implements OnInit, OnDestroy {
   rxCoverCanvas: HTMLCanvasElement;
   bgCanvas: HTMLCanvasElement;
   tmpCanvas: HTMLCanvasElement;
+  
 
   rendererEvent1: any;
 
@@ -104,7 +108,8 @@ export class BoardCanvasComponent implements OnInit, OnDestroy {
     this.viewInfoService.state$
       .pipe(takeUntil(this.unsubscribe$), pluck('pageInfo'), distinctUntilChanged())
       .subscribe((pageInfo) => {
-
+        this.currentDocNum = pageInfo.currentDocNum;
+        this.currentPage = pageInfo.currentPage;
         // 초기 load 포함 변경사항에 대해 수행
         // (doc change, page change, zoom change 등)
         if (pageInfo.currentDocId) {
@@ -151,8 +156,42 @@ export class BoardCanvasComponent implements OnInit, OnDestroy {
       const pageNum = pageInfo.currentPage;
       const zoomScale = pageInfo.zoomScale;
 
+      
       if (docNum == data.docNum && pageNum == data.pageNum) {
-        this.drawingService.rxDrawing(data.drawingEvent, this.rxCoverCanvas, this.teacherCanvas, zoomScale, docNum, pageNum);
+        if (data.drawingEvent.tool.type == 'pointer') {
+          this.drawingService.rxPointer(data.drawingEvent, this.rxCoverCanvas, this.teacherCanvas, zoomScale, docNum, pageNum);
+        } else {
+          this.drawingService.rxDrawing(data.drawingEvent, this.rxCoverCanvas, this.teacherCanvas, zoomScale, docNum, pageNum);
+        }
+      }
+    });
+    /////////////////////////////////////////////////////////////
+
+    //~~~ 판서 전체 삭제 루틴:  추가 변경 해야함
+    this.eventBusService.on('rmoveDrawEventPageRendering',this.unsubscribe$,(data)=>{
+      const viewInfo = this.viewInfoService.state;
+      const docNum = viewInfo.pageInfo.currentDocNum;
+      const pageNum = viewInfo.pageInfo.currentPage;
+      const zoomScale = viewInfo.pageInfo.zoomScale;
+
+      if(this.currentDocNum == docNum && this.currentPage == pageNum){
+        this.pageRender(docNum, pageNum, zoomScale)
+      }
+    })
+    ///////////////////////////////////////////////
+
+    /////////////////////////////////////
+    // 다른 참가자가 receive:clearDrawEvent를 발생시켰을때의 Listener
+    // 판서 표시
+    this.eventBusService.on('receive:clearDrawEvent', this.unsubscribe$, async (data) => {
+      const pageInfo = this.viewInfoService.state.pageInfo;
+      //document Number -> 1부터 시작.
+      const docNum = pageInfo.currentDocNum;
+      const pageNum = pageInfo.currentPage;
+      const zoomScale = pageInfo.zoomScale;
+      
+      if (docNum == data.currentDocNum && pageNum == data.currentPage) {      
+        this.pageRender(docNum, pageNum, zoomScale)
       }
     });
     /////////////////////////////////////////////////////////////
@@ -167,22 +206,23 @@ export class BoardCanvasComponent implements OnInit, OnDestroy {
 
     /////////////////////////////////////////////////////////////
     //~~~ 판서 전체 삭제 루틴:  추가 변경 해야함
-    this.canvasClearBoardA$.pipe(takeUntil(this.unsubscribe$)).subscribe((text: string) => {
+    // this.canvasClearBoardA$.pipe(takeUntil(this.unsubscribe$)).subscribe((text: string) => {
 
-      const confirmResult = confirm('처음부터 다시 그리시겠습니까?');
+    //   const confirmResult = confirm('처음부터 다시 그리시겠습니까?');
 
-      if (confirmResult === true) {
-        console.log(' ---> init drawing');
-        // this.canvasService.recordingClear();
+    //   if (confirmResult === true) {
+    //     console.log(' ---> init drawing');
+    //     // this.canvasService.recordingClear();
 
-        // tool 초기화 --> 새로운 event data 처음 처리.
-        // this.changeTool('pen', 'black');
-      } else {
-        return;
-      }
+    //     // tool 초기화 --> 새로운 event data 처음 처리.
+    //     // this.changeTool('pen', 'black');
+    //   } else {
+    //     return;
+    //   }
 
-    });
-    ///////////////////////////////////////////////
+    // });
+    
+
 
   }
   // end of ngOnInit
@@ -245,6 +285,7 @@ export class BoardCanvasComponent implements OnInit, OnDestroy {
 
     // board rendering
     const drawingEvents = this.drawStorageService.getDrawingEvents(currentDocNum, currentPage);
+    console.log(drawingEvents)
     this.renderingService.renderBoard(this.teacherCanvas, zoomScale, drawingEvents);
   }
 
