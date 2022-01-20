@@ -256,7 +256,7 @@ export class CanvasService {
 					takeUntil(fromEvent(sourceCanvas, 'mouseup')),
 					takeUntil(fromEvent(sourceCanvas, 'mouseout')),
 					takeUntil(fromEvent(sourceCanvas, 'touchend')),
-					throttleTime(50)
+					throttleTime(30)
 				  ).subscribe(()=>{
 					  	eventBusService.emit(new EventData('gen:newDrawEvent', {
 							points: oldPoint,
