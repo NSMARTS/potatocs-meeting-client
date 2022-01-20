@@ -241,7 +241,7 @@ export class DrawingService {
 
   dataArray: any = [];
   stop: any = null;
-
+  //  
   /**
  * page 전환 등...--> 기존에 그려지고 있던 event stop.
  */
