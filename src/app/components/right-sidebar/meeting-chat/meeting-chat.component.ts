@@ -43,9 +43,6 @@ export class MeetingChatComponent implements OnInit, AfterViewChecked {
 
     ngOnInit(): void {
 
-        // 마지막 채팅에 스크롤 focus
-        this.scrollToBottom();
-
         // 현재 meeting에 접속 중인 유저정보, 미팅정보 가져오기
         this.meetingInfoService.state$
             .pipe(takeUntil(this.unsubscribe$))

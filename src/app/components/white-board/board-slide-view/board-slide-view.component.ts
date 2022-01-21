@@ -217,7 +217,7 @@ export class BoardSlideViewComponent implements OnInit {
 		// this.eventBusService.emit(new EventData('clickPdf', pageNum))
 
 		// /*-------------------------------------------
-		// zoom, page 전환등을 하는 경우 sync
+		//  zoom, page 전환등을 하는 경우 sync
 		// ---------------------------------------------*/
 		// const data = {
 		// 	meetingId: this.meetingId,
