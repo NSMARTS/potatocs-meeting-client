@@ -150,31 +150,34 @@ export class WebRTCComponent implements OnInit {
 		
 
 
-
-		this.socket.emit('userInfo', this.userData)
+		this.eventBusService.on('join', this.unsubscribe$, () => {
+			this.socket.emit('userInfo', this.userData)
+			this.socket.emit('join:room', this.meetingId);
+		});
+				
 
 		// Socket Code
-		this.socket.on("existingParticipants", async (data) => {
+		this.socket.on("existingParticipants", (data) => {
 			console.log(data)
 			
 			this.onExistingParticipants(data);
 			this.eventBusService.emit(new EventData('updateParticipants', this.participants))
 		});
-		this.socket.on("newParticipantArrived", async (data) => {
+		this.socket.on("newParticipantArrived", (data) => {
 			this.onNewParticipant(data);
 		});
 		// 나중에 구현
-		this.socket.on("participantLeft", async (data) => {
+		this.socket.on("participantLeft", (data) => {
 			console.log("participantLeft---------------", data)
 			this.onParticipantLeft(data);
 			this.eventBusService.emit(new EventData('participantLeft', data))
 
 		});
-		this.socket.on("receiveVideoAnswer", async (data) => {
+		this.socket.on("receiveVideoAnswer", (data) => {
 			console.log(data)
 			this.receiveVideoResponse(data);
 		});
-		this.socket.on("iceCandidate", async (data) => {
+		this.socket.on("iceCandidate", (data) => {
 			console.log(data)
 			this.participants[data.userId].rtcPeer.addIceCandidate(data.candidate, function (error) {
 				if (error) {
@@ -284,6 +287,7 @@ export class WebRTCComponent implements OnInit {
 
 	//https://github.com/peterkhang/ionic-demo/blob/a5dc3bef1067eb93c2070b4d8feb233ac6d3427a/src/app/pages/videoCall/video-call.page.ts#L169
 	async onExistingParticipants(msg) {
+		
 
 		var participant = new Participant(this.socketService, this.userId, this.userId, this.userName,  this.participantsElement);
 		this.participants[this.userId] = participant;
@@ -291,6 +295,10 @@ export class WebRTCComponent implements OnInit {
 		this.participantsService.updateParticipants(this.participants[this.userId]);
 		var video = participant.getVideoElement();
 
+		/****************************************
+		*   Device check 시 video overlay
+		*****************************************/
+		this.eventBusService.emit(new EventData('deviceCheckVideoOverlay', video))
 
 		// DeviceCheck Component로 부터 장치 id를 가져온다.
 		this.devicesInfoService.state$
@@ -428,6 +436,11 @@ export class WebRTCComponent implements OnInit {
 				});
 		})
 
+		
+        
+	
+		
+
 
 
 		/****************************************
@@ -518,9 +531,7 @@ export class WebRTCComponent implements OnInit {
 			console.log('succes speaker device')
 		})
 
-		
-
-		this.eventBusService.emit(new EventData('updateParticipants', this.participants))
+	
 
 		var options = {
 			remoteVideo: video,

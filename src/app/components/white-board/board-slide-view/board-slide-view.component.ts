@@ -62,6 +62,8 @@ export class BoardSlideViewComponent implements OnInit {
 	thumbArray = []; // page별 thumbnail size
 	scrollRatio: any;
 
+	stopRendering = false;
+
 
 	@ViewChildren('thumb') thumRef: QueryList<ElementRef> // 부모 thumb-item 안에 자식 element
 	@ViewChildren('thumbCanvas') thumbCanvasRef: QueryList<ElementRef>
@@ -84,8 +86,11 @@ export class BoardSlideViewComponent implements OnInit {
 
 				// Thumbnail Mode로 전환된 경우 Thumbnail Rendering
 				if (prevViewInfo.leftSideView != 'thumbnail' && viewInfo.leftSideView == 'thumbnail') {
+					this.stopRendering = false;
 					this.renderThumbnails();
 				}
+
+				
 			});
 
 		// container Scroll, Size, 판서event
@@ -252,34 +257,65 @@ export class BoardSlideViewComponent implements OnInit {
 	 * 문서 Load에 따른 thumbnail 생성 및 Rendering
 	 *
 	 */
-	async renderThumbnails() {
+	 async renderThumbnails() {
 
 		const numPages = this.viewInfoService.state.documentInfo[this.currentDocNum - 1].numPages;
-
+	
 		this.thumbArray = [];
-
+	
 		for (let pageNum = 1; pageNum <= numPages; pageNum++) {
-			/*-----------------------------------------------------------
-			  1. get size of thumbnail canvas --> thumbnail element 생성.
-			  - width, height, scale return.
-			--------------------------------------------------------------*/
-			const thumbSize = this.canvasService.getThumbnailSize(this.currentDocNum, pageNum);
-			this.thumbArray.push(thumbSize);
+		  /*-----------------------------------------------------------
+			1. get size of thumbnail canvas --> thumbnail element 생성.
+			- width, height, scale return.
+		  --------------------------------------------------------------*/
+		  const thumbSize = this.canvasService.getThumbnailSize(this.currentDocNum, pageNum);
+		  this.thumbArray.push(thumbSize);
 		}
-
-		await new Promise(res => setTimeout(res, 0));
-
-		// Thumbnail Background (PDF)
-		for (let i = 0; i < this.thumRef.toArray().length; i++) {
-			await this.renderingService.renderThumbBackground(this.thumRef.toArray()[i].nativeElement, this.currentDocNum, i + 1);
+	
+		// 엔트리와 함께... 초기 썸네일 오류... => Main Canvas와 겹치면 이상해지는듯?
+		await new Promise(res => setTimeout(res, 300));
+	
+		// Render Background & Board
+		for (let i = 0; i < numPages; i++) {
+		  await this.renderingService.renderThumbBackground(this.thumRef.toArray()[i].nativeElement, this.currentDocNum, i + 1);
+	
+		  this.renderingService.renderThumbBoard(this.thumbCanvasRef.toArray()[i].nativeElement, this.currentDocNum, i + 1);
+	
+		  // 그리는 중 docList로 변경된 경우
+		  if (this.stopRendering) {
+			i = numPages;
+		  }
+	
 		};
-
-		// Thumbnail Board (판서)
-		for (let i = 0; i < this.thumbCanvasRef.toArray().length; i++) {
-			await this.renderingService.renderThumbBoard(this.thumbCanvasRef.toArray()[i].nativeElement, this.currentDocNum, i + 1);
-		};
-
 	}
+	// async renderThumbnails() {
+
+	// 	const numPages = this.viewInfoService.state.documentInfo[this.currentDocNum - 1].numPages;
+
+	// 	this.thumbArray = [];
+
+	// 	for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+	// 		/*-----------------------------------------------------------
+	// 		  1. get size of thumbnail canvas --> thumbnail element 생성.
+	// 		  - width, height, scale return.
+	// 		--------------------------------------------------------------*/
+	// 		const thumbSize = this.canvasService.getThumbnailSize(this.currentDocNum, pageNum);
+	// 		this.thumbArray.push(thumbSize);
+	// 	}
+
+	// 	await new Promise(res => setTimeout(res, 0));
+
+	// 	// Thumbnail Background (PDF)
+	// 	for (let i = 0; i < this.thumRef.toArray().length; i++) {
+	// 		await this.renderingService.renderThumbBackground(this.thumRef.toArray()[i].nativeElement, this.currentDocNum, i + 1);
+	// 	};
+
+	// 	// Thumbnail Board (판서)
+	// 	for (let i = 0; i < this.thumbCanvasRef.toArray().length; i++) {
+	// 		await this.renderingService.renderThumbBoard(this.thumbCanvasRef.toArray()[i].nativeElement, this.currentDocNum, i + 1);
+	// 	};
+
+	// }
 
 
 

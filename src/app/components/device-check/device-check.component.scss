@@ -26,8 +26,9 @@ mat-card {
     padding-bottom: 18px;
 }
 
-.device_set_header h1 {
+.device_set_header h4 {
     font-size: 16px;
+    font-weight: 600;
 }
 
 .device_set_header .device_header_tx {
@@ -100,7 +101,7 @@ mat-card {
 }
 
 video {
-    background-color: black;
+    // background-color: black;
 }
 
 .txRec {
@@ -128,10 +129,30 @@ video {
 }
 
 
+.browserRec {
+    position: relative;
+}
 
+.titleRec {
+    position: relative;
+    padding-bottom: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+}
 
+.browserData {
+    position: absolute;
+    top: 20px;
+    right: 0;
+    width: 100%;
+}
 
-
+.browserInfo .browserTx {
+    text-align: right;
+    font-size: 15px;
+    letter-spacing: .4px;
+}
 
 .btnsRec {
     border-top: 1px solid #333;

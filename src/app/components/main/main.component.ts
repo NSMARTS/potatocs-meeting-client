@@ -65,9 +65,9 @@ export class MainComponent implements OnInit {
         // Meeting Info 수신
         // ---> 이 부분은 추후 화상회의 부분에서 적용해야 함
         ////////////////////////////////////////////////////////////////////
-        if (this.meetingId) {
-            this.socket.emit('join:room', this.meetingId);
-        }
+        // if (this.meetingId) {
+        //     this.socket.emit('join:room', this.meetingId);
+        // }
         // 화이트 보드 컴포넌트에 있는 this.apiService.getMeetingInfo 없애고
         // main.component에 저장해두기
         // 그런 다음 데이터를 subscribe 해서 webRTC 부분에 가져오기

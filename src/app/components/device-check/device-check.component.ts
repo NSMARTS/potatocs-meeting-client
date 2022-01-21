@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { EventBusService } from 'src/@wb/services/eventBus/event-bus.service';
@@ -6,6 +6,7 @@ import { DevicesInfoService } from 'src/@wb/store/devices-info.service';
 import { EventData } from 'src/@wb/services/eventBus/event.class';
 import { MeetingService } from 'src/app/services/meeting/meeting.service';
 import { ActivatedRoute } from '@angular/router';
+import { WebRTCService } from 'src/app/services/webRTC/web-rtc.service';
 
 @Component({
     selector: 'app-device-check',
@@ -13,7 +14,6 @@ import { ActivatedRoute } from '@angular/router';
     styleUrls: ['./device-check.component.scss']
 })
 export class DeviceCheckComponent implements OnInit {
-    video: HTMLVideoElement;
     miceDevices: any = [];
     videoDevices: any = [];
     speakerDevices: any = [];
@@ -28,7 +28,25 @@ export class DeviceCheckComponent implements OnInit {
     meetingId;
     meetingClose = false;
 
+    browserInfo: any;
+    browserVersion: any;
+
+    localStream$;
+
     private unsubscribe$ = new Subject<void>();
+
+
+    // @ViewChild('video') public videoRef: ElementRef;
+	// get video(): HTMLVideoElement {
+	// 	return this.videoRef.nativeElement;
+	// }
+
+    @ViewChild('video') public videoRef: ElementRef;
+	get video(): HTMLVideoElement {
+		return this.videoRef.nativeElement;
+	}
+
+
     constructor(
         private eventBusService: EventBusService,
         public fb: FormBuilder,
@@ -36,22 +54,27 @@ export class DeviceCheckComponent implements OnInit {
 
         private meetingService: MeetingService,
         private route: ActivatedRoute,
+        private webrtcService: WebRTCService
     ) {
-
+        this.localStream$ = this.webrtcService.localStream$;
     }
 
     ngOnInit(): void {
 
         this.meetingId = this.route.snapshot.params['id'];
 
-        // this.getMeetingStatus(this.meetingId)
+        // 브라우저 체크
+        this.browserCheck();
 
         // 컴퓨터에 연결된 장치 목록
-        this.deviceCheck()
+        this.deviceCheck();
         // 컴퓨터에 연결된 장치 추가/제거 시 실시간으로 목록 수정
-        this.deviceChangeCheck()
+        this.deviceChangeCheck();
         // 브라우저가 장치의 권한 부여 시 목록 수정
-        this.registerSocketListener()
+        this.registerSocketListener();
+
+
+        this.getLocalMediaStream();
     }
 
     // 컴퓨터에 연결된 장치 목록
@@ -79,10 +102,12 @@ export class DeviceCheckComponent implements OnInit {
             }
             console.log(this.devicesInfo)
             this.devicesInfoService.setDevicesInfo(this.devicesInfo);
-        
+
         }).catch(function (err) {
             console.log(err);
         });
+
+        this.getLocalMediaStream();
     }
 
     // 컴퓨터에 연결된 장치 추가/제거 시 실시간으로 목록 변경
@@ -132,10 +157,10 @@ export class DeviceCheckComponent implements OnInit {
     // 장치의 연결 유무
     checkDevice() {
         console.log(this.miceDevices[0]?.id)
-        if (this.miceDevices.length < 1 ) {
+        if (this.miceDevices.length < 1) {
             this.audioDeviceExist = false
         }
-        if (this.videoDevices.length < 1 ) {
+        if (this.videoDevices.length < 1) {
             this.videoDeviceExist = false
         }
     }
@@ -150,10 +175,75 @@ export class DeviceCheckComponent implements OnInit {
             audioDeviceExist: this.audioDeviceExist,
             videoDeviceExist: this.videoDeviceExist
         }))
+
+        this.getLocalMediaStream();
     }
+
     // 채널 참가 main component로 이동
     joinMeetingRoom() {
+        this.eventBusService.emit(new EventData('join', ''));
         this.eventBusService.emit(new EventData('deviceCheck', ''))
     }
-    
+
+
+    async getLocalMediaStream() {
+		// const options = { audio: true, video: true };
+		const options = { video: true };
+		try {
+			await this.webrtcService.getMediaStream(options);
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
+
+    // 브라우저 체크
+    browserCheck() {
+        var userAgent = navigator.userAgent;
+        var reg = null;
+        var browser = {
+            name: null,
+            version: null
+        };
+
+        userAgent = userAgent.toLowerCase();
+
+        if (userAgent.indexOf("opr") !== -1) {
+            reg = /opr\/(\S+)/;
+            browser.name = "Opera";
+            browser.version = reg.exec(userAgent)[1];
+
+        } else if (userAgent.indexOf("edge") !== -1) {
+            reg = /edge\/(\S+)/;
+            browser.name = "Edge";
+            browser.version = reg.exec(userAgent)[1];
+        } else if (userAgent.indexOf("chrome") !== -1) {
+            reg = /chrome\/(\S+)/;
+            browser.name = "Chrome";
+            browser.version = reg.exec(userAgent)[1];
+        } else if (userAgent.indexOf("safari") !== -1) {
+            reg = /safari\/(\S+)/;
+            browser.name = "Safari";
+            browser.version = reg.exec(userAgent)[1];
+        } else if (userAgent.indexOf("firefox") !== -1) {
+            reg = /firefox\/(\S+)/;
+            browser.name = "Firefox";
+            browser.version = reg.exec(userAgent)[1];
+        } else if (userAgent.indexOf("trident") !== -1) {
+            browser.name = "IE";
+
+            if (userAgent.indexOf("msie") !== -1) {
+                reg = /msie (\S+)/;
+                browser.version = reg.exec(userAgent)[1];
+                browser.version = browser.version.replace(";", "");
+            } else {
+                reg = /rv:(\S+)/;
+                browser.version = reg.exec(userAgent)[1];
+            }
+        }
+
+        return this.browserInfo = browser;
+    }
+
+
 }

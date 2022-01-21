@@ -19,7 +19,7 @@
 
     </div>
 </div>
-<div [hidden]="deviceCheckMode" class="realTime_container">
+<div *ngIf="!deviceCheckMode" class="realTime_container">
     <app-device-check></app-device-check>
 </div>
 
