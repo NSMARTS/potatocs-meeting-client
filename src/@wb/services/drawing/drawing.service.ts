@@ -281,7 +281,7 @@ export class DrawingService {
   }
 
   end(context, points, tool) {
-    console.log(points)
+    // console.log(points)
     context.lineCap = "round";
     context.lineJoin = 'round';
     context.lineWidth = tool.width;

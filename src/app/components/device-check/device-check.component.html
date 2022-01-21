@@ -1,24 +1,94 @@
-<div>
-    <select #miceDeivce [(ngModel)]="selectedMiceDevice" (ngModelChange)="selectDevice()">
-        <option *ngFor="let miceDevice of miceDevices" [ngValue]="miceDevice">{{miceDevice?.label}}</option>
-    </select>
-    <div *ngIf="miceDevices?.length < 1 ">" A microphone device does not exist."</div>
-    <div *ngIf="!miceDevices[0]?.label && miceDevices[0]?.kind == 'audioinput'">"A microphone device is not allowed."
-    </div>
+<div class="card-container" fxLayoutAlign="center center" fxLayout="column">
+    <mat-card class="deviceSetContent">
+        <header class="device_set_header">
+            <h4>Device test</h4>
+            <p class="device_header_tx">Please check the status of the camera, microphone, and audio.</p>
+        </header>
+        <section class="deviceSetBody">
+            <div class="cameraRec">
+                <h6 class="titleRec cam">Camera</h6>
+                <div class="contentRec">
+                    <div class="deviceList camera">
+                        <select class="selectBox ellipsis" [(ngModel)]="selectedVideoDevice" (ngModelChange)="selectDevice()">
+                            <option *ngFor="let videoDevice of videoDevices" [ngValue]="videoDevice">{{videoDevice?.label}}</option>
+                        </select>
+                    </div>
+                    <div class="device_play" data-audio-volume="0" data-video-status="playing">
+                        <div class="video">
+                            <video autoplay="" muted=""></video>
+                            <!-- <div class="video-play-size">320x240</div> -->
+                        </div>
+
+                        <div class="txRec ">
+                            <div class="desc video-none-playing-desc error">
+                                <p *ngIf="videoDevices?.length < 1" class="subTx camera">❌ An webcam device is not exists.</p>
+                                <p *ngIf="!videoDevices[0]?.label && videoDevices[0]?.kind == 'videoinput'" class="subTx camera">❌ An webcam device is not allowed</p>
+                            </div>
+                            <p *ngIf="videoDevices?.length >= 1 && videoDevices[0]?.label && videoDevices[0]?.kind == 'videoinput'" class="desc video-playing-desc">✅ Camera videos are appearing normally.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="micRec">
+                <h6 class="titleRec mic">Microphone</h6>
+                <div class="contentRec">
+                    <div class="device-play" data-audio-volume="0" data-video-status="playing">
+                        <div class="deviceList mic">
+                            <select class="selectBox ellipsis" data-device-type="audioinput"><option class="deviceItem ellipsis" data-usestatus="" data-deviceid="default" value="default" selected="selected">기본값 - 스테레오 믹스(Realtek High Definition Audio)</option><option class="deviceItem ellipsis" data-usestatus="" data-deviceid="communications" value="communications">커뮤니케이션 - 스테레오 믹스(Realtek High Definition Audio)</option><option class="deviceItem ellipsis" data-usestatus="" data-deviceid="bfcc7f25dd523e1d0cd2c28cefff7d2435b581cbebe35e4a7f6935fbda933c92" value="bfcc7f25dd523e1d0cd2c28cefff7d2435b581cbebe35e4a7f6935fbda933c92">스테레오 믹스(Realtek High Definition Audio)</option></select>
+                        </div>
+                      
+                        <div class="audio">
+                            <div class="audioinput-volume">
+                                <!-- <div class="volume">
+                                    <p class="gauge" style="height: 0%;">&nbsp;</p>
+                                    <p class="icoMic"></p>
+                                </div> -->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="speakerRec">
+                <h6 class="titleRec speaker">Audio</h6>
+                <div class="contentRec">
+                    <div class="device-play" data-audio-volume="0" data-video-status="playing">
+                        <div class="deviceList">
+                            <select class="selectBox ellipsis" data-device-type="audiooutput"><option class="deviceItem ellipsis" data-usestatus="" data-deviceid="default" value="default" selected="selected">기본값 - LOOK LK2420LA(NVIDIA High Definition Audio)</option><option class="deviceItem ellipsis" data-usestatus="" data-deviceid="communications" value="communications">커뮤니케이션 - LOOK LK2420LA(NVIDIA High Definition Audio)</option><option class="deviceItem ellipsis" data-usestatus="" data-deviceid="49aa0754fec6819d5133b2816305fcf70e01921be2b0fd26ddfa59411d0b5e39" value="49aa0754fec6819d5133b2816305fcf70e01921be2b0fd26ddfa59411d0b5e39">Realtek Digital Output(Realtek High Definition Audio)</option><option class="deviceItem ellipsis" data-usestatus="" data-deviceid="0e4a6154715dfc24612014e9ea5e78b07f2e3777a41aa0c4434e810acb67e76f" value="0e4a6154715dfc24612014e9ea5e78b07f2e3777a41aa0c4434e810acb67e76f">LOOK LK2420LA(NVIDIA High Definition Audio)</option></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="btnsRec">
+                <button class="btnConfirm" mat-raised-button color="primary" (click)="joinMeetingRoom()"> Join</button>
+			</footer>
+            
+        </section>
+        <!-- <div>
+            <select #miceDeivce [(ngModel)]="selectedMiceDevice" (ngModelChange)="selectDevice()">
+                <option *ngFor="let miceDevice of miceDevices" [ngValue]="miceDevice">{{miceDevice?.label}}</option>
+            </select>
+            <div *ngIf="miceDevices?.length < 1 ">" A microphone device is not exists."</div>
+            <div *ngIf="!miceDevices[0]?.label && miceDevices[0]?.kind == 'audioinput'">"A microphone device is not allowed."
+            </div>
+        </div>
+        <div>
+            <select [(ngModel)]="selectedVideoDevice" (ngModelChange)="selectDevice()">
+                <option *ngFor="let videoDevice of videoDevices" [ngValue]="videoDevice">{{videoDevice?.label}}</option>
+            </select>
+            <div *ngIf="videoDevices?.length < 1 ">" An webcam device is not exists."</div>
+            <div *ngIf="!videoDevices[0]?.label && videoDevices[0]?.kind == 'videoinput'">"An webcam device is not allowed"
+            </div>
+        </div>
+        <div>
+            <select [(ngModel)]="selectedSpeakerDevice" (ngModelChange)="selectDevice()">
+                <option *ngFor="let speakerDevice of speakerDevices" [ngValue]="speakerDevice">{{speakerDevice?.label}}</option>
+            </select>
+        </div>
+        <div *ngIf="speakerDevices?.length < 1 ">"An audio device is not exits"</div>
+        <button mat-raised-button color="primary" (click)="joinMeetingRoom()"> Join</button> -->
+    </mat-card>
 </div>
-<div>
-    <select [(ngModel)]="selectedVideoDevice" (ngModelChange)="selectDevice()">
-        <option *ngFor="let videoDevice of videoDevices" [ngValue]="videoDevice">{{videoDevice?.label}}</option>
-    </select>
-    <div *ngIf="videoDevices?.length < 1 ">" A webcam device does not exist."</div>
-    <div *ngIf="!videoDevices[0]?.label && videoDevices[0]?.kind == 'videoinput'">"An webcam device is not allowed"
-    </div>
-</div>
-<div>
-    <select [(ngModel)]="selectedSpeakerDevice" (ngModelChange)="selectDevice()">
-        <option *ngFor="let speakerDevice of speakerDevices" [ngValue]="speakerDevice">{{speakerDevice?.label}}</option>
-    </select>
-</div>
-<div *ngIf="speakerDevices?.length < 1 ">"An audio device does not exit"</div>
-<!-- <button type="submit">Submit</button> -->
-<button mat-raised-button color="primary" (click)="joinMeetingRoom()"> Join</button>
+
+
