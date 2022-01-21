@@ -35,12 +35,12 @@ export class WebRTCComponent implements OnInit {
 
 	myName:any;
 	participantsName:any;
-
+	screenStream: any;
 	//   private socket: Socket;
 	public localStream$;
 	private socket;
 	participants: any = {};
-	stream: any;
+	// stream: any;
 	private unsubscribe$ = new Subject<void>();
 	localStream: any;
 	bitrate: any;
@@ -56,7 +56,7 @@ export class WebRTCComponent implements OnInit {
 	options: any;
 	meetingInfo;
 	meetingStatus = false;
-
+	speakerDeviceId :any;
 
 
 	@ViewChild('call') public callRef: ElementRef;
@@ -197,20 +197,30 @@ export class WebRTCComponent implements OnInit {
 				}
 			};
 
-			console.log('stream', this.stream, 'sharing', this.sharing)
+			console.log('stream', this.screenStream, 'sharing', this.sharing)
 			var participant = this.participants[this.userId];
 			var video = participant.getVideoElement();
+			//--------------------------------------------
+			// 스피커 변경
+			//-------------------------------------------
+			video.setSinkId(this.speakerDeviceId).then(()=>{
+				console.log('succes speaker device')
+			})
+			.catch(error => {
+				console.log(error)
+			})
 			console.log(video)
+
 			if (this.sharing) {
 				var options = {
-					videoStream: this.stream,
+					videoStream: this.screenStream,
 					localVideo: video,
 					mediaConstraints: constraints,
 					onicecandidate: participant.onIceCandidate.bind(participant),
 				}
 			} else {
 				var options = {
-					videoStream: null,
+					videoStream: this.localStream,
 					localVideo: video,
 					mediaConstraints: constraints,
 					onicecandidate: participant.onIceCandidate.bind(participant),
@@ -289,21 +299,32 @@ export class WebRTCComponent implements OnInit {
 				console.log(devicesInfo)
 				// 마이크 장치가 없거나 권한이 없으면
 				this.constraints = {
-					audio: {
+					audio: devicesInfo.audioDeviceExist ? {
 						'echoCancellation': true,
 						'noiseSuppression': true,
 						deviceId: devicesInfo?.miceDevices[0]?.id
-					},
-					video: {
+					} : false,
+					video: devicesInfo.videoDeviceExist ? {
 						deviceId: devicesInfo?.videoDevices[0]?.id,
 						width: 320,
 						framerate: { max: 24, min: 24 }
-					}
+					} : false
 				};
+				console.log(this.constraints)
 
+				//--------------------------------------------
+				// 스피커 변경
+				//-------------------------------------------
+				this.speakerDeviceId = devicesInfo?.speakerDevices[0]?.id;
+				video.setSinkId(devicesInfo?.speakerDevices[0]?.id).then(()=>{
+					console.log('succes speaker device')
+				})
+				.catch(error => {
+					console.log(error)
+				})
+				
 			});
-		console.log(this.streamConstraints)
-		console.log(this.constraints)
+		
 		
 
 		// getUserDevice
@@ -355,18 +376,29 @@ export class WebRTCComponent implements OnInit {
 			this.socket.emit("video_device_change", "")
 			console.log(deviceInfo)
 			this.constraints = {
-				audio: {
+				audio: deviceInfo.audioDeviceExist ? {
 					'echoCancellation': true,
 					'noiseSuppression': true,
 					deviceId: deviceInfo.selectedMiceDeviceId
-				},
-				video: {
+				} : false,
+				video: deviceInfo.videoDeviceExist ? {
 					deviceId: deviceInfo.selectedVideoDeviceId,
 					width: 320,
 					framerate: { max: 24, min: 24 }
-				}
+				} : false
 			};
-			console.log(this.constraints)
+			this.speakerDeviceId = deviceInfo?.selectedSpeakerDeviceId
+
+			//--------------------------------------------
+			// 스피커 변경
+			//-------------------------------------------
+			video.setSinkId(deviceInfo?.selectedSpeakerDeviceId).then(()=>{
+				console.log('succes speaker device')
+			})
+			.catch(error => {
+				console.log(error)
+			})
+
 			await navigator.mediaDevices.getUserMedia(this.constraints)
 				.then(async (screenStream) => {
 					this.localStream = screenStream;
@@ -377,7 +409,7 @@ export class WebRTCComponent implements OnInit {
 						// callback('cancel');
 					}
 				});
-			console.log(video)
+
 			this.options = {
 				videoStream: this.localStream,
 				localVideo: video,
@@ -471,7 +503,7 @@ export class WebRTCComponent implements OnInit {
 		});
 		console.log(msg.data)
 	}
-
+	
 	receiveVideo(sender) {
 		console.log(sender)
 
@@ -479,6 +511,12 @@ export class WebRTCComponent implements OnInit {
 		this.participants[sender.userId] = participant;
 		var video = participant.getVideoElement();
 
+		//--------------------------------------------
+		// 스피커 변경 크롬만 작동 중 => 나중에 다른식으로 구현
+		//-------------------------------------------
+		video.setSinkId(this.speakerDeviceId).then(()=>{
+			console.log('succes speaker device')
+		})
 
 		
 
@@ -618,8 +656,7 @@ export class WebRTCComponent implements OnInit {
 			}).catch(function (error) {
 				console.log('getUserMedia error: ' + error.name, error);
 				callback('cancel');
-			}
-			);
+			});
 		} else {
 			function getScreenId(error, sourceId, screen_constraints) {
 				console.log('getScreeId fuction')
@@ -671,9 +708,10 @@ export class WebRTCComponent implements OnInit {
 				console.log('[ screenStream ]', screenStream)
 				if (screenStream == 'cancel') {
 					this.eventBusService.emit(new EventData('handleSharingCancel', ''))
+
 				} else if (screenStream != null) {
 					video.className = 'Sharing'
-					this.stream = screenStream;
+					this.screenStream = screenStream;
 					video = screenStream;
 					// this.sharingBtn.innerText = "Stop Sharing";
 					this.sharing = true;

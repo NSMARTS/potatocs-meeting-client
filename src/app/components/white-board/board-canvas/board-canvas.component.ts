@@ -156,7 +156,7 @@ export class BoardCanvasComponent implements OnInit, OnDestroy {
       const pageNum = pageInfo.currentPage;
       const zoomScale = pageInfo.zoomScale;
 
-      
+      console.log(data.drawingEvent)
       if (docNum == data.docNum && pageNum == data.pageNum) {
         if (data.drawingEvent.tool.type == 'pointer') {
           this.drawingService.rxPointer(data.drawingEvent, this.rxCoverCanvas, this.teacherCanvas, zoomScale, docNum, pageNum);

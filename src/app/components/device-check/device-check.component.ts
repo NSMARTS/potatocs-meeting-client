@@ -63,9 +63,9 @@ export class DeviceCheckComponent implements OnInit {
         navigator.mediaDevices.enumerateDevices().then(async (devices) => {
             console.log('-------------------- device list ------------------------');
             // 장치 목록 객체화
-            this.convertDeviceObject(devices)
+            await this.convertDeviceObject(devices)
             // 장치 연결, 권한 유무
-            this.checkDevice()
+            await this.checkDevice()
 
             console.log(this.miceDevices)
             console.log(this.videoDevices)
@@ -129,13 +129,13 @@ export class DeviceCheckComponent implements OnInit {
         this.selectedSpeakerDevice = this.speakerDevices[0];
     }
 
-    // 장치의 연결,권한 유무
+    // 장치의 연결 유무
     checkDevice() {
-        console.log(this.miceDevices[0].id)
-        if (this.miceDevices.length < 1 || (!this.miceDevices[0]?.label && this.miceDevices[0]?.kind == 'audioinput')) {
+        console.log(this.miceDevices[0]?.id)
+        if (this.miceDevices.length < 1 ) {
             this.audioDeviceExist = false
         }
-        if (this.videoDevices.length < 1 || (!this.videoDevices[0]?.label && this.videoDevices[0]?.kind == 'videoinput')) {
+        if (this.videoDevices.length < 1 ) {
             this.videoDeviceExist = false
         }
     }
@@ -147,6 +147,8 @@ export class DeviceCheckComponent implements OnInit {
             selectedVideoDeviceId: this.selectedVideoDevice?.id,
             selectedMiceDeviceId: this.selectedMiceDevice?.id,
             selectedSpeakerDeviceId: this.selectedSpeakerDevice?.id,
+            audioDeviceExist: this.audioDeviceExist,
+            videoDeviceExist: this.videoDeviceExist
         }))
     }
     // 채널 참가 main component로 이동

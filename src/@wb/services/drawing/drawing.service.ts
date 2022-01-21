@@ -514,17 +514,33 @@ export class DrawingService {
   async rxDrawingFunc() {
     console.log('rxDrawingFunc~~~~~~~~~~')
     if (this.dataArray.length === 0) return;
-
+    
     const data = await this.dataArray[0].data;
-    const pointsLength = data.points.length / 2;
-
     const sourceCanvas = this.dataArray[0].sourceCanvas;
     const context = sourceCanvas.getContext("2d");
-
     const targetCanvas = this.dataArray[0].targetCanvas;
     const targetContext = targetCanvas.getContext("2d");
-
     const scale = this.dataArray[0].scale;
+
+
+    if (data.tool.type == 'line' || data.tool.type == 'circle'
+        || data.tool.type == 'rectangle' || data.tool.type == 'roundedRectangle'
+    ){
+      // context.clearRect(0, 0, sourceCanvas.width / scale, sourceCanvas.height / scale);
+      this.end(targetContext, data.points, data.tool);
+      this.dataArray.shift();
+      this.rxDrawingFunc();
+      return;
+    }
+
+
+    const pointsLength = data.points.length / 2;
+
+    
+
+    
+
+    
 
     context.lineCap = "round";
     context.lineJoin = 'round';

@@ -92,11 +92,12 @@
                             <mat-icon [ngClass]="(currentTool == 'rectangle') && (mode == 'draw')?'active':''">
                                 rectangle </mat-icon>
                         </button>
-                        <button type="button" (click)="changeTool('roundedRectangle');" mat-icon-button>
+                        <!-- 버그 수정중 -->
+                        <!-- <button type="button" (click)="changeTool('roundedRectangle');" mat-icon-button>
                             <mat-icon [ngClass]="(currentTool == 'roundedRectangle') && (mode == 'draw')?'active':''">
                                 crop_3_2
                             </mat-icon>
-                        </button>
+                        </button> -->
                     </mat-menu>
 
 

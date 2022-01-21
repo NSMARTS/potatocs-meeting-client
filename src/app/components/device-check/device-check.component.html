@@ -2,7 +2,7 @@
     <select #miceDeivce [(ngModel)]="selectedMiceDevice" (ngModelChange)="selectDevice()">
         <option *ngFor="let miceDevice of miceDevices" [ngValue]="miceDevice">{{miceDevice?.label}}</option>
     </select>
-    <div *ngIf="miceDevices?.length < 1 ">" A microphone device is not exists."</div>
+    <div *ngIf="miceDevices?.length < 1 ">" A microphone device does not exist."</div>
     <div *ngIf="!miceDevices[0]?.label && miceDevices[0]?.kind == 'audioinput'">"A microphone device is not allowed."
     </div>
 </div>
@@ -10,7 +10,7 @@
     <select [(ngModel)]="selectedVideoDevice" (ngModelChange)="selectDevice()">
         <option *ngFor="let videoDevice of videoDevices" [ngValue]="videoDevice">{{videoDevice?.label}}</option>
     </select>
-    <div *ngIf="videoDevices?.length < 1 ">" An webcam device is not exists."</div>
+    <div *ngIf="videoDevices?.length < 1 ">" A webcam device does not exist."</div>
     <div *ngIf="!videoDevices[0]?.label && videoDevices[0]?.kind == 'videoinput'">"An webcam device is not allowed"
     </div>
 </div>
@@ -19,6 +19,6 @@
         <option *ngFor="let speakerDevice of speakerDevices" [ngValue]="speakerDevice">{{speakerDevice?.label}}</option>
     </select>
 </div>
-<div *ngIf="speakerDevices?.length < 1 ">"An audio device is not exits"</div>
+<div *ngIf="speakerDevices?.length < 1 ">"An audio device does not exit"</div>
 <!-- <button type="submit">Submit</button> -->
 <button mat-raised-button color="primary" (click)="joinMeetingRoom()"> Join</button>
