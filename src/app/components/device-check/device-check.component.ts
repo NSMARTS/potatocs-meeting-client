@@ -188,7 +188,7 @@ export class DeviceCheckComponent implements OnInit {
 
     async getLocalMediaStream() {
 		// const options = { audio: true, video: true };
-		const options = { video: {deviceId: this.selectedVideoDevice?.Id} };
+		const options = { video: {deviceId: this.selectedVideoDevice?.id} };
 		try {
 			await this.webrtcService.getMediaStream(options);
 		} catch (e) {
@@ -211,34 +211,35 @@ export class DeviceCheckComponent implements OnInit {
         if (userAgent.indexOf("opr") !== -1) {
             reg = /opr\/(\S+)/;
             browser.name = "Opera";
-            browser.version = reg.exec(userAgent)[1];
+            // browser.version = reg.exec(userAgent)[1];
+            browser.version = reg.exec(userAgent)[1].substring(0, reg.exec(userAgent)[1].indexOf('.'));
 
         } else if (userAgent.indexOf("edge") !== -1) {
             reg = /edge\/(\S+)/;
             browser.name = "Edge";
-            browser.version = reg.exec(userAgent)[1];
+            browser.version = reg.exec(userAgent)[1].substring(0, reg.exec(userAgent)[1].indexOf('.'));
         } else if (userAgent.indexOf("chrome") !== -1) {
             reg = /chrome\/(\S+)/;
             browser.name = "Chrome";
-            browser.version = reg.exec(userAgent)[1];
+            browser.version = reg.exec(userAgent)[1].substring(0, reg.exec(userAgent)[1].indexOf('.'));
         } else if (userAgent.indexOf("safari") !== -1) {
             reg = /safari\/(\S+)/;
             browser.name = "Safari";
-            browser.version = reg.exec(userAgent)[1];
+            browser.version = reg.exec(userAgent)[1].substring(0, reg.exec(userAgent)[1].indexOf('.'));
         } else if (userAgent.indexOf("firefox") !== -1) {
             reg = /firefox\/(\S+)/;
             browser.name = "Firefox";
-            browser.version = reg.exec(userAgent)[1];
+            browser.version = reg.exec(userAgent)[1].substring(0, reg.exec(userAgent)[1].indexOf('.'));
         } else if (userAgent.indexOf("trident") !== -1) {
             browser.name = "IE";
 
             if (userAgent.indexOf("msie") !== -1) {
                 reg = /msie (\S+)/;
-                browser.version = reg.exec(userAgent)[1];
+                browser.version = reg.exec(userAgent)[1].substring(0, reg.exec(userAgent)[1].indexOf('.'));
                 browser.version = browser.version.replace(";", "");
             } else {
                 reg = /rv:(\S+)/;
-                browser.version = reg.exec(userAgent)[1];
+                browser.version = reg.exec(userAgent)[1].substring(0, reg.exec(userAgent)[1].indexOf('.'));
             }
         }
 

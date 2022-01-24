@@ -154,6 +154,15 @@ video {
     letter-spacing: .4px;
 }
 
+.browserTest {
+    text-align: center;
+}
+
+.browserTest > p {
+    font-size: 12px;
+    color: rgb(255, 45, 45);
+}
+
 .btnsRec {
     border-top: 1px solid #333;
     padding-top: 24px;
