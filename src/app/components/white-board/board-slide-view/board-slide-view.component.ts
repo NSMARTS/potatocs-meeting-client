@@ -12,6 +12,7 @@ import { EventData } from 'src/@wb/services/eventBus/event.class';
 import { RenderingService } from 'src/@wb/services/rendering/rendering.service';
 import { SocketService } from 'src/@wb/services/socket/socket.service';
 import { DrawStorageService } from 'src/@wb/storage/draw-storage.service';
+import { PdfStorageService } from 'src/@wb/storage/pdf-storage.service';
 
 import { ViewInfoService } from 'src/@wb/store/view-info.service';
 
@@ -36,6 +37,7 @@ export class BoardSlideViewComponent implements OnInit {
     private drawingService: DrawingService,
     private socketService: SocketService,
     private drawStorageService: DrawStorageService,
+	private pdfStorageService: PdfStorageService,
   ) {
     this.socket = this.socketService.socket;
   }
@@ -105,15 +107,28 @@ export class BoardSlideViewComponent implements OnInit {
         })
 
 
+		/////////////////////////////////////////////////////////////////////////////////////////
 		/*-------------------------------------------
 			page 전환 하는 경우 sync
 		---------------------------------------------*/
 		// Participant 모드 일 경우 sync 기능 적용 제외
         if(this.myRole != 'Participant'){
-			this.socket.on('sync:pageChange', (pageNum)=> {
-				this.viewInfoService.updateCurrentPageNum(pageNum);
+			this.socket.on('sync:pageChange', async (data)=> {
+
+				
+				// 'Presenter' 모드 였다가 도중 'Participant'모드로 변경 후 문서 변경 시 doc sync 해결 위해
+				// 해당 doc.docId를 받아와서 doc.docId가 다를 경우 변경된 doc으로 변경 후 새로 썸네일 렌더링
+				if(this.currentDocId !== data.docId){
+					this.viewInfoService.changeToThumbnailView(data.docId);
+					this.viewInfoService.updateCurrentPageNum(data.pageNum);
+
+					this.renderThumbnails();
+				} else {
+					this.viewInfoService.updateCurrentPageNum(data.pageNum);
+				}
 			})
 		}
+		/////////////////////////////////////////////////////////////////////////////////////////
 
 
 		/*-------------------------------------------
@@ -125,6 +140,11 @@ export class BoardSlideViewComponent implements OnInit {
 				this.viewInfoService.setViewInfo({ leftSideView: 'fileList' });
 			})
 		}
+
+
+		this.eventBusService.on('docChange', this.unsubscribe$, (myRole) => {
+			this.renderThumbnails();
+        })
 	}
 
 
@@ -221,18 +241,22 @@ export class BoardSlideViewComponent implements OnInit {
 		this.viewInfoService.updateCurrentPageNum(pageNum);
 		// this.eventBusService.emit(new EventData('clickPdf', pageNum))
 
-		// /*-------------------------------------------
-		//  zoom, page 전환등을 하는 경우 sync
-		// ---------------------------------------------*/
-		// const data = {
-		// 	meetingId: this.meetingId,
-		// 	pageNum: pageNum
-		// }
+		//////////////////////////////////////////////////////////
+		/*-------------------------------------------
+		 zoom, page 전환등을 하는 경우 sync
+		---------------------------------------------*/
+		const data = {
+			meetingId: this.meetingId,
+			docId: this.viewInfoService.state.pageInfo.currentDocId,
+			pageNum: pageNum
+		}
 		
-		// // Participant 모드 일 경우 sync 기능 적용 제외
-		// if(this.myRole != 'Participant'){
-		// 	this.socket.emit('sync:page', data)
-		// }
+		// Participant 모드 일 경우 sync 기능 적용 제외
+		if(this.myRole != 'Participant'){
+			this.socket.emit('sync:page', data)
+		}
+
+		//////////////////////////////////////////////////////////
 	}
 
 
@@ -242,14 +266,15 @@ export class BoardSlideViewComponent implements OnInit {
 	backToFileList() {
 		this.viewInfoService.setViewInfo({ leftSideView: 'fileList' });
 
-		// const data = {
-		// 	meetingId: this.meetingId,
-		// }
 
-		// // Participant 모드 일 경우 sync 기능 적용 제외
-		// if(this.myRole != 'Participant'){
-		// 	this.socket.emit('sync:FileList', (data))
-		// }
+		const data = {
+			meetingId: this.meetingId,
+		}
+
+		// Participant 모드 일 경우 sync 기능 적용 제외
+		if(this.myRole != 'Participant'){
+			this.socket.emit('sync:FileList', data)
+		}
 	}
 
 
