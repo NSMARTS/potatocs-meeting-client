@@ -151,8 +151,8 @@ export class WebRTCComponent implements OnInit {
 
 
 		this.eventBusService.on('join', this.unsubscribe$, () => {
-			this.socket.emit('join:room', this.meetingId);
 			this.socket.emit('userInfo', this.userData)
+			// this.socket.emit('join:room', this.meetingId);
 		});
 				
 
