@@ -1,13 +1,16 @@
 <div class="chatAllBorder">
-    <div class="chatContainer" #target [scrollTop]="target.scrollHeight">
-        <div class="chatInMeeting" *ngFor="let item of chatInMeeting">            
-            <div class="chatting">
-                <div *ngIf="item.chatMember" fxLayout="row">
+    <div [ngClass]="{'whiteBoardMode': whiteBoardMode === true}" class="chatContainer" #target [scrollTop]="target.scrollHeight">
+        <div class="chatInMeeting" *ngFor="let item of chatInMeeting">         
+            <!-- <button mat-button class="deleteChatBtn"  (click)="deleteChat(item._id)" *ngIf="item.userId==userId">
+                <mat-icon class="settingIcon ">close</mat-icon>
+            </button>    -->
+            <div [ngClass]="item.userId==userId ? 'myChat' : 'participantChat'">
+                <div class="chatting_inner" *ngIf="item.chatMember" fxLayout="row">
                     <div class="chatting_charMember_name">
                         {{ item.chatMember }}
                     </div>
                     <div class="chatting_createdAt">
-                        {{ item.createdAt}}
+                        {{ item.createdAt | date: 'YYYY-MM-dd hh:mm'}}
                     </div>
                 </div>
                 <div class="chatContent">
@@ -18,14 +21,12 @@
     </div>
 
     
-    <div class="textFormContainer">
-        <form  #f="ngForm" (ngSubmit)="f.form.valid && createChat()" novalidate class="submit-form">
+    <div class="textFormContainer" [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
+        <form [ngClass]="myRole == 'Participant' ? 'participant': '' " #f="ngForm" (ngSubmit)="f.form.valid && createChat()" (keyup.enter)="createChat()" novalidate class="submit-form">
             <div class="chattingContainer">
                 <div class="chatInput">
                     <textarea class="textarea-style"  type="text" [(ngModel)]="chatContent" name="first"></textarea>
-                </div>
-                <div class="chatSendBtn"fxLayout="row" fxLayoutAlign="end end" >
-                    <button mat-stroked-button >send</button>
+                    <button class="chatSendBtn" mat-stroked-button >send</button>
                 </div>
             </div>
         </form>

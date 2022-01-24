@@ -72,16 +72,10 @@ export class WebRTCService {
 		try {
 			const stream = await navigator.mediaDevices.getUserMedia(options);
 			this.updateLocalStream(stream);
+			console.log(stream)
 		} catch (e) {
 			throw e;
 		}
-	}
-
-
-
-	// 채팅 생성
-	createChat(data){
-		// return this.http.post('/api/v1/collab/space/doc/createChat', data)
 	}
 
 

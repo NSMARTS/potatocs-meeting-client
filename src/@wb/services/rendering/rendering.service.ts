@@ -33,7 +33,7 @@ export class RenderingService {
     // console.log('> renderThumbnail Background');
     const pdfPage = this.pdfStorageService.getPdfPage(pdfNum, pageNum);
 
-    console.log(pdfPage)
+    // console.log(pdfPage)
     // 배경 처리를 위한 임시 canvas
     const tmpCanvas = document.createElement('canvas');
     const tmpCtx = tmpCanvas.getContext("2d");
@@ -74,7 +74,7 @@ export class RenderingService {
    * @param {number} pageNum 페이지 번호
    * @param {Object} data drawing data (tool, timediff, points)
    */
-  renderThumbBoard(thumbCanvas, docNum, pageNum) {
+   renderThumbBoard(thumbCanvas, docNum, pageNum) {
     let drawingEvents = this.drawStorageService.getDrawingEvents(docNum, pageNum);
 
     // 해당 page의 drawing 정보가 있는 경우
