@@ -151,8 +151,8 @@ export class WebRTCComponent implements OnInit {
 
 
 		this.eventBusService.on('join', this.unsubscribe$, () => {
-			this.socket.emit('userInfo', this.userData)
 			this.socket.emit('join:room', this.meetingId);
+			this.socket.emit('userInfo', this.userData)
 		});
 				
 
@@ -162,6 +162,7 @@ export class WebRTCComponent implements OnInit {
 			
 			this.onExistingParticipants(data);
 			this.eventBusService.emit(new EventData('updateParticipants', this.participants))
+			this.socket.emit('updateParticipants', this.meetingId);
 		});
 		this.socket.on("newParticipantArrived", (data) => {
 			this.onNewParticipant(data);
@@ -193,10 +194,10 @@ export class WebRTCComponent implements OnInit {
 			var constraints = {
 				audio: true,
 				video: {
-					mandatory: {
+				
 						width: 320,
 						framerate: { max: 24, min: 24 }
-					}
+					
 				}
 			};
 
