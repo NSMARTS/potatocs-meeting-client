@@ -552,6 +552,20 @@ export class WebRTCComponent implements OnInit {
 
 
 		/*******************************************************
+		*   상대방이 bitrate 변경 시 bigvideo가 사라지거나 겹쳐지는 부분 / 화면 공유 중 bigVideo 사라지는 부분
+		********************************************************/
+		// bigvideo 없으면 내 video를 big video로 만들기
+		var isExist = document.getElementsByClassName(sender.userId)
+		
+		if (this.whiteBoardMode == false) {
+			if (!isExist[0]) {
+				document.getElementById(this.userId).className = "bigvideo";
+			}
+		}
+
+
+
+		/*******************************************************
 		*   whiteBoard Mode 시 webRTC 상대방 비디오 오버레이
 		********************************************************/
 		this.eventBusService.on('whiteBoardClick', this.unsubscribe$, () => {
@@ -611,9 +625,9 @@ export class WebRTCComponent implements OnInit {
 		}
 
 		var participant = this.participants[result.userId];
+
+
 		var isExist = participant.getContainer(result.userId);
-
-
 		if (isExist === "bigvideo") {
 			document.getElementById(this.userId).className = "bigvideo";
 		}
