@@ -110,10 +110,12 @@ export class MainComponent implements OnInit {
         }
 
         // meeting의 status를 불러온다.
-        this.meetingService.getMeetingStatus(data).subscribe((data:any) => {
+        this.meetingService.getMeetingStatus(data).subscribe((res:any) => {
+
+            this.eventBusService.emit(new EventData('meetingStatus', res))
   
             // meeting의 status가 'Close'일 경우 role 변경
-            if(data.status === 'Close'){
+            if(res.status === 'Close'){
 
                 const userRoleData = {
                     meetingId: this.meetingId,
@@ -123,7 +125,8 @@ export class MainComponent implements OnInit {
 
                 this.meetingService.getRoleUpdate(userRoleData).subscribe(() => {      
                     const data = {
-                        role : 'Participant'
+                        role : 'Participant',
+                        status: res.status
                     }
 
                     this.eventBusService.emit(new EventData('myRole', data));      
