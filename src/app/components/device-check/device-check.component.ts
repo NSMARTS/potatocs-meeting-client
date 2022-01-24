@@ -188,7 +188,7 @@ export class DeviceCheckComponent implements OnInit {
 
     async getLocalMediaStream() {
 		// const options = { audio: true, video: true };
-		const options = { video: true };
+		const options = { video: {deviceId: this.selectedVideoDevice?.Id} };
 		try {
 			await this.webrtcService.getMediaStream(options);
 		} catch (e) {

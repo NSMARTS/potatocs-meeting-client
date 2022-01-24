@@ -72,6 +72,7 @@ export class WebRTCService {
 		try {
 			const stream = await navigator.mediaDevices.getUserMedia(options);
 			this.updateLocalStream(stream);
+			console.log(stream)
 		} catch (e) {
 			throw e;
 		}
