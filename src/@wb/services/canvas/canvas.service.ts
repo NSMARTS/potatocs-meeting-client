@@ -300,6 +300,7 @@ export class CanvasService {
 					tool
 				}));
 				tool.type = 'pointer';
+				document.getElementById('canvas').style.cursor = 'default'
 				return clear(sourceCanvas, scale); 
 			}
 			

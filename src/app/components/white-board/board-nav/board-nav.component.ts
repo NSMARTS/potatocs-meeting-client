@@ -13,6 +13,10 @@ import { EventData } from 'src/@wb/services/eventBus/event.class';
 import { ApiService } from 'src/@wb/services/apiService/api.service';
 import { SocketService } from 'src/@wb/services/socket/socket.service';
 
+// icon icon 별로 불러오기
+import eraserIcon from '@iconify/icons-mdi/eraser';
+import shapeOutlineIcon from '@iconify/icons-mdi/shape-outline';
+
 
 
 @Component({
@@ -37,6 +41,13 @@ export class BoardNavComponent implements OnInit {
     currentPage: any;
     currentDocId: string;
     private socket;
+
+
+     // iconify TEST //////////////////////
+    eraserIcon = eraserIcon;
+    shapeOutlineIcon = shapeOutlineIcon;
+  //////////////////////////////////////
+
     // Width: 3단계 설정
     widthSet = CANVAS_CONFIG.widthSet;
     currentWidth = {

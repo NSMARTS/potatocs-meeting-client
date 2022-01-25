@@ -22,6 +22,10 @@ import { BoardFabsComponent } from './components/white-board/board-fabs/board-fa
 import { DragScrollDirective } from '../@wb/directives/drag-scroll.directive';
 import { NgMaterialUIModule } from './ng-material-ui/ng-material-ui.module';
 
+// icon
+import { IconModule } from '@visurel/iconify-angular';
+
+
 // Config
 import { ENV } from './config/config';
 
@@ -76,6 +80,7 @@ export function tokenGetter() {
     HttpClientModule,
     FileUploadModule,
     ReactiveFormsModule,
+    IconModule, // icon
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
