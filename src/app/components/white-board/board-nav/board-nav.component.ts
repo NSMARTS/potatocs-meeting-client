@@ -118,9 +118,12 @@ export class BoardNavComponent implements OnInit {
     changeColor(color) {
         const editInfo = Object.assign({}, this.editInfoService.state);
         editInfo.mode = 'draw';
-        if (editInfo.mode != 'draw' || editInfo.tool != 'pen') return;
-
+        if (editInfo.mode != 'draw' || (editInfo.tool == 'erasar' || editInfo.tool == 'pointer')) return;
         editInfo.toolsConfig.pen.color = color;
+        editInfo.toolsConfig.line.color = color;
+        editInfo.toolsConfig.circle.color = color;
+        editInfo.toolsConfig.rectangle.color = color;
+        editInfo.toolsConfig.roundedRectangle.color = color;
         this.editInfoService.setEditInfo(editInfo);
     }
 

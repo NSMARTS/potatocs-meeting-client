@@ -208,14 +208,14 @@ export class WebRTCComponent implements OnInit {
 			// 스피커 변경
 			//-------------------------------------------
 			// Check for the sinkId property on an HTMLMediaElement instance.
-			
-			video.setSinkId(this.speakerDeviceId).then(()=>{
-				console.log('succes speaker device')
-			})
-			.catch(error => {
-				console.log(error)
-			})
-			
+			if (typeof video.sinkId !== 'undefined') {
+				video.setSinkId(this.speakerDeviceId).then(()=>{
+					console.log('succes speaker device')
+				})
+				.catch(error => {
+					console.log(error)
+				})
+			}
 			if (this.sharing) {
 				var options = {
 					videoStream: this.screenStream,
@@ -331,14 +331,14 @@ export class WebRTCComponent implements OnInit {
 				this.speakerDeviceId = devicesInfo?.selectedSpeakerDeviceId;
 				console.log(this.speakerDeviceId)
 			
-				// Do the work.
-				video.setSinkId(this.speakerDeviceId).then(()=>{
-					console.log('succes speaker device')
-					console.log(this.speakerDeviceId)
-				})
-				.catch(error => {
-					console.log(error)
-				})
+				if (typeof video.sinkId !== 'undefined') {
+					video.setSinkId(this.speakerDeviceId).then(()=>{
+						console.log('succes speaker device')
+					})
+					.catch(error => {
+						console.log(error)
+					})
+				}
 				
 				
 			});
@@ -408,12 +408,14 @@ export class WebRTCComponent implements OnInit {
 		// 	//--------------------------------------------
 		// 	// 스피커 변경
 		// 	//-------------------------------------------
-		// 	video.setSinkId(deviceInfo?.selectedSpeakerDeviceId).then(()=>{
+		// if (typeof video.sinkId !== 'undefined') {
+		// 	video.setSinkId(this.speakerDeviceId).then(()=>{
 		// 		console.log('succes speaker device')
 		// 	})
 		// 	.catch(error => {
 		// 		console.log(error)
 		// 	})
+		// }
 
 		// 	await navigator.mediaDevices.getUserMedia(this.constraints)
 		// 		.then(async (screenStream) => {
@@ -536,14 +538,14 @@ export class WebRTCComponent implements OnInit {
 		// 스피커 변경 크롬만 작동 중 => 나중에 다른식으로 구현
 		//-------------------------------------------
 
-			// Do the work.
+		if (typeof video.sinkId !== 'undefined') {
 			video.setSinkId(this.speakerDeviceId).then(()=>{
 				console.log('succes speaker device')
 			})
 			.catch(error => {
 				console.log(error)
 			})
-		
+		}
 	
 
 		var options = {

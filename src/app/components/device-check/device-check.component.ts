@@ -156,12 +156,14 @@ export class DeviceCheckComponent implements OnInit {
 
         console.log(this.video)
         console.log(this.selectedSpeakerDevice);
-        (this.video as any).setSinkId(this.selectedSpeakerDevice?.id).then(()=>{
-            		console.log('succes speaker device')
-            	})
-            	.catch(error => {
-            		console.log(error)
-            	})
+            if (typeof this.video.sinkId !== 'undefined') {
+            this.video.setSinkId(this.selectedSpeakerDevice?.id).then(()=>{
+                		console.log('succes speaker device')
+                	})
+                	.catch(error => {
+                		console.log(error)
+                	})
+            }
     }
 
     // 채널 참가 main component로 이동
