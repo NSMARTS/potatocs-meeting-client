@@ -35,13 +35,20 @@ export class DrawingService {
         context.globalCompositeOperation = 'source-over';
         context.lineCap = "round";
         context.lineJoin = 'round';
-        context.fillStyle = 'red';
-        context.strokeStyle = 'black';
-        context.lineWidth = 1; // check line width 영향...
+        // context.strokeStyle = 'black';
+        // context.lineWidth = 1; // check line width 영향...
         context.beginPath();
-        context.arc(points[0], points[1], 30 / 2, 0, Math.PI * 2, !0);
+        context.arc(points[0], points[1], 20 / 2, 0, Math.PI * 2, !0);
+        context.fillStyle = 'red';
+        
+        // context.stroke();
+        // 포인터 추가 부분 //////////
+        context.shadowColor = "red";
+        context.shadowBlur = 30;
+        // context.globalAlpha = 0.7;
+        document.getElementById('canvas').style.cursor = 'none'
+        ////////////////////////////////////////
         context.fill();
-        context.stroke();
 
         context.closePath();
         break;
@@ -262,17 +269,17 @@ export class DrawingService {
       case 'pointer':
           context.clearRect(0, 0, sourceCanvas.width, sourceCanvas.height);
           context.globalCompositeOperation = 'source-over';
-          context.lineCap = "round";
+          // context.lineCap = "round";
           context.lineJoin = 'round';
           context.fillStyle = 'red';
-          context.strokeStyle = 'black';
+          // context.strokeStyle = 'black';
           context.lineWidth = 1; // check line width 영향...
           context.beginPath();
-          context.arc(points[2 * (len - 1)], points[2 * (len - 1) + 1], 30 / 2, 0, Math.PI * 2, !0);
+          context.arc(points[2 * (len - 1)], points[2 * (len - 1) + 1], 20 / 2, 0, Math.PI * 2, !0);
           context.fill();
-          context.stroke();
+          // context.stroke();
           context.closePath();
-          
+          document.getElementById('canvas').style.cursor = 'none'
           break;
 
       default:
@@ -380,7 +387,7 @@ export class DrawingService {
         context.beginPath();
         context.strokeRect(points[0], points[1], (points[2 * (len - 1)] - points[0]), (points[2 * (len - 1) + 1] - points[1]));
         context.closePath();
-        // fillRect는 색이 채워지고 strokeRect은 색이 채워지지 안흔다.
+        // fillRect는 색이 채워지고 strokeRect은 색이 채워지지 않는다.
         // context.fillRect(points[0], points[1], (points[2 * (len - 1)] - points[0]), (points[2 * (len - 1) + 1] - points[1]));
         context.strokeStyle = tool.color;
         break;
@@ -472,16 +479,22 @@ export class DrawingService {
       console.log('rxPointer-------------------------')
       const context = sourceCanvas.getContext("2d"); 
       context.globalCompositeOperation = 'source-over';
-      context.lineCap = "round";
+      // context.lineCap = "round";
       context.lineJoin = 'round';
       context.fillStyle = 'red';
-      context.strokeStyle = 'black';
-      context.lineWidth = 1; // check line width 영향...
+      // context.strokeStyle = 'black';
+      // context.lineWidth = 1; // check line width 영향...
       context.beginPath();
       context.clearRect(0, 0, sourceCanvas.width / scale, sourceCanvas.height / scale);
-      context.arc(data.points[0], data.points[1], 30 / 2, 0, Math.PI * 2, !0);
+      context.arc(data.points[0], data.points[1], 20 / 2, 0, Math.PI * 2, !0);
       context.fill();
-      context.stroke();
+      // context.stroke();
+
+      // 포인터 추가 부분 //////////
+      context.shadowColor = "red";
+      context.shadowBlur = 30;
+      ////////////////////////////////////////
+
       context.closePath();
       return;
   

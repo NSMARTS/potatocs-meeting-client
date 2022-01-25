@@ -157,6 +157,10 @@ export class ParticipantComponent implements OnInit {
             this.getParticipantState();
         })
         /////////////////////////////////////////////////////////////
+
+        this.socket.on("disconnect", (data) => {
+            this.getParticipantState();
+        })
     }
 
 
