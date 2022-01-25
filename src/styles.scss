@@ -86,6 +86,21 @@ ul {
   // transform: scaleX(-1);
 
 }
+
+.bigvideo video{
+  position: fixed;
+  width: 55%;
+  top: 64px;
+  left: 100px;
+  max-width: 1400px;
+  // transform: rotateY(180deg);         
+  // -webkit-transform:rotateY(180deg); /* Safari and Chrome */        
+  // -moz-transform:rotateY(180deg); /* Firefox */
+  
+  
+  // transform: scaleX(-1);
+
+}
 .bigvideo p{
   // color: white;
   position: fixed;
@@ -93,8 +108,9 @@ ul {
   left: 27%;
 }
 
-.participantsVideo video{
+video{
   width: 100%;
+  max-width: 320px;
 }
 
 
