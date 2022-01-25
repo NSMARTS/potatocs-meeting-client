@@ -21,7 +21,7 @@
                         </div> -->
 
                         <div class="video">
-                            <video autoplay="" muted="" [srcObject]="localStream$|async"></video>
+                            <video #video autoplay="" muted="" [srcObject]="localStream$|async"></video>
                         </div>
                         
 
@@ -85,6 +85,7 @@
 
                         <div class="txRec">
                             <p class="subTx camera" *ngIf="speakerDevices?.length < 1 ">❌ An audio device is not exits</p>
+                            <p class="subTx camera" *ngIf="this.browserInfo?.name == 'Opera' && this.browserInfo?.name !== 'Edge' && this.browserInfo?.name !== 'Chrome' ">❌ This browser is not supported</p>
                             <p class="desc volume-desc">
                                 🔵 Please check if the sound is coming from the audio you set.
                             </p>

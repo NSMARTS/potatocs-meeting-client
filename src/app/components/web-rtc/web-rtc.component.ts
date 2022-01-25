@@ -207,14 +207,15 @@ export class WebRTCComponent implements OnInit {
 			//--------------------------------------------
 			// 스피커 변경
 			//-------------------------------------------
+			// Check for the sinkId property on an HTMLMediaElement instance.
+			
 			video.setSinkId(this.speakerDeviceId).then(()=>{
 				console.log('succes speaker device')
 			})
 			.catch(error => {
 				console.log(error)
 			})
-			console.log(video)
-
+			
 			if (this.sharing) {
 				var options = {
 					videoStream: this.screenStream,
@@ -295,7 +296,7 @@ export class WebRTCComponent implements OnInit {
 
 		this.participantsService.updateParticipants(this.participants[this.userId]);
 		var video = participant.getVideoElement();
-
+		console.log(video)
 		/****************************************
 		*   Device check 시 video overlay
 		*****************************************/
@@ -311,30 +312,36 @@ export class WebRTCComponent implements OnInit {
 					audio: devicesInfo.audioDeviceExist ? {
 						'echoCancellation': true,
 						'noiseSuppression': true,
-						deviceId: devicesInfo?.miceDevices[0]?.id
+						deviceId: devicesInfo?.selectedMiceDeviceId,
 					} : false,
 					video: devicesInfo.videoDeviceExist ? {
-						deviceId: devicesInfo?.videoDevices[0]?.id,
+						deviceId: devicesInfo?.selectedVideoDeviceId,
 						width: 320,
 						framerate: { max: 24, min: 24 }
 					} : false
 				};
 				console.log(this.constraints)
 
+				
+				
 				//--------------------------------------------
 				// 스피커 변경
 				//-------------------------------------------
-				this.speakerDeviceId = devicesInfo?.speakerDevices[0]?.id;
-				video.setSinkId(devicesInfo?.speakerDevices[0]?.id).then(()=>{
+				// Check for the sinkId property on an HTMLMediaElement instance.
+				this.speakerDeviceId = devicesInfo?.selectedSpeakerDeviceId;
+				console.log(this.speakerDeviceId)
+			
+				// Do the work.
+				video.setSinkId(this.speakerDeviceId).then(()=>{
 					console.log('succes speaker device')
+					console.log(this.speakerDeviceId)
 				})
 				.catch(error => {
 					console.log(error)
 				})
 				
+				
 			});
-		
-		
 
 		// getUserDevice
 		// constraints(제약)에 맞는 장치로 부터 데이터 스트림을 가져옴.
@@ -377,65 +384,65 @@ export class WebRTCComponent implements OnInit {
 		/////////////////////////////////////////////////////////////
     
 
-		/****************************************
-		*   장치 변경 시 비디오 전환
-		*****************************************/
-		this.eventBusService.on('selectDevice', this.unsubscribe$, async (deviceInfo) => {
-			console.log('device change')
-			this.socket.emit("video_device_change", "")
-			console.log(deviceInfo)
-			this.constraints = {
-				audio: deviceInfo.audioDeviceExist ? {
-					'echoCancellation': true,
-					'noiseSuppression': true,
-					deviceId: deviceInfo.selectedMiceDeviceId
-				} : false,
-				video: deviceInfo.videoDeviceExist ? {
-					deviceId: deviceInfo.selectedVideoDeviceId,
-					width: 320,
-					framerate: { max: 24, min: 24 }
-				} : false
-			};
-			this.speakerDeviceId = deviceInfo?.selectedSpeakerDeviceId
+		// /****************************************
+		// *   장치 변경 시 비디오 전환
+		// *****************************************/
+		// this.eventBusService.on('selectDevice', this.unsubscribe$, async (deviceInfo) => {
+		// 	console.log('device change')
+		// 	this.socket.emit("video_device_change", "")
+		// 	console.log(deviceInfo)
+		// 	this.constraints = {
+		// 		audio: deviceInfo.audioDeviceExist ? {
+		// 			'echoCancellation': true,
+		// 			'noiseSuppression': true,
+		// 			deviceId: deviceInfo.selectedMiceDeviceId
+		// 		} : false,
+		// 		video: deviceInfo.videoDeviceExist ? {
+		// 			deviceId: deviceInfo.selectedVideoDeviceId,
+		// 			width: 320,
+		// 			framerate: { max: 24, min: 24 }
+		// 		} : false
+		// 	};
+		// 	this.speakerDeviceId = deviceInfo?.selectedSpeakerDeviceId
 
-			//--------------------------------------------
-			// 스피커 변경
-			//-------------------------------------------
-			video.setSinkId(deviceInfo?.selectedSpeakerDeviceId).then(()=>{
-				console.log('succes speaker device')
-			})
-			.catch(error => {
-				console.log(error)
-			})
+		// 	//--------------------------------------------
+		// 	// 스피커 변경
+		// 	//-------------------------------------------
+		// 	video.setSinkId(deviceInfo?.selectedSpeakerDeviceId).then(()=>{
+		// 		console.log('succes speaker device')
+		// 	})
+		// 	.catch(error => {
+		// 		console.log(error)
+		// 	})
 
-			await navigator.mediaDevices.getUserMedia(this.constraints)
-				.then(async (screenStream) => {
-					this.localStream = screenStream;
-				}).catch(function (error) {
-					if (error.name === 'PermissionDeniedError') {
-						console.log('getUserMedia error: ' + error.name, error);
-						location.reload();
-						// callback('cancel');
-					}
-				});
+		// 	await navigator.mediaDevices.getUserMedia(this.constraints)
+		// 		.then(async (screenStream) => {
+		// 			this.localStream = screenStream;
+		// 		}).catch(function (error) {
+		// 			if (error.name === 'PermissionDeniedError') {
+		// 				console.log('getUserMedia error: ' + error.name, error);
+		// 				location.reload();
+		// 				// callback('cancel');
+		// 			}
+		// 		});
 
-			this.options = {
-				videoStream: this.localStream,
-				localVideo: video,
-				mediaConstraints: this.constraints,
-				onicecandidate: participant.onIceCandidate.bind(participant)
-			}
+		// 	this.options = {
+		// 		videoStream: this.localStream,
+		// 		localVideo: video,
+		// 		mediaConstraints: this.constraints,
+		// 		onicecandidate: participant.onIceCandidate.bind(participant)
+		// 	}
 
-			participant.rtcPeer = WebRtcPeer.WebRtcPeerSendonly(this.options,
-				function (error) {
-					if (error) {
-						if (error.name == "NotAllowedError") {
-							return console.log('장치에 입력이 들어오고 있지 않습니다. 다시 한번 확인해주세요.')
-						}
-					}
-					this.generateOffer(participant.offerToReceiveVideo.bind(participant));
-				});
-		})
+		// 	participant.rtcPeer = WebRtcPeer.WebRtcPeerSendonly(this.options,
+		// 		function (error) {
+		// 			if (error) {
+		// 				if (error.name == "NotAllowedError") {
+		// 					return console.log('장치에 입력이 들어오고 있지 않습니다. 다시 한번 확인해주세요.')
+		// 				}
+		// 			}
+		// 			this.generateOffer(participant.offerToReceiveVideo.bind(participant));
+		// 		});
+		// })
 
 		
         
@@ -528,10 +535,15 @@ export class WebRTCComponent implements OnInit {
 		//--------------------------------------------
 		// 스피커 변경 크롬만 작동 중 => 나중에 다른식으로 구현
 		//-------------------------------------------
-		video.setSinkId(this.speakerDeviceId).then(()=>{
-			console.log('succes speaker device')
-		})
 
+			// Do the work.
+			video.setSinkId(this.speakerDeviceId).then(()=>{
+				console.log('succes speaker device')
+			})
+			.catch(error => {
+				console.log(error)
+			})
+		
 	
 
 		var options = {

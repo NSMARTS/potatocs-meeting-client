@@ -24,7 +24,7 @@ export class DeviceCheckComponent implements OnInit {
     selectedDevices: any;
     audioDeviceExist: boolean = true;
     videoDeviceExist: boolean = true;
-
+   
     meetingId;
     meetingClose = false;
 
@@ -41,17 +41,13 @@ export class DeviceCheckComponent implements OnInit {
 	// 	return this.videoRef.nativeElement;
 	// }
 
-    @ViewChild('video') public videoRef: ElementRef;
-	get video(): HTMLVideoElement {
-		return this.videoRef.nativeElement;
-	}
 
-
+    @ViewChild('video', { static: true }) public videoRef: ElementRef;
+    video: any;
     constructor(
         private eventBusService: EventBusService,
         public fb: FormBuilder,
         private devicesInfoService: DevicesInfoService,
-
         private meetingService: MeetingService,
         private route: ActivatedRoute,
         private webrtcService: WebRTCService
@@ -59,10 +55,10 @@ export class DeviceCheckComponent implements OnInit {
         this.localStream$ = this.webrtcService.localStream$;
     }
 
-    ngOnInit(): void {
+    ngOnInit(){
 
         this.meetingId = this.route.snapshot.params['id'];
-
+        this.video = this.videoRef.nativeElement;
         // 브라우저 체크
         this.browserCheck();
 
@@ -70,44 +66,33 @@ export class DeviceCheckComponent implements OnInit {
         this.deviceCheck();
         // 컴퓨터에 연결된 장치 추가/제거 시 실시간으로 목록 수정
         this.deviceChangeCheck();
-        // 브라우저가 장치의 권한 부여 시 목록 수정
-        this.registerSocketListener();
-
-
-        this.getLocalMediaStream();
+        
     }
 
+    
+
     // 컴퓨터에 연결된 장치 목록
-    deviceCheck() {
+    async deviceCheck() {
         // https://developer.mozilla.org/ko/docs/Web/API/MediaDevices/enumerateDevices
         // https://webrtc.org/getting-started/media-devices#using-promises
         // https://simpl.info/getusermedia/sources/
         // https://levelup.gitconnected.com/share-your-screen-with-webrtc-video-call-with-webrtc-step-5-b3d7890c8747
-        navigator.mediaDevices.enumerateDevices().then(async (devices) => {
+        await navigator.mediaDevices.enumerateDevices().then(async (devices) => {
             console.log('-------------------- device list ------------------------');
             // 장치 목록 객체화
-            await this.convertDeviceObject(devices)
+            this.convertDeviceObject(devices)
             // 장치 연결, 권한 유무
-            await this.checkDevice()
-
+            this.checkDevice()
             console.log(this.miceDevices)
             console.log(this.videoDevices)
             console.log(this.speakerDevices)
-            this.devicesInfo = {
-                miceDevices: this.miceDevices,
-                videoDevices: this.videoDevices,
-                speakerDevices: this.speakerDevices,
-                audioDeviceExist: this.audioDeviceExist,
-                videoDeviceExist: this.videoDeviceExist
-            }
-            console.log(this.devicesInfo)
-            this.devicesInfoService.setDevicesInfo(this.devicesInfo);
-
+            this.selectDevice();
         }).catch(function (err) {
             console.log(err);
         });
-
         this.getLocalMediaStream();
+        
+	
     }
 
     // 컴퓨터에 연결된 장치 추가/제거 시 실시간으로 목록 변경
@@ -120,21 +105,11 @@ export class DeviceCheckComponent implements OnInit {
         });
     }
 
-    registerSocketListener() {
-        // 브라우저에게 권한을 줄 경우 목록 새로고침
-        this.eventBusService.on("device_Check", this.unsubscribe$, (data) => {
-            navigator.mediaDevices.enumerateDevices().then((devices) => {
-                this.deviceCheck();
-            }).catch(function (err) {
-                console.log(err.name + ": " + err.message);
-            });;
-        })
-    }
-
 
     // 모든 미디어 장치 분리해서 Object로 저장
     convertDeviceObject(devices) {
         // 장치값 초기화
+
         this.miceDevices = []
         this.videoDevices = []
         this.speakerDevices = []
@@ -168,15 +143,25 @@ export class DeviceCheckComponent implements OnInit {
     // select 창에서 장치를 선택하거나, 목록이 바뀌었을 경우 실행 
     selectDevice() {
         console.log('-------------device Change ---------------')
-        this.eventBusService.emit(new EventData('selectDevice', {
+        this.devicesInfo = {
             selectedVideoDeviceId: this.selectedVideoDevice?.id,
             selectedMiceDeviceId: this.selectedMiceDevice?.id,
             selectedSpeakerDeviceId: this.selectedSpeakerDevice?.id,
             audioDeviceExist: this.audioDeviceExist,
             videoDeviceExist: this.videoDeviceExist
-        }))
+        }
+        console.log(this.devicesInfo)
+        this.devicesInfoService.setDevicesInfo(this.devicesInfo);
+        this.changeMediaStream();
 
-        this.getLocalMediaStream();
+        console.log(this.video)
+        console.log(this.selectedSpeakerDevice);
+        (this.video as any).setSinkId(this.selectedSpeakerDevice?.id).then(()=>{
+            		console.log('succes speaker device')
+            	})
+            	.catch(error => {
+            		console.log(error)
+            	})
     }
 
     // 채널 참가 main component로 이동
@@ -185,10 +170,59 @@ export class DeviceCheckComponent implements OnInit {
         this.eventBusService.emit(new EventData('deviceCheck', ''))
     }
 
-
+    // video에 스트림 추출
     async getLocalMediaStream() {
 		// const options = { audio: true, video: true };
-		const options = { video: {deviceId: this.selectedVideoDevice?.id} };
+		const options = { 
+            audio: 
+            this.audioDeviceExist ? {
+                'echoCancellation': true,
+                'noiseSuppression': true,
+                deviceId: this.selectedMiceDevice?.id,
+            } : 
+            false,
+            video: this.videoDeviceExist ? {
+                deviceId: this.selectedVideoDevice?.id,
+                width: 320,
+                framerate: { max: 24, min: 24 }
+            } : false 
+        };
+        
+        console.log(options)
+		try {
+			await this.webrtcService.getMediaStream(options);
+            // 브라우저가 장치의 권한 부여 시 목록 수정
+            await navigator.mediaDevices.enumerateDevices().then(async (devices) => {
+                this.convertDeviceObject(devices)
+                this.checkDevice()
+            }).catch(function (err) {
+                console.log(err);
+            });
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
+    // select에서 장치 변경 시 stream 변경
+    // 권한 확인 유무 관련해서 이슈때문에 change시 새로운 함수 사용
+    async changeMediaStream() {
+		// const options = { audio: true, video: true };
+		const options = { 
+            audio: 
+            this.audioDeviceExist ? {
+                'echoCancellation': true,
+                'noiseSuppression': true,
+                deviceId: this.selectedMiceDevice?.id,
+            } : 
+            false,
+            video: this.videoDeviceExist ? {
+                deviceId: this.selectedVideoDevice?.id,
+                width: 320,
+                framerate: { max: 24, min: 24 }
+            } : false 
+        };
+        
+        console.log(options)
 		try {
 			await this.webrtcService.getMediaStream(options);
 		} catch (e) {
