@@ -159,19 +159,23 @@ export class BoardNavComponent implements OnInit {
         editInfo.mode = 'draw';
 
         if (editInfo.tool == 'eraser' && tool == 'eraser') {
-            const data = {
-                docId: this.currentDocId,
-                currentDocNum: this.currentDocNum,
-                currentPage: this.currentPage
+            if(confirm("Do you want to delete all drawings on the current page?")){
+                const data = {
+                    docId: this.currentDocId,
+                    currentDocNum: this.currentDocNum,
+                    currentPage: this.currentPage
+                }
+
+                // 다른 사람들에게 드로우 이벤트 제거
+                this.socket.emit('clearDrawingEvents', data)
+
+                // 자기자신한테 있는 드로우 이벤트 제거
+                this.drawStorageService.clearDrawingEvents(this.currentDocNum, this.currentPage);
+                this.eventBusService.emit(new EventData('rmoveDrawEventPageRendering', ''));
+                this.eventBusService.emit(new EventData('rmoveDrawEventThumRendering', ''));
+            } else {
+                return;
             }
-
-            // 다른 사람들에게 드로우 이벤트 제거
-            this.socket.emit('clearDrawingEvents', data)
-
-            // 자기자신한테 있는 드로우 이벤트 제거
-            this.drawStorageService.clearDrawingEvents(this.currentDocNum, this.currentPage);
-            this.eventBusService.emit(new EventData('rmoveDrawEventPageRendering', ''));
-            this.eventBusService.emit(new EventData('rmoveDrawEventThumRendering', ''));
         }
 
         editInfo.tool = tool;
