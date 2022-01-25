@@ -26,6 +26,7 @@ export class MeetingChatComponent implements OnInit, AfterViewChecked {
     public userName;
     public chatContent;
 
+    meetingStatus:any;
     myChat = false;
     myRole: any;
 
@@ -56,10 +57,15 @@ export class MeetingChatComponent implements OnInit, AfterViewChecked {
                 }
             });
 
+        this.eventBusService.on('meetingStatus', this.unsubscribe$, (meetingStatus) => {
+            this.meetingStatus = meetingStatus.status
+        })
+
         /*-------------------------------------------
                 role에 따라 권한 설정
         ---------------------------------------------*/
         this.eventBusService.on('myRole', this.unsubscribe$, (myRole) => {
+            console.log(myRole)
             this.myRole = myRole.role
         })
 

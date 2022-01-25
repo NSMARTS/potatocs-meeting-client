@@ -65,9 +65,9 @@ export class MainComponent implements OnInit {
         // Meeting Info 수신
         // ---> 이 부분은 추후 화상회의 부분에서 적용해야 함
         ////////////////////////////////////////////////////////////////////
-        // if (this.meetingId) {
-        //     this.socket.emit('join:room', this.meetingId);
-        // }
+        if (this.meetingId) {
+            this.socket.emit('join:room', this.meetingId);
+        }
         // 화이트 보드 컴포넌트에 있는 this.apiService.getMeetingInfo 없애고
         // main.component에 저장해두기
         // 그런 다음 데이터를 subscribe 해서 webRTC 부분에 가져오기
@@ -110,10 +110,12 @@ export class MainComponent implements OnInit {
         }
 
         // meeting의 status를 불러온다.
-        this.meetingService.getMeetingStatus(data).subscribe((data:any) => {
+        this.meetingService.getMeetingStatus(data).subscribe((res:any) => {
+
+            this.eventBusService.emit(new EventData('meetingStatus', res))
   
             // meeting의 status가 'Close'일 경우 role 변경
-            if(data.status === 'Close'){
+            if(res.status === 'Close'){
 
                 const userRoleData = {
                     meetingId: this.meetingId,
@@ -123,7 +125,8 @@ export class MainComponent implements OnInit {
 
                 this.meetingService.getRoleUpdate(userRoleData).subscribe(() => {      
                     const data = {
-                        role : 'Participant'
+                        role : 'Participant',
+                        status: res.status
                     }
 
                     this.eventBusService.emit(new EventData('myRole', data));      

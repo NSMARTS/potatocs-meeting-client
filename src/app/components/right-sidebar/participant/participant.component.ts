@@ -146,6 +146,15 @@ export class ParticipantComponent implements OnInit {
         }
 
         this.meetingService.getRoleUpdate(userRoleData).subscribe(() => {            
+            this.getParticipantState();
+        })
+        /////////////////////////////////////////////////////////////
+
+
+        /////////////////////////////////////////////////////////////
+        // 참여자 online / offline 실시간 체크
+        this.socket.on("updateParticipants", (data) => {
+            this.getParticipantState();
         })
         /////////////////////////////////////////////////////////////
     }

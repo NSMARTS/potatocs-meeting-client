@@ -75,23 +75,31 @@
                         [matMenuTriggerFor]="shapeMemu">
                         <mat-icon
                             [ngClass]="(currentTool == 'line' || currentTool == 'circle'  ||currentTool == 'rectangle' || currentTool == 'roundedRectangle' ) && (mode == 'draw')?'active':''">
-                            draw </mat-icon>
+                            star_border_purple500 </mat-icon>
+                            <!-- interests -->
                         </button>
                     </div>
                     
-                    <mat-menu #shapeMemu="matMenu" class="menuCustomize" fxLayout="column">
-                        <button type="button" (click)="changeTool('line');" mat-icon-button>
-                            <mat-icon [ngClass]="(currentTool == 'line') && (mode == 'draw')?'active':''"> remove icon
-                            </mat-icon>
-                        </button>
-                        <button type="button" (click)="changeTool('circle');" mat-icon-button>
-                            <mat-icon [ngClass]="(currentTool == 'circle') && (mode == 'draw')?'active':''"> circle
-                            </mat-icon>
-                        </button>
-                        <button type="button" (click)="changeTool('rectangle');" mat-icon-button>
-                            <mat-icon [ngClass]="(currentTool == 'rectangle') && (mode == 'draw')?'active':''">
-                                rectangle </mat-icon>
-                        </button>
+                    <mat-menu #shapeMemu="matMenu" class="menuCustomize" >
+                        <div fxFlex fxLayout="row">
+
+                            <div (click)="changeTool('line');">
+                                <button mat-menu-item [ngClass]="(currentTool == 'line') && (mode == 'draw')?'active':''">
+                                    <mat-icon>remove</mat-icon>
+                                </button>
+                            </div>
+                            <div (click)="changeTool('circle');">
+                                <button mat-menu-item [ngClass]="(currentTool == 'circle') && (mode == 'draw')?'active':''">
+                                    <mat-icon>panorama_fish_eye</mat-icon>
+                                </button>
+                            </div>
+                            <div (click)="changeTool('rectangle');">
+                                <button mat-menu-item [ngClass]="(currentTool == 'rectangle') && (mode == 'draw')?'active':''">
+                                    <mat-icon>crop_din</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                        
                         <!-- 버그 수정중 -->
                         <!-- <button type="button" (click)="changeTool('roundedRectangle');" mat-icon-button>
                             <mat-icon [ngClass]="(currentTool == 'roundedRectangle') && (mode == 'draw')?'active':''">

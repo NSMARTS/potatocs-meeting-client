@@ -39,35 +39,33 @@
             <!-- 마이크 -->
             <div class="micRec">
                 <h6 class="titleRec mic">Microphone</h6>
+
                 <div class="contentRec">
                     <div class="device-play" data-audio-volume="0" data-video-status="playing">
                         <div class="deviceList mic">
                             <select class="selectBox ellipsis" #miceDeivce [(ngModel)]="selectedMiceDevice" (ngModelChange)="selectDevice()">
-                                <option class="deviceItem ellipsis" *ngFor="let miceDevice of miceDevices" [ngValue]="miceDevice">{{miceDevice?.label}}</option>
+                                <option class="deviceItem ellipsis" *ngFor="let miceDevice of miceDevices" [ngValue]="miceDevice">
+                                    {{miceDevice?.label}}
+                                </option>
                             </select>
-                        </div>
-
-                        <div *ngIf="miceDevices?.length < 1 ">"❌ A microphone device is not exists."</div>
-            <div *ngIf="!miceDevices[0]?.label && miceDevices[0]?.kind == 'audioinput'">"❌ A microphone device is not allowed."
-            </div>
-                      
+                        </div>                        
                         <div class="txRec">
-                            <div class="desc volume-none-desc error">
-                                <p class="tx" *ngIf="miceDevices?.length < 1 ">A microphone device is not exists.</p>
-                                <p class="tx" *ngIf="!miceDevices[0]?.label && miceDevices[0]?.kind == 'audioinput'">A microphone device is not exists.</p>
+                            <div class="desc error">
+                                <p class="subTx camera" *ngIf="miceDevices?.length < 1 ">❌ A microphone device is not exists.</p>
+                                <p class="subTx camera" *ngIf="!miceDevices[0]?.label && miceDevices[0]?.kind == 'audioinput'">❌ A microphone device is not exists.</p>
                             </div>
                             <p *ngIf="(miceDevices?.length >= 1) && (miceDevices[0]?.label && miceDevices[0]?.kind == 'audioinput')" class="desc volume-desc">
                                 ✅ The microphone device is being detected.
                             </p>
                         </div>
-                        <!-- <div class="audio">
-                            <div class="audioinput-volume">
-                                <div class="volume">
-                                    <p class="gauge" style="height: 7.90625%;">&nbsp;</p>
-                                    <p class="icoMic"></p>
+                            <!-- <div class="audio">
+                                <div class="audioinput-volume">
+                                    <div class="volume">
+                                        <p class="gauge" style="height: 7.90625%;">&nbsp;</p>
+                                        <p class="icoMic"></p>
+                                    </div>
                                 </div>
-                            </div>
-                        </div> -->
+                            </div> -->
 
                     </div>
                 </div>
@@ -86,7 +84,7 @@
                         </div>
 
                         <div class="txRec">
-                            <p class="tx" *ngIf="speakerDevices?.length < 1 ">❌ An audio device is not exits</p>
+                            <p class="subTx camera" *ngIf="speakerDevices?.length < 1 ">❌ An audio device is not exits</p>
                             <p class="desc volume-desc">
                                 🔵 Please check if the sound is coming from the audio you set.
                             </p>
@@ -105,7 +103,11 @@
                         <p class="browserTx">{{ browserInfo.name }} {{ browserInfo.version }}</p>
                     </div>
                 </div>
+                <div class="browserTest">
+                    <p >🔈 The live meeting in Mac system is under testing.</p>
+                </div>
             </div>
+            
 
             <footer class="btnsRec">
                 <button class="btnConfirm" mat-raised-button color="primary" (click)="joinMeetingRoom()"> Join</button>

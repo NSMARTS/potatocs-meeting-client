@@ -48,7 +48,7 @@ export class BoardFileViewComponent implements OnInit {
 
     private socket;
     meetingId: any;
-    myRole: any; // 나의 역할(권한)
+    myRole:any = 'Presenter'; // 나의 역할(권한)
 
     documentInfo = [];
 
@@ -67,6 +67,8 @@ export class BoardFileViewComponent implements OnInit {
                 this.renderFileList();
             });
 
+        
+
         /*-------------------------------------------
             role에 따라 권한 설정
         ---------------------------------------------*/
@@ -80,7 +82,11 @@ export class BoardFileViewComponent implements OnInit {
         ---------------------------------------------*/
         this.socket.on('sync:docChange', (docId) => {
             this.viewInfoService.changeToThumbnailView(docId);
+
+            this.eventBusService.emit(new EventData('docChange', '')) 
         })
+
+
     }
 
     ngOnDestory(): void {
@@ -122,19 +128,20 @@ export class BoardFileViewComponent implements OnInit {
         console.log('>> click PDF : change to Thumbnail Mode');
         this.viewInfoService.changeToThumbnailView(docId);
 
-        // /*-------------------------------------------
-        //     doc 전환 하는 경우 sync
-        // ---------------------------------------------*/
-        // const data = {
-        //     meetingId: this.meetingId,
-        //     docId: docId
-        // }
+        //////////////////////////////////////////////////////////
+        /*-------------------------------------------
+            doc 전환 하는 경우 sync
+        ---------------------------------------------*/
+        const data = {
+            meetingId: this.meetingId,
+            docId: docId
+        }
 
-        // // Participant 모드 일 경우 sync 기능 적용 제외
-        // if(this.myRole != 'Participant'){
-        //     this.socket.emit('sync:doc', data)
-        // }
-        
+        // Participant 모드 일 경우 sync 기능 적용 제외
+        if(this.myRole != 'Participant'){
+            this.socket.emit('sync:doc', data)
+        }
+        //////////////////////////////////////////////////////////
     }
 
 
