@@ -15,6 +15,7 @@ import { SocketService } from 'src/@wb/services/socket/socket.service';
 
 // icon icon 별로 불러오기
 import eraserIcon from '@iconify/icons-mdi/eraser';
+import markerIcon from '@iconify/icons-mdi/marker';
 import shapeOutlineIcon from '@iconify/icons-mdi/shape-outline';
 
 
@@ -41,11 +42,12 @@ export class BoardNavComponent implements OnInit {
     currentPage: any;
     currentDocId: string;
     private socket;
-
+    
 
      // iconify TEST //////////////////////
     eraserIcon = eraserIcon;
     shapeOutlineIcon = shapeOutlineIcon;
+    markerIcon = markerIcon;
   //////////////////////////////////////
 
     // Width: 3단계 설정

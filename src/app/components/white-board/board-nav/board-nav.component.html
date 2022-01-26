@@ -58,7 +58,8 @@
                     <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
                         <button type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
                             (click)="changeTool('highlighter');" mat-icon-button>
-                            <mat-icon [ngClass]="(currentTool == 'highlighter') && (mode == 'draw')?'active':''">draw</mat-icon>
+                            <ic-icon [icon]="markerIcon" [width]="35" [height]="35" [ngClass]="(currentTool == 'highlighter') && (mode == 'draw')?'active':''"></ic-icon>
+                            <span class="iconify" data-icon="mdi:marker"></span>
                         </button>
                     </div>
 
