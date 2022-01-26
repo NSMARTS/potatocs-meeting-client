@@ -327,7 +327,7 @@ export class BoardCanvasComponent implements OnInit, OnDestroy {
      * - UI 측면의 효과
      * @param pageNum page 번호
      */
-    async preRenderBackground(pageNum) {
+    preRenderBackground(pageNum) {
         const targetCanvas = this.bgCanvas
         const ctx = targetCanvas.getContext("2d");
         const imgElement: any = document.getElementById('thumb_' + pageNum);
