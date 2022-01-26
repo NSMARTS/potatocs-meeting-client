@@ -280,6 +280,7 @@ export class CanvasService {
 				points.push(oldPoint[0]); // x
 				points.push(oldPoint[1]); // y
 				drawingService.move(sourceCtx, points, tool, scale, sourceCanvas); // scale: eraser marker 정확히 지우기 위함.	
+				
 				event.preventDefault();
 				// console.log(points)
 			}
@@ -290,10 +291,13 @@ export class CanvasService {
 			if (!isDown) return;
 			isDown = false;
 			isTouch = false;
-			
+
 			// 레이저 포인트일경우
 			drawingService.end(targetCtx, points, tool);
 			if(tool.type == 'pointer'){
+				// 마우스 업 이벤트 시 레이저 포인트 그림자 제거
+				sourceCtx.shadowColor = "";
+				sourceCtx.shadowBlur = 0;
 				tool.type = 'pointerEnd';
 				eventBusService.emit(new EventData('gen:newDrawEvent', {
 					points: newPoint,
@@ -301,6 +305,7 @@ export class CanvasService {
 				}));
 				tool.type = 'pointer';
 				document.getElementById('canvas').style.cursor = 'default'
+				points = [];
 				return clear(sourceCanvas, scale); 
 			}
 			
