@@ -99,7 +99,6 @@ export class RenderingService {
     }
   }
 
-
   /**
    * Main Board의 Background rendering
    * - pending 처리 포함

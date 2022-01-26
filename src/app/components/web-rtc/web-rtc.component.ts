@@ -597,9 +597,9 @@ export class WebRTCComponent implements OnInit {
 
 				var video = document.getElementById(sender.userId) // 상대방 video
 				video.classList.remove("receiveVideoOverlay");
+				video.classList.remove("videoOverlay");
 
 				var receiveVideoOverlay = document.getElementById('participants')
-
 				receiveVideoOverlay.append(video)
 			}
 
@@ -609,16 +609,17 @@ export class WebRTCComponent implements OnInit {
 		/****************************************
 		*   whiteBoard Mode 시 새로 들어 온 webRTC 상대방 비디오 오버레이
 		*****************************************/
-		this.eventBusService.on('newWhiteBoardOverlay', this.unsubscribe$, () => {
+		this.eventBusService.on('newWhiteBoardOverlay', this.unsubscribe$, (sender) => {
 
 			console.log(sender)
 			if (this.whiteBoardMode == true) {
 				// 내 local video와 name을 가져오기 위해 container 통째로
-				var videoOverlay = document.getElementById(sender.userId)
+				var videoOverlay = document.getElementById(sender)
 				videoOverlay.className = 'videoOverlay'
 				var videoOverlay_container = document.getElementById('videoOverlay_container')
 				videoOverlay_container.append(videoOverlay)
-			}
+			} 				
+			
 		})
 
 

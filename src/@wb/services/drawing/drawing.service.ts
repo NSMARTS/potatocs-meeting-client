@@ -295,6 +295,7 @@ export class DrawingService {
     context.strokeStyle = tool.color;
     context.fillStyle = tool.color;
 
+    console.log('up----------------------')
     // cover canvas 초기화 후 다시 그림.
     // context.clearRect(0, 0, context.canvas.width, context.canvas.height);
     let i;
@@ -491,8 +492,10 @@ export class DrawingService {
       // context.stroke();
 
       // 포인터 추가 부분 //////////
-      context.shadowColor = "red";
-      context.shadowBlur = 30;
+      if(data.tool.type == 'pointer'){
+        context.shadowColor = "red";
+        context.shadowBlur = 30;
+      } 
       ////////////////////////////////////////
 
       context.closePath();
