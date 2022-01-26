@@ -291,11 +291,10 @@ export class CanvasService {
 			if (!isDown) return;
 			isDown = false;
 			isTouch = false;
-
+			sourceCtx.globalAlpha = 1
 			// 레이저 포인트일경우
 			drawingService.end(targetCtx, points, tool);
 			if(tool.type == 'pointer'){
-				// 마우스 업 이벤트 시 레이저 포인트 그림자 제거
 				sourceCtx.shadowColor = "";
 				sourceCtx.shadowBlur = 0;
 				tool.type = 'pointerEnd';

@@ -53,6 +53,7 @@ export class BoardNavComponent implements OnInit {
     currentWidth = {
         pointer: this.widthSet.pointer[0],
         pen: this.widthSet.pen[0],
+        highlighter: this.widthSet.highlighter[0],
         eraser: this.widthSet.eraser[2],
         line: this.widthSet.line[0],
         circle: this.widthSet.circle[0],
@@ -97,6 +98,7 @@ export class BoardNavComponent implements OnInit {
                 this.currentWidth = {
                     pointer: editInfo.toolsConfig.pointer.width,
                     pen: editInfo.toolsConfig.pen.width,
+                    highlighter: editInfo.toolsConfig.highlighter.width,
                     eraser: editInfo.toolsConfig.eraser.width,
                     line: editInfo.toolsConfig.line.width,
                     circle: editInfo.toolsConfig.circle.width,
@@ -131,6 +133,7 @@ export class BoardNavComponent implements OnInit {
         editInfo.mode = 'draw';
         if (editInfo.mode != 'draw' || (editInfo.tool == 'erasar' || editInfo.tool == 'pointer')) return;
         editInfo.toolsConfig.pen.color = color;
+        editInfo.toolsConfig.highlighter.color = color;
         editInfo.toolsConfig.line.color = color;
         editInfo.toolsConfig.circle.color = color;
         editInfo.toolsConfig.rectangle.color = color;
@@ -167,9 +170,9 @@ export class BoardNavComponent implements OnInit {
     async changeTool(tool) {
         // console.log(tool)
         const editInfo = Object.assign({}, this.editInfoService.state);
-        editInfo.mode = 'draw';
+        
 
-        if (editInfo.tool == 'eraser' && tool == 'eraser') {
+        if (editInfo.tool == 'eraser' && editInfo.mode == 'draw' && tool == 'eraser') {
             if(confirm("Do you want to delete all drawings on the current page?")){
                 const data = {
                     docId: this.currentDocId,
@@ -188,7 +191,7 @@ export class BoardNavComponent implements OnInit {
                 return;
             }
         }
-
+        editInfo.mode = 'draw';
         editInfo.tool = tool;
         this.editInfoService.setEditInfo(editInfo);
 

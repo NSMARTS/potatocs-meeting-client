@@ -19,7 +19,8 @@ export const CANVAS_CONFIG = {
 	widthSet: {
 		pointer: [20, 25, 30],
 		pen: [4, 7, 13],
-		eraser: [30, 45, 60],
+		highlighter: [30, 45, 60],
+		eraser: [20, 25, 30],
 		line: [4, 7, 13],
 		circle: [4, 7, 13],
 		rectangle: [4, 7, 13],
