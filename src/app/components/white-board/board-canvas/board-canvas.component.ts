@@ -161,7 +161,9 @@ export class BoardCanvasComponent implements OnInit, OnDestroy {
         if (data.drawingEvent.tool.type == 'pointer') {
           this.drawingService.rxPointer(data.drawingEvent, this.rxCoverCanvas, this.teacherCanvas, zoomScale, docNum, pageNum);
         } else if(data.drawingEvent.tool.type == 'pointerEnd'){
-          const context = this.rxCoverCanvas.getContext("2d"); 
+          const context = this.rxCoverCanvas.getContext("2d");
+          context.shadowColor = "";
+          context.shadowBlur = 0;
           context.clearRect(0, 0, this.rxCoverCanvas.width / zoomScale, this.rxCoverCanvas.height / zoomScale);
         } 
         else {

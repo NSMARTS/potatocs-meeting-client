@@ -52,7 +52,20 @@ export class DrawingService {
 
         context.closePath();
         break;
-    
+      case 'highlighter':
+        context.clearRect(0, 0, sourceCanvas.width, sourceCanvas.height);
+        // context.globalCompositeOperation = 'color'
+        context.globalAlpha = 0.5;
+        context.lineCap = "square";
+        context.lineJoin = 'square';
+        context.beginPath();
+        context.fillStyle = '#ff0';
+        
+        context.fillRect(points[0]-(tool.width/2), points[1]-(tool.width/2), tool.width, tool.width);
+        context.fill();
+
+        context.closePath();
+        break;
       default:
         break;
     }
@@ -267,20 +280,68 @@ export class DrawingService {
         // }
         break;
       case 'pointer':
-          context.clearRect(0, 0, sourceCanvas.width, sourceCanvas.height);
-          context.globalCompositeOperation = 'source-over';
-          // context.lineCap = "round";
-          context.lineJoin = 'round';
-          context.fillStyle = 'red';
-          // context.strokeStyle = 'black';
-          context.lineWidth = 1; // check line width 영향...
+        context.clearRect(0, 0, sourceCanvas.width, sourceCanvas.height);
+        context.globalCompositeOperation = 'source-over';
+        // context.lineCap = "round";
+        context.lineJoin = 'round';
+        context.fillStyle = 'red';
+        // context.strokeStyle = 'black';
+        context.lineWidth = 1; // check line width 영향...
+        context.beginPath();
+        context.arc(points[2 * (len - 1)], points[2 * (len - 1) + 1], 20 / 2, 0, Math.PI * 2, !0);
+        context.fill();
+        // context.stroke();
+        context.closePath();
+        document.getElementById('canvas').style.cursor = 'none'
+        break;
+      // case 'highlighter':
+      //   context.globalCompositeOperation = 'multiply';
+      //   context.lineCap = "square";
+      //   context.lineJoin = 'round';
+      //   context.beginPath();
+      //   context.fillStyle = '#ff0';
+      //   context.quadraticCurveTo(points[2 * i], points[2 * i + 1], points[2 * (i + 1)], points[2 * (i + 1) + 1]);
+      //   context.fillRect(points[2 * (len - 1)]-(tool.width/2), points[2 * (len - 1) + 1]-(tool.width/2), tool.width, tool.width);
+      //   // context.fill();
+
+      //   context.closePath();
+      //   break;
+      // 형광펜
+      case 'highlighter':
+        // context.globalCompositeOperation = 'color'
+        context.globalAlpha = 0.5;
+        context.lineCap = "square";
+        context.lineJoin = 'square';
+        context.fillStyle = '#ff0';
+        context.strokeStyle = '#ff0';
+        context.clearRect(0, 0, context.canvas.width / zoomScale, context.canvas.height / zoomScale);
+        if (len < 3) {
           context.beginPath();
-          context.arc(points[2 * (len - 1)], points[2 * (len - 1) + 1], 20 / 2, 0, Math.PI * 2, !0);
+          // context.arc(points[0], points[1], tool.width / 2, 0, Math.PI * 2, !0);
+          context.fillRect(points[0]-(tool.width/2), points[1]-(tool.width/2), tool.width, tool.width);
           context.fill();
-          // context.stroke();
           context.closePath();
-          document.getElementById('canvas').style.cursor = 'none'
+          // eraser Marker
+          // eraserMarker(context,points[len-1],tool.width);
+          this.eraserMarker(context, [points[2 * (len - 1)], points[2 * (len - 1) + 1]], tool.width);
           break;
+        }
+
+        context.moveTo(points[0], points[1]);
+        for (i = 1; i < len - 2; i++) {
+          c = (points[2 * i] + points[2 * (i + 1)]) / 2;
+          d = (points[2 * i + 1] + points[2 * (i + 1) + 1]) / 2;
+          context.quadraticCurveTo(points[2 * i], points[2 * i + 1], c, d);
+        }
+
+        context.quadraticCurveTo(points[2 * i], points[2 * i + 1], points[2 * (i + 1)], points[2 * (i + 1) + 1]);
+        context.stroke();
+        context.closePath();
+
+        // eraser Marker
+        this.eraserMarker(context, [points[2 * (len - 1)], points[2 * (len - 1) + 1]], tool.width);
+        break;
+        
 
       default:
         break;
@@ -305,10 +366,9 @@ export class DrawingService {
     if (tool.type === "pointer"){
       return
     } else if (tool.type === "pen" || tool.type === "line" || tool.type === "circle" ||
-    tool.type === "rectangle" || tool.type === "roundedRectangle") {
+    tool.type === "rectangle" || tool.type === "roundedRectangle" || tool.type === "highlighter") {
       context.globalCompositeOperation = 'source-over';
-    }
-    else {
+    } else {
       context.globalCompositeOperation = 'destination-out';
     }
 
@@ -414,6 +474,37 @@ export class DrawingService {
         context.strokeStyle = tool.color;
         break;
 
+      // 형광펜
+      case 'highlighter':
+        // context.globalCompositeOperation = 'color'
+        context.globalAlpha = 0.5;
+        context.lineCap = "square";
+        context.lineJoin = 'round';
+        context.fillStyle = '#ff0';
+        context.strokeStyle = '#ff0';
+        if (len < 3) {
+          context.beginPath();
+          context.fillRect(points[0]-(tool.width/2), points[1]-(tool.width/2), tool.width, tool.width);
+          context.fill();
+          context.closePath();
+          context.globalAlpha = 1
+          return;
+        }
+        context.beginPath();
+        context.moveTo(points[0], points[1]);
+        // console.log('end')
+        for (i = 1; i < len - 2; i++) {
+          c = (points[2 * i] + points[2 * (i + 1)]) / 2;
+          d = (points[2 * i + 1] + points[2 * (i + 1) + 1]) / 2;
+          context.quadraticCurveTo(points[2 * i], points[2 * i + 1], c, d);
+        }
+        context.quadraticCurveTo(points[2 * i], points[2 * i + 1], points[2 * (i + 1)], points[2 * (i + 1) + 1]);
+        context.stroke();
+        context.closePath();
+        context.globalAlpha = 1
+        break;
+
+      
       default:
         break;
     
@@ -491,8 +582,10 @@ export class DrawingService {
       // context.stroke();
 
       // 포인터 추가 부분 //////////
-      context.shadowColor = "red";
-      context.shadowBlur = 30;
+      if(data.tool.type == 'pointer'){
+        context.shadowColor = "red";
+        context.shadowBlur = 30;
+      }
       ////////////////////////////////////////
 
       context.closePath();
@@ -537,7 +630,7 @@ export class DrawingService {
 
 
     if (data.tool.type == 'line' || data.tool.type == 'circle'
-        || data.tool.type == 'rectangle' || data.tool.type == 'roundedRectangle'
+        || data.tool.type == 'rectangle' || data.tool.type == 'roundedRectangle' || data.tool.type == 'highlighter'
     ){
       // context.clearRect(0, 0, sourceCanvas.width / scale, sourceCanvas.height / scale);
       this.end(targetContext, data.points, data.tool);

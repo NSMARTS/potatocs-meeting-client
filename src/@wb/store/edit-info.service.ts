@@ -13,6 +13,7 @@ class InitEditInfo {
   toolsConfig = {
     pointer: { width: 20, color: 'black' },
     pen: { width: 4, color: 'black' },
+    highlighter: { width: 20, color: 'ff0' },
     eraser: { width: 60, color: '#ffffff' },
     line: { width: 4, color: 'black' },
     circle: { width: 4, color: 'black' },

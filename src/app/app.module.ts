@@ -42,8 +42,6 @@ import { MeetingChatComponent } from './components/right-sidebar/meeting-chat/me
 import { ParticipantComponent } from './components/right-sidebar/participant/participant.component';
 
 
-
-
 export function tokenGetter() {
 	return localStorage.getItem(ENV.tokenName);
 }

@@ -55,7 +55,13 @@
                         </button>
                     </div>
 
-                    
+                    <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
+                        <button type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
+                            (click)="changeTool('highlighter');" mat-icon-button>
+                            <mat-icon [ngClass]="(currentTool == 'highlighter') && (mode == 'draw')?'active':''">draw</mat-icon>
+                        </button>
+                    </div>
+
                     <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
                         <button type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
                             (click)="changeTool('eraser');" mat-icon-button>
