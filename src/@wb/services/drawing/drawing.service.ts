@@ -308,7 +308,6 @@ export class DrawingService {
       //   break;
       // 형광펜
       case 'highlighter':
-        // context.globalCompositeOperation = 'color'
         context.globalAlpha = 0.5;
         context.lineCap = "square";
         context.lineJoin = 'square';
@@ -631,7 +630,7 @@ export class DrawingService {
 
 
     if (data.tool.type == 'line' || data.tool.type == 'circle'
-        || data.tool.type == 'rectangle' || data.tool.type == 'roundedRectangle' || data.tool.type == 'highlighter'
+        || data.tool.type == 'rectangle' || data.tool.type == 'roundedRectangle'
     ){
       // context.clearRect(0, 0, sourceCanvas.width / scale, sourceCanvas.height / scale);
       this.end(targetContext, data.points, data.tool);
@@ -642,15 +641,10 @@ export class DrawingService {
 
 
     const pointsLength = data.points.length / 2;
-
     
-
-    
-
-    
-
     context.lineCap = "round";
     context.lineJoin = 'round';
+    context.globalAlpha = 1;
     context.lineWidth = data.tool.width;
 
     if (data.tool.type === "pen") {
@@ -663,55 +657,66 @@ export class DrawingService {
       context.strokeStyle = "rgba(255, 255, 255, 1)";
       context.fillStyle = "rgba(255, 255, 255, 1)";
     } 
+    else if (data.tool.type === "highlighter"){
+      context.globalCompositeOperation = 'xor';
+      context.globalAlpha = 0.5;
+      context.lineCap = "square";
+      context.fillStyle = '#ff0';
+      context.strokeStyle = '#ff0';  
+    } 
 
-    if (pointsLength < 3) {
-      context.beginPath();
-      context.arc(data.points[0], data.points[1], data.tool.width / 2, 0, Math.PI * 2, !0);
-      context.fill();
-      context.closePath();
+    if(data.tool.type === "pen" || data.tool.type === "eraser" ||  data.tool.type === "highlighter"){
+      if (pointsLength < 3) {
+        context.beginPath();
+        context.arc(data.points[0], data.points[1], data.tool.width / 2, 0, Math.PI * 2, !0);
+        context.fill();
+        context.closePath();
 
-      this.dataArray.shift();
-      this.rxDrawingFunc();
-      return;
-    }
-
-    let i = 2;
-
-    this.stop = setInterval(() => {
-      context.beginPath();
-      if (i === 2) {
-        context.moveTo(data.points[0], data.points[1]);
-      }
-      else {
-        const a = (data.points[2 * (i - 2)] + data.points[2 * (i - 1)]) / 2;
-        const b = (data.points[2 * (i - 2) + 1] + data.points[2 * (i - 1) + 1]) / 2;
-        context.moveTo(a, b);
-      }
-      const c = (data.points[2 * (i - 1)] + data.points[2 * i]) / 2;
-      const d = (data.points[2 * (i - 1) + 1] + data.points[2 * i + 1]) / 2;
-
-      context.quadraticCurveTo(data.points[2 * (i - 1)], data.points[2 * (i - 1) + 1], c, d);
-      context.stroke();
-      i += 1;
-
-      if (i === pointsLength) {
-        clearInterval(this.stop);
-        this.stop = null;
-
-        this.dataArray.shift();
         context.clearRect(0, 0, sourceCanvas.width / scale, sourceCanvas.height / scale);
-
-        // 최종 target에 그리기
         this.end(targetContext, data.points, data.tool);
-
-        // 다음 event 그리기 시작.
+        
+        this.dataArray.shift();
         this.rxDrawingFunc();
+        return;
+        
       }
 
-    }, data.timeDiff / pointsLength);
+      let i = 2;
 
+      this.stop = setInterval(() => {
+        context.beginPath();
+        if (i === 2) {
+          context.moveTo(data.points[0], data.points[1]);
+        }
+        else {
+          context.lineCap = "round";
+          const a = (data.points[2 * (i - 2)] + data.points[2 * (i - 1)]) / 2;
+          const b = (data.points[2 * (i - 2) + 1] + data.points[2 * (i - 1) + 1]) / 2;
+          context.moveTo(a, b);
+        }
+        const c = (data.points[2 * (i - 1)] + data.points[2 * i]) / 2;
+        const d = (data.points[2 * (i - 1) + 1] + data.points[2 * i + 1]) / 2;
+        context.quadraticCurveTo(data.points[2 * (i - 1)], data.points[2 * (i - 1) + 1], c, d);
+        context.stroke();
+        i += 1;
+
+        if (i === pointsLength) {
+          clearInterval(this.stop);
+          this.stop = null;
+
+          this.dataArray.shift();
+          context.clearRect(0, 0, sourceCanvas.width / scale, sourceCanvas.height / scale);
+
+          // 최종 target에 그리기
+          this.end(targetContext, data.points, data.tool);
+
+          // 다음 event 그리기 시작.
+          this.rxDrawingFunc();
+        }
+
+      }, data.timeDiff / pointsLength);
+    }
   }
-
   /**
    * 수신 DATA 썸네일에 그리기
    *
