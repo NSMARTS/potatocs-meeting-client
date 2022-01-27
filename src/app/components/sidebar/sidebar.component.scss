@@ -7,7 +7,7 @@
             padding: 30px 0;
         }
     }
-    padding-top: 100px;
+    padding-top: 50px;
 }
 
 .btn:hover {
@@ -30,4 +30,9 @@
 .participant {
     /* 클릭 불가능 none */
     pointer-events : none;
+}
+
+
+.whiteBoardMode1 {
+    padding-top: 65px;
 }

@@ -3,6 +3,7 @@
   outline:none; 
 }
 
+
 ul {
   list-style: none
 }
@@ -152,7 +153,6 @@ video{
   position: absolute;
   bottom: 0px;
   left: 0%;
-  width: 300px;
   overflow: auto;
 }
 ////////////////////////////////////////////////////////////
@@ -161,7 +161,7 @@ video{
 
 ///////////////// 스크롤바 꾸미기 ///////////////
 #participants {
-  width: 300px;
+  width: 325px;
   overflow:hidden
 }
 

@@ -20,6 +20,7 @@ export class SidebarComponent implements OnInit {
     shareIcon = 'videocam_on';
 
     whiteBoardMode = false;
+    whiteBoardMode1 = false;
     whiteBoardIcon = 'border_color';
 
     myRole: any;
@@ -54,6 +55,15 @@ export class SidebarComponent implements OnInit {
         this.eventBusService.on('handleSharingCancel', this.unsubscribe$, () => {
             this.shareIcon = 'videocam_on'
             this.sharing = false;
+        })
+
+        this.eventBusService.on('whiteBoardClick', this.unsubscribe$, () => {
+            console.log('eventBus on whiteBoardClick')
+            if (this.whiteBoardMode1 == false) {
+                this.whiteBoardMode1 = true;
+            } else {
+                this.whiteBoardMode1 = false
+            }
         })
 
     }
