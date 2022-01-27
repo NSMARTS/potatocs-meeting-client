@@ -30,27 +30,21 @@
 
 .webRtc_container {
     // position: relative;
-    margin: 0;
-    width: 100%;
-    // min-width: 1180px;
+    margin: 64px 0 0 100px;
+    width: calc(100% - 400px);
+    height: calc(100vh - 64px);
+
     -khtml-user-select: none;
     -o-user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
     user-select: none;
 
-    height: 100vh;
-
 
     //click시 파란색 outline 방지.
     *:focus {
         outline: none
-    }
-
-    padding-top: 63px;
-    padding-left: 100px;
-    padding-right: 250px;
-    
+    }    
 }
 
 

@@ -1,22 +1,8 @@
-// // fitToWidth 관련 
-// html {
-//   // overflow: scroll;
-//   /* IE scroll 숨김 */
-//   -ms-overflow-style: none;
-//   overflow: hidden;
-// }
-// html::-webkit-scrollbar { 
-//   display: none;
-//   width: 0 !important;
-// }
-
-
-
-
 //click시 파란색 outline 방지.
 *:focus { 
   outline:none; 
 }
+
 
 ul {
   list-style: none
@@ -29,6 +15,10 @@ ul {
     text-align: center;
   }
 
+#container {
+  width: 100%;
+}
+
   
 #call{
   // position: fixed;
@@ -36,179 +26,113 @@ ul {
   height: 100%;
   background-color: #282828;
   text-align: center;
-}
-#call h3{
-  font-size: 30px;
-  color: #bfc8e1;
+  margin: 0;
 }
 
-#participants{
-  position: fixed;
-  overflow: auto;
-  right: 310px;
-  height: 90%;
-  overflow-x: hidden
-}
-// #participants > video{
-//   width: 50%;
-  // height: 300px;
-  // -webkit-transform:rotateY(180deg); /* Safari and Chrome */
-// }
-#participants p{
-  color: #fff;
-}
-#participants::-webkit-scrollbar{
-  width: 10px;
-  height: 10px
-}
-#participants::-webkit-scrollbar-thumb{
-  background: linear-gradient(#bfc8e1, #bfc8e1);
-  border-radius: 5px;
-}
-#participants::-webkit-scrollbar-track{
-  background: grey;
-  border-radius: 5px;
-}
-#participants::-webkit-scrollbar-corner{
-  background: #282828;
-}
-.bigvideo video{
-  position: fixed;
-  width: 50%;
-  top: 64px;
-  left: 100px;
-  max-width: 1200px;
-  // transform: rotateY(180deg);         
-  // -webkit-transform:rotateY(180deg); /* Safari and Chrome */        
-  // -moz-transform:rotateY(180deg); /* Firefox */
-  
-  
-  // transform: scaleX(-1);
-
-}
-
-.bigvideo video{
-  position: fixed;
-  width: 55%;
-  top: 64px;
-  left: 100px;
-  max-width: 1400px;
-  // transform: rotateY(180deg);         
-  // -webkit-transform:rotateY(180deg); /* Safari and Chrome */        
-  // -moz-transform:rotateY(180deg); /* Firefox */
-  
-  
-  // transform: scaleX(-1);
-
-}
-.bigvideo p{
-  // color: white;
-  position: fixed;
-  top: 73%;
-  left: 27%;
-}
 
 video{
-  width: 100%;
-  max-width: 320px;
+    width: 100%;
+  }
+  
+  
+
+////////////////// participants ///////////////////
+#participants{
+  position: fixed;
+//   overflow: auto;
+//   overflow-x: hidden;
+  left: 40%;
+  bottom: 0%;
+  display: flex;
 }
 
+#participants::-webkit-scrollbar{
+    width: 10px;
+    height: 10px
+}
+#participants::-webkit-scrollbar-thumb{
+    background: linear-gradient(#bfc8e1, #bfc8e1);
+    border-radius: 5px;
+}
+#participants::-webkit-scrollbar-track{
+    background: grey;
+    border-radius: 5px;
+}
+#participants::-webkit-scrollbar-corner{
+    background: #282828;
+}
+////////////////////////////////////////////////////
 
-#call footer{
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  background-color: #282828;
+
+
+
+///////////////// big video/////////////////////
+.bigvideo {
+    z-index: 1;
 }
-#call button{
-  width: 95px;
-  padding: 10px 0 10px;
-  border-radius: 6px;
-  border: solid 1px rgba(0,0,0,.15);
-  background-color: #bfc8e1;
-  margin: 10px 2px;
-  color: #fff;
+
+.bigvideo:hover{
+  cursor: default;
 }
-#call button:hover{
-  color: #fff;
-  background-color: #939fbe;
-  opacity: 0.9;
+
+.bigvideo > video{
+    position: fixed;
+    width: 61%;
+    height: 93%;
+    top: 65px;
+    left: 14%;
 }
-#room{
-  color: #bfc8e1;
-  display: inline-block;
-  width: 160px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+
+.bigvideo > p{
+    position: fixed;
+    // color: #fffb00;
+    color: #fff;
+    background-color: #424242;
+    border-radius: 15px;
+    padding: 5px 54px;
+    font-size: 12px;
+    top: 80px;
+    left: 40%;
 }
-#num{
-  color: #bfc8e1;
-  display: inline-block;
-  width: 80px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+////////////////////////////////////////////////////
+
+
+
+
+
+
+/////////////////// small video ///////////////////////
+.smallvideo {
+  z-index: 100;
+  width: 150px;
 }
-.popup3{
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  opacity: 0;
-  visibility: hidden;
-  transform: scale(1.1);
-  transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
+
+.smallvideo > video {
+  height: 113px;
+  width: 150px;
+  border: 1px solid white;
 }
-.popup_show3{
-  opacity: 1;
-  visibility: visible;
-  transform: scale(1.0);
-  transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
-}
-#popup_setting{
+
+.smallvideo > p {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  padding: 1rem 4rem;
-  border-radius: 0.5rem;
-  text-align: center;
-}
-#popup_setting h3{
-  width: 250px;
-  font-size: 20px;
-  color: #bfc8e1;
-}
-#btnyes3, #btnno3{
-  width: 110px;
-  padding: 17px 0 15px;
-  border-radius: 6px;
-  border: solid 1px rgba(0,0,0,.15);
-  background-color: #bfc8e1;
-  margin: 20px 2px;
-  font-size: 18px;
-  color: #fff;
-}
-#btnyes3:hover, #btnno3:hover {
-  color: #fff;
-  background-color: #939fbe;
-  opacity: 0.9;
-}
-  
-
-.btn {
-  padding: 0;
+  bottom: 7px;
   margin: 0;
-  font-size: 24px;
-  
+  color: #fff;
+  background-color: rgba(66, 66, 66, 0.7);
+  border-radius: 15px;
+  padding: 2px 50px;
+  font-size: 12px;
+  margin: 0;
 }
+////////////////////////////////////////////////////
 
 
+
+
+
+
+
+////////////////////////////////////////////////////
 .onLine {
   color: rgb(70, 113, 255);
   font-weight: 800;
@@ -218,53 +142,96 @@ video{
   color: rgb(133, 131, 131);
   font-weight: 100;
 }
+////////////////////////////////////////////////////
 
-// 비디오 오버레이 컨테이너
+
+
+///////////////// 비디오 오버레이 컨테이너 ///////////////
 .videoOverlay_container {
   display: flex;
   flex-direction: row;
   position: absolute;
   bottom: 0px;
-  left: 45%;
-  width: 320px;
+  left: 0%;
   overflow: auto;
+  width: 300px;
+}
+////////////////////////////////////////////////////////////
+
+
+
+///////////////// 스크롤바 꾸미기 ///////////////
+#participants {
+  width: 325px;
+  overflow:hidden
 }
 
-// 스크롤바 꾸미기
-.videoOverlay_container::-webkit-scrollbar {
-  height: 5px;
-}
-.videoOverlay_container::-webkit-scrollbar-thumb {
-  background-color: #3f51b5;
-}
-.videoOverlay_container::-webkit-scrollbar-track {
-  background-color: rgb(235, 235, 235);
+
+#videoOverlay_container {
+  overflow:hidden
 }
 
-// 내 로컬 비디오 오버레이
+// .videoOverlay_container::-webkit-scrollbar {
+//   height: 5px;
+// }
+// .videoOverlay_container::-webkit-scrollbar-thumb {
+//   background-color: #3f51b5;
+// }
+// .videoOverlay_container::-webkit-scrollbar-track {
+//   background-color: rgb(235, 235, 235);
+// }
+////////////////////////////////////////////////////
+
+
+
+///////////////// 내 로컬 비디오 오버레이 ///////////////
 .videoOverlay {
   pointer-events: none;
 }
 
 .videoOverlay > video {
-    width: 150px;
+  height: 113px;
+  width: 150px;
+  border: 1px solid white;
 }
 
 .videoOverlay > p {
-  text-align: center;
+  position: absolute;
+  bottom: 7px;
+  margin: 0;
+  color: #fff;
+  background-color: rgba(66, 66, 66, 0.7);
+  border-radius: 15px;
+  padding: 2px 50px;
+  font-size: 12px;
+  margin: 0;
 }
+////////////////////////////////////////////////////
 
-// 상대방 비디오 오버레이
+
+
+
+/////////// 상대방 비디오 오버레이 //////////////////
 .receiveVideoOverlay {
   pointer-events: none;
 }
 
 .receiveVideoOverlay > video {
+  height: 113px;
   width: 150px;
+  border: 1px solid white;
 }
 
 .receiveVideoOverlay > p {
-  text-align: center;
+  position: absolute;
+  bottom: 7px;
+  margin: 0;
+  color: #fff;
+  background-color: rgba(66, 66, 66, 0.7);
+  border-radius: 15px;
+  padding: 2px 50px;
+  font-size: 12px;
+  margin: 0;
 }
 
 .videoOverlay_wrap {
@@ -272,17 +239,52 @@ video{
   flex-direction: row;
   position: absolute;
   bottom: 0px;
-  left: 45%;
+  left: 41%;
+}
+////////////////////////////////////////////////////
+
+
+
+
+
+.videohidden_button {
+    z-index: 101;
+    position: relative;
+    left: 0px;
+    top: 40px;
+    transform: scale(1);
+    border-radius: 50%;
+    background-color: #b2b2b2;
+    color: white;
+    height: 24px;
+
+    
+    
+}
+
+.videohidden_button:hover {
+    cursor: pointer;
+    background-color: #3f51b5;
 }
 
 
-
-@media ( max-width: 767px ) {
-  .bigvideo video{
+.visibleVideo_button {
+    background-color: #b2b2b2;
+    color: white;
+    border-radius: 50%;
     position: fixed;
-    width: 100%;
-    top: 64px;
-    left: 100px;
-    max-width: 320px;
-  }
+    bottom: 60px;
+    right: 315px;
+    transform: scale(1);   
+
+}
+
+
+.visibleVideo_button:hover {
+    cursor: pointer;
+    background-color: #3f51b5;
+}
+
+.hiddenVideo {
+  display: none;
 }
