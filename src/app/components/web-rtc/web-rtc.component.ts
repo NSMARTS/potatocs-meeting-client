@@ -58,6 +58,10 @@ export class WebRTCComponent implements OnInit {
 	meetingStatus = false;
 	speakerDeviceId :any;
 
+	// webRTC 비디오 오버레이
+	hiddenVideoMode = false;
+	dragOn = true;
+
 
 	@ViewChild('call') public callRef: ElementRef;
 	get call(): HTMLDivElement {
@@ -603,6 +607,7 @@ export class WebRTCComponent implements OnInit {
 
 				var receiveVideoOverlay = document.getElementById('participants')
 				receiveVideoOverlay.append(video)
+				video.className = "smallvideo";
 			}
 
 
@@ -790,6 +795,33 @@ export class WebRTCComponent implements OnInit {
 		})
 	}
 
+
+
+	// hiddenVideo 버튼 클릭 시 오버레이 비디오 숨기기
+	hiddenVideo() {
+		if (this.hiddenVideoMode == false) {
+			this.hiddenVideoMode = true;
+		}
+		const smallVideo = document.querySelectorAll('.smallvideo')
+		for (let index = 0; index < smallVideo.length; index++) {
+			smallVideo[index].className = 'hiddenVideo'
+		}
+
+		this.eventBusService.on('whiteBoardClick', this.unsubscribe$, () => {
+			this.hiddenVideoMode = false;
+		})
+	}
+	
+	visibleVideo() {
+		if (this.hiddenVideoMode == true) {
+			this.hiddenVideoMode = false;
+		}
+		const smallVideo = document.querySelectorAll('.hiddenVideo')
+		for (let index = 0; index < smallVideo.length; index++) {
+			smallVideo[index].className = 'smallvideo'
+		}		
+	}
+
 }
 
 
@@ -802,12 +834,12 @@ function checkClass(userids) {
 
 		if (isExist === "bigvideo") {
 			document.getElementById(userid).classList.remove("bigvideo");
-		}
+			document.getElementById(userid).className = "smallvideo";
+		} 		
 	});
 
 	console.log(userids)
 }
-
 
 
 function Participant(socketService, userId, userid, userName, participants) {
@@ -827,6 +859,8 @@ function Participant(socketService, userId, userid, userName, participants) {
 
 	if (userId === userid) {
 		container.className = "bigvideo";
+	} else {
+		container.className = "smallvideo";
 	}
 
 	participants.appendChild(container);
@@ -837,6 +871,7 @@ function Participant(socketService, userId, userid, userName, participants) {
 	container.onclick = function () {
 		checkClass(participants_name);
 		container.classList.toggle("bigvideo");
+		document.getElementById(userid).classList.remove("smallvideo");
 	}
 
 

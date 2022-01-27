@@ -24,7 +24,6 @@ export class SidebarComponent implements OnInit {
 
     myRole: any;
 
-
     constructor(
         private socketService: SocketioService,
         private participantsService: ParticipantsService,

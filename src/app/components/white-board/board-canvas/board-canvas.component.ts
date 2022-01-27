@@ -311,7 +311,6 @@ export class BoardCanvasComponent implements OnInit, OnDestroy {
         
         console.log('>>> page Render! [background and board] + addEventHandler');
 
-
         // board rendering
         const drawingEvents = this.drawStorageService.getDrawingEvents(currentDocNum, currentPage);
         // console.log(drawingEvents)
