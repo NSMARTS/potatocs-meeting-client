@@ -3,6 +3,12 @@ import { Subject, takeUntil } from 'rxjs';
 import { EventBusService } from 'src/@wb/services/eventBus/event-bus.service';
 import { MeetingInfoService } from 'src/@wb/store/meeting-info.service';
 
+
+// notifier
+import { NotifierService } from 'angular-notifier';
+import { SocketioService } from '../../services/socketio/socketio.service';
+
+
 @Component({
     selector: 'app-right-sidebar',
     templateUrl: './right-sidebar.component.html',
@@ -24,10 +30,17 @@ export class RightSidebarComponent implements OnInit, AfterViewInit {
     selectedIndex = 0;
     currentMembersCount;
 
+    private socket;
+
     constructor(
         private eventBusService: EventBusService,
         private meetingInfoService: MeetingInfoService,
-    ) { }
+        public notifier: NotifierService,
+        private socketService: SocketioService,
+    ) {
+        this.socket = socketService.socket;
+        this.notifier = notifier;
+     }
 
     ngOnInit(): void {
         this.selectedIndex = 0;
@@ -47,6 +60,17 @@ export class RightSidebarComponent implements OnInit, AfterViewInit {
             console.log(data)
             this.currentMembersCount = data;
         })
+
+
+        // 자기 자신 포함 같은 room에 있는 사람들에게 입장했다고 알림
+        this.socket.on('notifier_in', (userName)=> {
+            this.showNotification('info', `${userName} 님이 입장하였습니다.`);
+        })
+
+        // // 자기 자신 포함 같은 room에 있는 사람들에게 퇴장했다고 알림
+        // this.socket.on('notifier_out', (userName)=> {
+        //     this.showNotification('info', `${userName} 님이 퇴장하였습니다.`);
+        // })
     }
 
 
@@ -162,4 +186,14 @@ export class RightSidebarComponent implements OnInit, AfterViewInit {
         // })
 
     }
+
+     /**
+	 * Show a notification
+	 *
+	 * @param {string} type    Notification type
+	 * @param {string} message Notification message
+	 */
+	showNotification( type: string, message: string ): void {
+		this.notifier.notify( type, message );
+	}
 }

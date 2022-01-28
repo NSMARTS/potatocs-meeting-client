@@ -9,6 +9,8 @@ import { DataStorageService } from 'src/app/services/dataStorage/data-storage.se
 import { EventData } from 'src/app/services/eventBus/event.class';
 import { MeetingService } from 'src/app/services/meeting/meeting.service';
 
+
+
 @Component({
     selector: 'app-main',
     templateUrl: './main.component.html',
@@ -40,6 +42,7 @@ export class MainComponent implements OnInit {
     }
 
     ngOnInit(): void {
+
 
         // 실시간으로 meeitngInfo를 바라보고 있다.
         this.meetingInfoService.state$
@@ -94,8 +97,6 @@ export class MainComponent implements OnInit {
 
         })
 
-        
-        
     }
 
 
@@ -137,4 +138,5 @@ export class MainComponent implements OnInit {
         })
     }
     /////////////////////////////////////////////////////////////
+
 }
