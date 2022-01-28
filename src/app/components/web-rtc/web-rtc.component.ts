@@ -486,31 +486,35 @@ export class WebRTCComponent implements OnInit {
 
 
 
-		/****************************************
-		*   whiteBoard Mode 시 webRTC 오버레이
-		*****************************************/
+		/************************************************
+		*  whiteBoard Mode 시 whiteBoard에 내 local video 오버레이
+		*************************************************/
 		this.eventBusService.on('whiteBoardClick', this.unsubscribe$, () => {
 
-			// whiteBoard Mode일 경우
+			// whiteBoard Mode로 변경 시
 			if (this.whiteBoardMode == false) {
 				this.whiteBoardMode = true;
 				console.log('whiteBoard Mode On')
 
 				// 내 local video와 name을 가져오기 위해 container 통째로
 				var videoOverlay = document.getElementById(this.userId)
-				console.log(videoOverlay)
 				videoOverlay.className = 'videoOverlay'
+				// 화이트보드에 있는 videoOverlay_container로 < video, p > element를 append
 				var videoOverlay_container = document.getElementById('videoOverlay_container')
 				videoOverlay_container.append(videoOverlay)
 
 			} else {
+				// webRTC Mode로 변경 시
 				this.whiteBoardMode = false
 				console.log('whiteBoard Mode Off')
 
+				// 내 local video와 name을 가져오기 위해 container 통째로
 				var video = document.getElementById(this.userId) // 내 local video
+				// videoOverlay className 지우기
 				video.classList.remove("videoOverlay");
-
+				// webRTC 있는 participants로 < video, p > element를 append
 				var videoOverlay = document.getElementById('participants')
+				// 내 local video bigvideo로
 				video.className = 'bigvideo'
 				videoOverlay.append(video)
 			}
@@ -570,21 +574,24 @@ export class WebRTCComponent implements OnInit {
 
 
 		/*******************************************************
-		*   상대방이 bitrate 변경 시 bigvideo가 사라지거나 겹쳐지는 부분 / 화면 공유 중 bigVideo 사라지는 부분
+		*   상대방이 bitrate 변경 시 bigvideo가 사라지거나 겹쳐지는 부분 / 화면 공유 중 bigVideo 사라지거나 겹쳐지는 부분
 		********************************************************/
 		// bigvideo 없으면 내 video를 big video로 만들기
 		var isExist = document.getElementsByClassName(sender.userId)
 		
 		if (this.whiteBoardMode == false) {
-			if (!isExist[0]) {
-				document.getElementById(this.userId).className = "bigvideo";
+			 // 화면 공유 시 다른 사람 화면 보고 있을 때 참여자 들어오면 bigvideo 겹쳐지는 부분
+			if(!document.querySelector('.bigvideo')){
+				if (!isExist[0]) {
+					document.getElementById(this.userId).className = "bigvideo";
+				}
 			}
 		}
 
 
-
 		/*******************************************************
 		*   whiteBoard Mode 시 webRTC 상대방 비디오 오버레이
+		*  receive 함수에서 상대방에 대한 비디오를 받기 때문에 여기서 작성.
 		********************************************************/
 		this.eventBusService.on('whiteBoardClick', this.unsubscribe$, () => {
 
