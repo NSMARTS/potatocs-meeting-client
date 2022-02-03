@@ -28,6 +28,7 @@
 
 
 
+
 .webRtc_container {
     // position: relative;
     margin: 64px 0 0 100px;
@@ -53,6 +54,46 @@
     outline: none
 }
 
+.toggle {
+    display: block;
+}
+
+
+@media screen and (max-width: 780px) {
+    .realTime_container {
+        position: relative;
+        margin: 0;
+        padding: 0;
+        background-color: #282828;
+    }
+
+    .webRtc_container {
+        margin: 0 0;
+        height: 100vh;
+        -khtml-user-select: none;
+        -o-user-select: none;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+    }
+
+    // 왼쪽 사이드 바
+    .sidebar_container {
+        display: none;
+        width: 60px;
+        z-index: 48;
+    }
+    
+    // 오른쪽 사이드 바
+    .right_sidebar_container {
+        display: none;
+    }
+
+    .toggle {
+        display: block;
+    }
+    
+}
 
 
 

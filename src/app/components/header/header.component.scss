@@ -38,3 +38,19 @@ button {
 .mat-elevation-z10 {
     z-index: 100;
 }
+
+
+.material-icons-outlined{
+    display: none;
+}
+
+
+@media screen and (max-width: 780px) {
+    .material-icons-outlined{
+        display: block;
+    }
+
+    .material-icons-outlined > mat-icon {
+        line-height: 40px;
+    }
+}
