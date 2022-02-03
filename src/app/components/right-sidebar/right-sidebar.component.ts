@@ -68,9 +68,10 @@ export class RightSidebarComponent implements OnInit, AfterViewInit {
         })
 
         // // 자기 자신 포함 같은 room에 있는 사람들에게 퇴장했다고 알림
-        // this.socket.on('notifier_out', (userName)=> {
-        //     this.showNotification('info', `${userName} 님이 퇴장하였습니다.`);
-        // })
+        this.socket.on('notifier_out', (userName)=> {
+            console.log(userName)
+            this.showNotification('info', `${userName} 님이 퇴장하였습니다.`);
+        })
     }
 
 
