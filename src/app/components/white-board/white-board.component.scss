@@ -146,3 +146,14 @@ $sidebarContainer-Width: 97px;
     display: none;
 }
 
+
+@media screen and (max-width: 780px) {
+    .sidebar_container {
+        margin-left: 0px;
+        padding-top: 163px;
+        z-index: 48;
+        width: 60px;
+    }
+
+}
+

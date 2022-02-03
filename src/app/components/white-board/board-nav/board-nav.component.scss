@@ -53,8 +53,8 @@
         height: 69px;
         display: flex;
         width: 40%;
-        max-width: 600px;
-        min-width: 400px;
+        // max-width: 600px;
+        // min-width: 400px;
 
 
         .color-set,
@@ -129,8 +129,8 @@
     .tool-items {
 
         width: 40%;
-        max-width: 500px;
-        min-width: 350px;
+        // max-width: 500px;
+        // min-width: 350px;
 
         .tool-set {
             display: flex;
@@ -262,4 +262,68 @@ mat-icon.active {
 
 ic-icon.active {
     color:yellow;
+}
+
+
+
+@media screen and (max-width: 780px) {
+
+    
+
+    .comclass-nav {
+        margin-left: 0;
+        margin-top: 56px;
+        margin-bottom: 0px !important;
+        background-color: #2d2f5f;
+        border-radius: 0px !important;
+    }
+
+    .navbar-nav li {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    
+
+    .container-fluid {
+        display: flex;
+        padding: 0;
+ 
+        .class-info_wrap {
+            display: none;
+        }
+
+        .drawing-config {
+            display: flex;
+            height: 60px;
+            width: 42%;
+
+            .color-set {
+                width: 50%;
+            }          
+        }
+
+        .tool-items { 
+            width: 65%;
+            background-color: #2d2f5f;
+            height: 45px;
+            min-width: 48px;
+
+            .mat-icon {
+                font-size: 28px;
+            }
+
+            .tool-set {
+                height: 45px;
+                min-width: 48px;
+
+                button {
+                    height: 70px;
+                    min-width: 50px;
+                }
+            }  
+        }
+
+    }
+    
 }

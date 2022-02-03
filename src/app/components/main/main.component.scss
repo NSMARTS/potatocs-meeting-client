@@ -8,7 +8,7 @@
 .header_container {
     position: fixed;
     top: 0;
-    z-index: 49;
+    z-index: 51;
     width: 100%;
 
     *:focus {
@@ -54,9 +54,6 @@
     outline: none
 }
 
-.toggle {
-    display: block;
-}
 
 
 @media screen and (max-width: 780px) {
@@ -79,18 +76,24 @@
 
     // 왼쪽 사이드 바
     .sidebar_container {
-        display: none;
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0s, opacity 0.1s linear;
         width: 60px;
-        z-index: 48;
+        z-index: 50;
     }
     
     // 오른쪽 사이드 바
     .right_sidebar_container {
-        display: none;
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0s, opacity 0.1s linear;
+        z-index: 48;
     }
 
     .toggle {
-        display: block;
+        visibility: visible;
+        opacity: 1;
     }
     
 }
