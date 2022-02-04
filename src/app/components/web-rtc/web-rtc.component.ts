@@ -830,6 +830,7 @@ export class WebRTCComponent implements OnInit {
 		})
 	}
 	
+	// 버튼 클릭 시 오버레이 비디오 보이게 하기
 	visibleVideo() {
 		if (this.hiddenVideoMode == true) {
 			this.hiddenVideoMode = false;
@@ -838,6 +839,7 @@ export class WebRTCComponent implements OnInit {
 		for (let index = 0; index < smallVideo.length; index++) {
 			smallVideo[index].className = 'smallvideo'
 		}		
+		
 	}
 	///////////////////////////////////////////////////////////////
 
