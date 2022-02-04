@@ -80,6 +80,11 @@ video{
     height: 93%;
     top: 65px;
     left: 14%;
+
+    ////////// 비디오 좌우반전////////////
+    // transform: rotateY(180deg);
+    // -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+    // -moz-transform:rotateY(180deg); /* Firefox */
 }
 
 .bigvideo > p{
@@ -410,6 +415,8 @@ video{
         height: 100%;
         top: 25px;
         left: 0%;
+
+        
     }
 
     .bigvideo > p{

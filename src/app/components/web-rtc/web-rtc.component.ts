@@ -880,6 +880,7 @@ function Participant(socketService, userId, receiveUserid, userName, participant
 
 	if (userId === receiveUserid) {
 		container.className = "bigvideo";
+		p.style.color = 'yellow'
 	} else {
 		container.className = "smallvideo";
 	}

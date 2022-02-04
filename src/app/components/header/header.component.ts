@@ -2,6 +2,7 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
 import { EventBusService } from 'src/@wb/services/eventBus/event-bus.service';
 import { EventData } from 'src/app/services/eventBus/event.class';
 import { ParticipantsService } from 'src/app/services/participants/participants.service';
@@ -22,11 +23,14 @@ export interface DialogData {
 })
 export class HeaderComponent implements OnInit {
 
+    private unsubscribe$ = new Subject<void>();
+
     participants: any;
     cameraOff: boolean = false;
     mute: boolean = false;
-    cameraIcon = 'videocam_on'
-    muteIcon = 'volume_up'
+    cameraIcon = 'videocam_on';
+    muteIcon = 'volume_up';
+    toggleIcon = 'density_medium';
 
 
     @ViewChild('cameraBtn') public cameraBtnRef: ElementRef;
@@ -53,6 +57,12 @@ export class HeaderComponent implements OnInit {
     // 토글 버튼
     toggle() {
         this.eventBusService.emit(new EventData('toggle', ''));
+
+        if(this.toggleIcon == 'density_medium'){
+            this.toggleIcon = 'arrow_back_ios';
+        } else if(this.toggleIcon == 'arrow_back_ios') {
+            this.toggleIcon = 'density_medium';
+        }                       
     }
 
 
