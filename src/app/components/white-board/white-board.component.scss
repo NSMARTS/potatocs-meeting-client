@@ -148,11 +148,28 @@ $sidebarContainer-Width: 97px;
 
 
 @media screen and (max-width: 780px) {
+    
+
     .sidebar_container {
         margin-left: 0px;
-        padding-top: 163px;
+        padding-top: 146px;
         z-index: 48;
         width: 60px;
+
+
+        
+    }
+
+    .comclass_container {
+        
+        margin: 0;
+        padding-left: 60px;
+        padding-top: 146px;
+        
+
+        .comclass-main {
+            height: calc(100vh - 146px);
+        }
     }
 
 }

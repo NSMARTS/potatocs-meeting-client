@@ -97,7 +97,17 @@
             p {
                 width: 40px;
                 font-size: 9px;
+                word-break: break-all;
             }
+        }
+    }
+
+    .mat-raised-button {
+        font-size: 10px;
+        padding: 0;
+
+        .mat-icon {
+            font-size: 20px;
         }
     }
 }

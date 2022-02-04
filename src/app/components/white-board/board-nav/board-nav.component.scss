@@ -276,6 +276,8 @@ ic-icon.active {
         margin-bottom: 0px !important;
         background-color: #2d2f5f;
         border-radius: 0px !important;
+        z-index: 50;
+
     }
 
     .navbar-nav li {
@@ -286,8 +288,17 @@ ic-icon.active {
     
 
     .container-fluid {
+        // display: flex;
+        // padding: 0;
+
         display: flex;
         padding: 0;
+        width: 100vh;
+        margin: 0;
+        
+        ul {
+            width: 100vw;
+        }
  
         .class-info_wrap {
             display: none;
@@ -295,25 +306,34 @@ ic-icon.active {
 
         .drawing-config {
             display: flex;
-            height: 60px;
-            width: 42%;
+            width: 100vw;
+            height: 45px;
 
             .color-set {
                 width: 50%;
+                height: 45px;
+                margin: 0;
             }          
+
+            .width-set {
+                width: 50px;
+                height: 46px;
+                margin: 0;
+            }
         }
 
         .tool-items { 
-            width: 65%;
+            width: 100vw;
             background-color: #2d2f5f;
             height: 45px;
             min-width: 48px;
-
+            
             .mat-icon {
                 font-size: 28px;
             }
 
             .tool-set {
+                margin-left: 14px;
                 height: 45px;
                 min-width: 48px;
 

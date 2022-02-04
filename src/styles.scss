@@ -380,7 +380,7 @@ video{
 
     #participants {
         width: 182px;
-        left: 30%;
+        left: 40%;
     }
 
     ///////////////// 비디오 오버레이 컨테이너 ///////////////
@@ -450,4 +450,55 @@ video{
     }
   ////////////////////////////////////////////////////
 
+
+
+    /////////////////// 화이트보드쪽 비디오 오버레이 ///////////////////////
+    .videoOverlay_wrap {
+        display: flex;
+        flex-direction: row;
+        position: absolute;
+        bottom: 0px;
+        left: 40%;
+    }
+
+    .videoOverlay_button {
+        display: none;
+    }
+
+
+    .videoOverlay > video{
+        width: 91px;
+        height: 70px;
+    }
+
+    .videoOverlay > p {
+        position: absolute;
+        bottom: 7px;
+        margin: 0;
+        color: #fff;
+        background-color: rgba(66, 66, 66, 0.7);
+        border-radius: 15px;
+        padding: 2px 20px;
+        font-size: 12px;
+        margin: 0;
+    }
+
+
+    .receiveVideoOverlay > video{
+        width: 91px;
+        height: 70px;
+    }
+
+    .receiveVideoOverlay > p {
+        position: absolute;
+        bottom: 7px;
+        margin: 0;
+        color: #fff;
+        background-color: rgba(66, 66, 66, 0.7);
+        border-radius: 15px;
+        padding: 2px 20px;
+        font-size: 12px;
+        margin: 0;
+    }
+    ////////////////////////////////////////////////////
 }
