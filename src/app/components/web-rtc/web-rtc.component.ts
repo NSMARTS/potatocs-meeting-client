@@ -629,6 +629,11 @@ export class WebRTCComponent implements OnInit {
 				var videoOverlay_container = document.getElementById('videoOverlay_container')
 				videoOverlay_container.append(videoOverlay)
 			} 				
+
+			// 상대방 비디오 안보이게 적용 중일 때 새로운 사람이 들어오면 버튼 위치 고치기
+			if (this.hiddenVideoMode == true) {
+				this.hiddenVideoMode = false;
+			}
 			
 		})
 
