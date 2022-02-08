@@ -3,6 +3,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { EventBusService } from 'src/@wb/services/eventBus/event-bus.service';
 import { MeetingInfoService } from 'src/@wb/store/meeting-info.service';
 
+
+import { SocketioService } from '../../services/socketio/socketio.service';
+
+
 @Component({
     selector: 'app-right-sidebar',
     templateUrl: './right-sidebar.component.html',
@@ -24,10 +28,15 @@ export class RightSidebarComponent implements OnInit, AfterViewInit {
     selectedIndex = 0;
     currentMembersCount;
 
+    private socket;
+
     constructor(
         private eventBusService: EventBusService,
         private meetingInfoService: MeetingInfoService,
-    ) { }
+        private socketService: SocketioService,
+    ) {
+        this.socket = socketService.socket;
+     }
 
     ngOnInit(): void {
         this.selectedIndex = 0;
@@ -162,4 +171,5 @@ export class RightSidebarComponent implements OnInit, AfterViewInit {
         // })
 
     }
+
 }

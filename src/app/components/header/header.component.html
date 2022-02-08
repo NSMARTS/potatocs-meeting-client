@@ -1,4 +1,10 @@
 <mat-toolbar class="mat-elevation-z10" color="primary" fxLayout="row">
+
+	<div>
+		<span class="material-icons-outlined" (click)="toggle()">
+			<mat-icon>{{toggleIcon}}</mat-icon> 
+		</span>
+	</div>
 	
 	<div class="toolbarIcon" fxFlex fxLayout="row">
 
@@ -22,7 +28,7 @@
 
 
 
-		<!-- bitrate ºÎºÐ-->
+		<!-- bitrate ï¿½Îºï¿½-->
 		<!-- <button class="btn" mat-icon-button #bitrateBtn (click)="openDialog()">	
 			<mat-icon>settings</mat-icon>
 		</button> -->

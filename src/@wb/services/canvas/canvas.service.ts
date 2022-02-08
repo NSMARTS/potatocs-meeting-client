@@ -131,7 +131,7 @@ export class CanvasService {
 		const ctx = coverCanvas.getContext("2d");
 		ctx.setTransform(zoomScale, 0, 0, zoomScale, 0, 0);
 
-    const rxCtx = rxCoverCanvas.getContext("2d");
+    	const rxCtx = rxCoverCanvas.getContext("2d");
 		rxCtx.setTransform(zoomScale, 0, 0, zoomScale, 0, 0);
 
 		const teacherCtx = teacherCanvas.getContext("2d");

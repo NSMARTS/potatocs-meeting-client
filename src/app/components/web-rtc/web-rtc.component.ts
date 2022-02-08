@@ -301,11 +301,7 @@ export class WebRTCComponent implements OnInit {
 		this.participantsService.updateParticipants(this.participants[this.userId]);
 		var video = participant.getVideoElement();
 		console.log(video)
-		/****************************************
-		*   Device check 시 video overlay
-		*****************************************/
-		this.eventBusService.emit(new EventData('deviceCheckVideoOverlay', video))
-
+		
 		// DeviceCheck Component로 부터 장치 id를 가져온다.
 		this.devicesInfoService.state$
 			.pipe(takeUntil(this.unsubscribe$))
@@ -591,7 +587,7 @@ export class WebRTCComponent implements OnInit {
 
 		/*******************************************************
 		*   whiteBoard Mode 시 webRTC 상대방 비디오 오버레이
-		*  receive 함수에서 상대방에 대한 비디오를 받기 때문에 여기서 작성.
+		*  receive 함수에서 상대방에 대한 비디오를 받기 때문에 receive 함수 안 여기서 작성.
 		********************************************************/
 		this.eventBusService.on('whiteBoardClick', this.unsubscribe$, () => {
 
@@ -633,6 +629,11 @@ export class WebRTCComponent implements OnInit {
 				var videoOverlay_container = document.getElementById('videoOverlay_container')
 				videoOverlay_container.append(videoOverlay)
 			} 				
+
+			// 상대방 비디오 안보이게 적용 중일 때 새로운 사람이 들어오면 버튼 위치 고치기
+			if (this.hiddenVideoMode == true) {
+				this.hiddenVideoMode = false;
+			}
 			
 		})
 
@@ -730,6 +731,7 @@ export class WebRTCComponent implements OnInit {
 	/*************************************
 	*	eventHandler
 	*************************************/
+	///////////////////////////////////////////////////////////////
 	// 카메라 On / Off
 	handleCameraClick() {
 		if (this.cameraOff) {
@@ -744,7 +746,11 @@ export class WebRTCComponent implements OnInit {
 			this.participants[this.userId].rtcPeer.videoEnabled = false;
 		}
 	}
+	///////////////////////////////////////////////////////////////
 
+
+
+	///////////////////////////////////////////////////////////////
 	// 화면 공유
 	handleSharingClick() {
 		var video = this.call.querySelector('#video-' + this.userId);
@@ -775,7 +781,11 @@ export class WebRTCComponent implements OnInit {
 
 		}
 	}
+	///////////////////////////////////////////////////////////////
 
+	
+
+	///////////////////////////////////////////////////////////////
 	// 음소거
 	handleMuteClick() {
 		console.log('handleMuteClick')
@@ -791,7 +801,11 @@ export class WebRTCComponent implements OnInit {
 			console.log("음소거")
 		}
 	}
+	///////////////////////////////////////////////////////////////
 
+
+
+	///////////////////////////////////////////////////////////////
 	// bitrate 변경
 	handleBitrateClick(data) {
 		console.log('handleBitrateClick')
@@ -801,9 +815,11 @@ export class WebRTCComponent implements OnInit {
 			bitrate: data
 		})
 	}
+	///////////////////////////////////////////////////////////////
 
 
 
+	///////////////////////////////////////////////////////////////
 	// hiddenVideo 버튼 클릭 시 오버레이 비디오 숨기기
 	hiddenVideo() {
 		if (this.hiddenVideoMode == false) {
@@ -819,6 +835,7 @@ export class WebRTCComponent implements OnInit {
 		})
 	}
 	
+	// 버튼 클릭 시 오버레이 비디오 보이게 하기
 	visibleVideo() {
 		if (this.hiddenVideoMode == true) {
 			this.hiddenVideoMode = false;
@@ -827,7 +844,10 @@ export class WebRTCComponent implements OnInit {
 		for (let index = 0; index < smallVideo.length; index++) {
 			smallVideo[index].className = 'smallvideo'
 		}		
+		
 	}
+	///////////////////////////////////////////////////////////////
+
 
 }
 
@@ -849,14 +869,15 @@ function checkClass(userids) {
 }
 
 
-function Participant(socketService, userId, userid, userName, participants) {
+function Participant(socketService, userId, receiveUserid, userName, participants) {
+	console.log('userId = ', userId, 'receiveUserid = ', receiveUserid)
 	const socket = socketService.socket;
-	participants_name.push(userid);
+	participants_name.push(receiveUserid);
 
-	this.userid = userid;
+	this.receiveUserid = receiveUserid;
 	var container = document.createElement('div');
 
-	container.id = userid;
+	container.id = receiveUserid;
 
 	var p = document.createElement('p');
 	var video = document.createElement('video');
@@ -864,8 +885,9 @@ function Participant(socketService, userId, userid, userName, participants) {
 	container.appendChild(video);
 	container.appendChild(p);
 
-	if (userId === userid) {
+	if (userId === receiveUserid) {
 		container.className = "bigvideo";
+		p.style.color = 'yellow'
 	} else {
 		container.className = "smallvideo";
 	}
@@ -878,11 +900,11 @@ function Participant(socketService, userId, userid, userName, participants) {
 	container.onclick = function () {
 		checkClass(participants_name);
 		container.classList.toggle("bigvideo");
-		document.getElementById(userid).classList.remove("smallvideo");
+		document.getElementById(receiveUserid).classList.remove("smallvideo");
 	}
 
 
-	video.id = 'video-' + userid;
+	video.id = 'video-' + receiveUserid;
 	video.autoplay = true;
 	video.controls = false;
 
@@ -894,8 +916,8 @@ function Participant(socketService, userId, userid, userName, participants) {
 		return video;
 	}
 
-	this.getContainer = function (userid) {
-		var isExist = document.getElementById(userid).className;
+	this.getContainer = function (receiveUserid) {
+		var isExist = document.getElementById(receiveUserid).className;
 		// isExist = 'bigvideo'
 		console.log(isExist)
 		return isExist;
@@ -906,7 +928,7 @@ function Participant(socketService, userId, userid, userName, participants) {
 		console.log('Invoking SDP offer callback function');
 		var msg = {
 			id: "receiveVideoFrom",
-			sender: userid,
+			sender: receiveUserid,
 			sdpOffer: offerSdp
 		};
 		sendMessage(msg);
@@ -919,7 +941,7 @@ function Participant(socketService, userId, userid, userName, participants) {
 		var message = {
 			id: 'onIceCandidate',
 			candidate: candidate,
-			sender: userid
+			sender: receiveUserid
 		};
 		sendMessage(message);
 	}
@@ -927,7 +949,7 @@ function Participant(socketService, userId, userid, userName, participants) {
 	Object.defineProperty(this, 'rtcPeer', { writable: true });
 
 	this.dispose = function () {
-		console.log('Disposing participant ' + this.userid);
+		console.log('Disposing participant ' + this.receiveUserid);
 		this.rtcPeer.dispose();
 		// container.parentNode.removeChild(container);
 		container.parentNode.removeChild(container);
