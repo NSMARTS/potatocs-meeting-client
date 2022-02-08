@@ -19,6 +19,7 @@ class InitEditInfo {
     circle: { width: 4, color: 'black' },
     rectangle: { width: 4, color: 'black' },
     roundedRectangle: { width: 4, color: 'black' },
+    textarea: { width: 4, color: 'black' },
   };
 
   toolDisabled = true; // move인 경우

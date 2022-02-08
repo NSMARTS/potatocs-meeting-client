@@ -61,6 +61,7 @@ export class BoardNavComponent implements OnInit {
         circle: this.widthSet.circle[0],
         rectangle: this.widthSet.rectangle[0],
         roundedRectangle: this.widthSet.roundedRectangle[0],
+        textarea: this.widthSet.textarea[0],
     };
     mode: any = 'move';
     myRole: any; // 나의 역할(권한)
@@ -106,6 +107,7 @@ export class BoardNavComponent implements OnInit {
                     circle: editInfo.toolsConfig.circle.width,
                     rectangle: editInfo.toolsConfig.rectangle.width,
                     roundedRectangle: editInfo.toolsConfig.roundedRectangle.width,
+                    textarea: editInfo.toolsConfig.textarea.width,
                 }
             });
 

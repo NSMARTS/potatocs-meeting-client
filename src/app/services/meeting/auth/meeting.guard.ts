@@ -70,7 +70,7 @@ export class MeetingGuard implements CanActivate, OnInit {
 
 				if (index < 0) {
 					// id가 없을 경우 어디론가 보낸다.
-					alert("권한이 없습니다.")
+					alert("Do not have permission.")
 					this.router.navigate(['/sign-in'], {queryParams: {params : state.url} });
 				} else {
 					// 전부 통과
@@ -86,7 +86,7 @@ export class MeetingGuard implements CanActivate, OnInit {
 			console.log(this.userId)
 			console.log(state)
 		} catch (error) {
-			alert("방을 찾을 수 없습니다.")
+			alert("Can not find a room.")
 			// window.open('http://localhost:4200/', "_self");
 			// this.router.navigate(['http://localhost:4200/']);
 			// this.router.navigate(['/sign-in'], {queryParams: {params : state.url} });

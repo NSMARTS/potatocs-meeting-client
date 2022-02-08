@@ -240,45 +240,48 @@ export class DrawingService {
         context.closePath();
         context.stroke();
         context.strokeStyle = tool.color;
-        
-        
-        
-        // var text = "Input Text";
-        // context.clearRect(0, 0, sourceCanvas.width, sourceCanvas.height);
-        // rectangledText(points[0],points[1], text ,(points[2 * (len - 1)] - points[0]))
-
-        // function rectangledText(x, y, text ,width){
-        //   var height = wrapText(x,y,text, width)
-        //   context.strokeRect(x, y, width, height);
-        //   context.stroke();
-        //   context.strokeStyle = 'black';
-        // }
-
-        // function wrapText(x,y,text,width){
-        //   var startingY=y;
-        //   var words = text.split(' ');
-        //   var line = '';
-        //   var space='';
-        //   var lineHeight = 20 * 1.286;
-        //   context.font = 20 + "px " + 'verdana';
-        //   context.textAlign='left';
-        //   context.textBaseline='top'
-        //   for (var n=0; n<words.length; n++) {
-        //     var testLine = line + space + words[n];
-        //     space=' ';
-        //     if (context.measureText(testLine).width > width) {
-        //       context.fillText(line,x,y);
-        //       line = words[n] + ' ';
-        //       y += lineHeight;
-        //       space='';
-        //     } else {
-        //       line = testLine;
-        //     }
-        //   }
-        //   context.fillText(line, x,y);
-        //   return(y+lineHeight-startingY);
-        // }
         break;
+        
+      // https://stackoverflow.com/questions/33771676/how-to-create-a-dynamic-drawing-text-box-in-html-canvas?answertab=oldest#tab-top
+      case 'textarea':  
+        var text = "Input Text";
+        context.clearRect(0, 0, sourceCanvas.width, sourceCanvas.height);
+        
+        rectangledText(points[0],points[1], text ,(points[2 * (len - 1)] - points[0]))
+
+        function rectangledText(x, y, text ,width){
+          var height = wrapText(x,y,text, width)
+          context.strokeRect(x, y, points[2 * (len - 1)] - points[0], points[2 * (len - 1) + 1] - points[1]);
+          context.stroke();
+          context.strokeStyle = 'black';
+        }
+
+        function wrapText(x,y,text,width){
+          var startingY=y;
+          var words = text.split(' ');
+          var line = '';
+          var space='';
+          var lineHeight = 20 * 1.286;
+          context.font = 20 + "px " + 'verdana';
+          context.textAlign='left';
+          context.textBaseline='top'
+          for (var n=0; n<words.length; n++) {
+            var testLine = line + space + words[n];
+            space=' ';
+            if (context.measureText(testLine).width > width) {
+              context.fillText(line,x,y);
+              line = words[n] + ' ';
+              y += lineHeight;
+              space='';
+            } else {
+              line = testLine;
+            }
+          }
+          context.fillText(line, x,y);
+          return(y+lineHeight-startingY);
+        }
+        break;
+
       case 'pointer':
         context.clearRect(0, 0, sourceCanvas.width, sourceCanvas.height);
         context.globalCompositeOperation = 'source-over';
@@ -294,18 +297,8 @@ export class DrawingService {
         context.closePath();
         document.getElementById('canvas').style.cursor = 'none'
         break;
-      // case 'highlighter':
-      //   context.globalCompositeOperation = 'multiply';
-      //   context.lineCap = "square";
-      //   context.lineJoin = 'round';
-      //   context.beginPath();
-      //   context.fillStyle = '#ff0';
-      //   context.quadraticCurveTo(points[2 * i], points[2 * i + 1], points[2 * (i + 1)], points[2 * (i + 1) + 1]);
-      //   context.fillRect(points[2 * (len - 1)]-(tool.width/2), points[2 * (len - 1) + 1]-(tool.width/2), tool.width, tool.width);
-      //   // context.fill();
+      
 
-      //   context.closePath();
-      //   break;
       // 형광펜
       case 'highlighter':
         context.globalAlpha = 0.5;
@@ -366,13 +359,50 @@ export class DrawingService {
     if (tool.type === "pointer"){
       return
     } else if (tool.type === "pen" || tool.type === "line" || tool.type === "circle" ||
-    tool.type === "rectangle" || tool.type === "roundedRectangle" || tool.type === "highlighter") {
+    tool.type === "rectangle" || tool.type === "roundedRectangle" ||  tool.type === "textarea") {
       context.globalCompositeOperation = 'source-over';
     } else {
       context.globalCompositeOperation = 'destination-out';
     }
 
     switch (tool.type) {
+      case 'textarea':  
+        var text = "Input Text";
+        
+        rectangledText(points[0],points[1], text ,(points[2 * (len - 1)] - points[0]))
+
+        function rectangledText(x, y, text ,width){
+          var height = wrapText(x,y,text, width)
+          context.strokeRect(x, y, points[2 * (len - 1)] - points[0], points[2 * (len - 1) + 1] - points[1]);
+          context.stroke();
+          context.strokeStyle = 'black';
+        }
+
+        function wrapText(x,y,text,width){
+          var startingY=y;
+          var words = text.split(' ');
+          var line = '';
+          var space='';
+          var lineHeight = 20 * 1.286;
+          context.font = 20 + "px " + 'verdana';
+          context.textAlign='left';
+          context.textBaseline='top'
+          for (var n=0; n<words.length; n++) {
+            var testLine = line + space + words[n];
+            space=' ';
+            if (context.measureText(testLine).width > width) {
+              context.fillText(line,x,y);
+              line = words[n] + ' ';
+              y += lineHeight;
+              space='';
+            } else {
+              line = testLine;
+            }
+          }
+          context.fillText(line, x,y);
+          return(y+lineHeight-startingY);
+        }
+        break;
       case 'pen':
       case 'eraser':
         if (len < 3) {
