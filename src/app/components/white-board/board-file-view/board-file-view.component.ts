@@ -62,6 +62,7 @@ export class BoardFileViewComponent implements OnInit {
             .subscribe(async (documentInfo) => {
                 this.documentInfo = documentInfo;
                 console.log(this.documentInfo)
+
                 await new Promise(res => setTimeout(res, 0));
 
                 this.renderFileList();
@@ -86,7 +87,7 @@ export class BoardFileViewComponent implements OnInit {
             this.eventBusService.emit(new EventData('docChange', '')) 
         })
 
-
+        
     }
 
     ngOnDestory(): void {

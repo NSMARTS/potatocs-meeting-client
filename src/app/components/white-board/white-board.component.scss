@@ -128,7 +128,7 @@ $sidebarContainer-Width: 97px;
     color: white;
     border-radius: 50%;
     position: fixed;
-    bottom: 60px;
+    bottom: 50px;
     right: 315px;
     transform: scale(1);     
 
@@ -149,10 +149,13 @@ $sidebarContainer-Width: 97px;
 
 @media screen and (max-width: 780px) {
     
+    .app-board-canvas {
+        width: 100%;
+    }
 
     .sidebar_container {
         margin-left: 0px;
-        padding-top: 138px;
+        padding-top: 148px;
         z-index: 48;
         width: 60px;
 
@@ -162,14 +165,17 @@ $sidebarContainer-Width: 97px;
 
     .comclass_container {
         
-        margin: 0;
+        margin: 0 !important;
         padding-left: 60px;
         padding-top: 146px;
-        
 
-        .comclass-main {
-            height: calc(100vh - 146px);
-        }
+        
+    }
+
+    .comclass-main {
+        width: 100% !important;
+        justify-content: unset;
+        height: calc(100vh - 146px) !important;
     }
 
 }

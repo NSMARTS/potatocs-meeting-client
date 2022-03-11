@@ -3,7 +3,10 @@
 <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
     <button mat-raised-button style="width: 100%;" [ngClass]="myRole == 'Participant' ? 'participant': '' "
         (click)="pdfInput.click()">
-        <mat-icon>file_open</mat-icon> Open File
+        <div class="pdfBtn">
+            <mat-icon>file_open</mat-icon> 
+            <span>Open File</span>
+        </div>
         <input #pdfInput type="file" (click)="$event.target.value = null" (change)="handleUploadFileChanged($event)"
             style="display:none;" accept=".pdf" />
     </button>

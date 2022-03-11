@@ -4,6 +4,7 @@ import { lastValueFrom } from 'rxjs';
 import { ApiService } from 'src/@wb/services/apiService/api.service';
 import { SocketService } from 'src/@wb/services/socket/socket.service';
 import { MeetingInfoService } from 'src/@wb/store/meeting-info.service';
+import { DialogService } from 'src/app/components/auth/sign-in/dialog/dialog.service';
 import { AuthService } from '../../auth/auth.service';
 import { MeetingService } from '../meeting.service';
 
@@ -23,6 +24,7 @@ export class MeetingGuard implements CanActivate, OnInit {
 		private apiService: ApiService,
 		private meetingInfoService: MeetingInfoService,
 		private socketService: SocketService,
+        private dialogService: DialogService
 	) {
 		this.socket = this.socketService.socket;
 	}
@@ -70,7 +72,8 @@ export class MeetingGuard implements CanActivate, OnInit {
 
 				if (index < 0) {
 					// id가 없을 경우 어디론가 보낸다.
-					alert("Don't have permission.")
+					// alert("Don't have permission.")
+                    this.dialogService.openDialogNegative("Don't have permission.");
 					this.router.navigate(['/sign-in'], {queryParams: {params : state.url} });
 				} else {
 					// 전부 통과
@@ -79,14 +82,16 @@ export class MeetingGuard implements CanActivate, OnInit {
 
 			} else {
 				// 로그인이 되지 않았을 경우
-				alert('Please login first');
+				// alert('Please login first');
+                this.dialogService.openDialogNegative("Please login first");
 				this.router.navigate(['/sign-in'], {queryParams: {params : state.url} });
 
 			}
 			console.log(this.userId)
 			console.log(state)
 		} catch (error) {
-			alert("Can't find the room.")
+			// alert("Can't find the room.")
+            this.dialogService.openDialogNegative("Can't find the room.");
 			// window.open('http://localhost:4200/', "_self");
 			// this.router.navigate(['http://localhost:4200/']);
 			// this.router.navigate(['/sign-in'], {queryParams: {params : state.url} });

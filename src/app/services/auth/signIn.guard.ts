@@ -1,5 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, ActivatedRoute } from '@angular/router';
+import { DialogService } from 'src/app/components/auth/sign-in/dialog/dialog.service';
 import { AuthService } from './auth.service';
 
 @Injectable()
@@ -8,7 +9,8 @@ export class SignInGuard implements CanActivate, OnInit {
 	constructor(
 		private router: Router,
 		private auth: AuthService,
-		private route: ActivatedRoute
+		private route: ActivatedRoute,
+		private dialogService: DialogService
 		) {
 
 	}
@@ -30,7 +32,7 @@ export class SignInGuard implements CanActivate, OnInit {
 			if (routePath == '' || routePath == 'sign-in' || routePath == 'sign-up') {
 				return true;
 			} else {
-				alert('Please login first');
+				this.dialogService.openDialogNegative('Please login first');
 				this.router.navigate(['/sign-in'], {queryParams: {params : state.url} });
 			}
 		} 

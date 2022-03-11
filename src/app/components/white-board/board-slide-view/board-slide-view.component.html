@@ -1,6 +1,10 @@
 <!-- Thumbnail -->
 <button mat-raised-button style="width: 100%;" (click)="backToFileList()">
-  <mat-icon>chevron_left</mat-icon> Doc. List </button>
+    <div class="pdfBtn">
+        <mat-icon>chevron_left</mat-icon> 
+        <span>Doc. List</span> 
+    </div>
+  </button>
 <div class="thumbnail-container">
   <div class="thumb-item" *ngFor="let thumb_ of thumbArray; let i = index" (click)="clickThumb(i+1)">
     <!-- thumbnail 배경 image -->

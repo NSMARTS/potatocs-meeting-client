@@ -76,7 +76,13 @@
             left: 0px;
             top: 0;
         }
-    }
+    }   
+}
+
+.pdfBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .thumbnail-container::-webkit-scrollbar {
@@ -86,6 +92,14 @@
 
 
 @media screen and (max-width: 780px) {
+
+    .pdfBtn {
+        text-align: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+    }
+
     .thumbBg {
         width: 45px;
         height: 45px;
@@ -109,5 +123,18 @@
         .mat-icon {
             font-size: 20px;
         }
+    }
+
+    .thumbCanvas {
+        width: 45px !important;
+        height: 45px !important;
+    }
+
+    #thumb-window {
+        position: absolute;
+        left: 2px;
+        top: 0px;
+        max-width: 45px !important;
+        max-height: 45px !important;
     }
 }

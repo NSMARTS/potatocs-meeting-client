@@ -43,6 +43,7 @@ video{
   left: 40%;
   bottom: 0%;
   display: flex;
+  z-index: 47;
 }
 
 #participants::-webkit-scrollbar{
@@ -93,10 +94,16 @@ video{
     color: #fff;
     background-color: #424242;
     border-radius: 15px;
-    padding: 5px 54px;
+    padding: 5px;
     font-size: 12px;
     top: 80px;
     left: 40%;
+    width: 100%;
+    max-width: 200px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: center;
 }
 ////////////////////////////////////////////////////
 
@@ -107,26 +114,32 @@ video{
 
 /////////////////// small video ///////////////////////
 .smallvideo {
-  z-index: 100;
-  width: 150px;
+    z-index: 100;
+    width: 150px;
 }
 
 .smallvideo > video {
-  height: 113px;
-  width: 150px;
-  border: 1px solid white;
+    height: 113px;
+    width: 150px;
+    border: 1px solid white;
 }
 
 .smallvideo > p {
-  position: absolute;
-  bottom: 7px;
-  margin: 0;
-  color: #fff;
-  background-color: rgba(66, 66, 66, 0.7);
-  border-radius: 15px;
-  padding: 2px 50px;
-  font-size: 12px;
-  margin: 0;
+    position: absolute;
+    bottom: 7px;
+    margin: 0;
+    color: #fff;
+    background-color: rgba(66, 66, 66, 0.7);
+    border-radius: 15px;
+    padding: 2px;
+    font-size: 12px;
+    margin: 0;
+    width: 100%;
+    max-width: 150px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: center;
 }
 ////////////////////////////////////////////////////
 
@@ -200,15 +213,20 @@ video{
 }
 
 .videoOverlay > p {
-  position: absolute;
-  bottom: 7px;
-  margin: 0;
-  color: #fff;
-  background-color: rgba(66, 66, 66, 0.7);
-  border-radius: 15px;
-  padding: 2px 50px;
-  font-size: 12px;
-  margin: 0;
+    position: absolute;
+    bottom: 7px;
+    margin: 0;
+    color: #fff;
+    background-color: rgba(66, 66, 66, 0.7);
+    border-radius: 15px;
+    padding: 5px;
+    font-size: 12px;
+    width: 100%;
+    max-width: 151px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: center;
 }
 ////////////////////////////////////////////////////
 
@@ -227,15 +245,20 @@ video{
 }
 
 .receiveVideoOverlay > p {
-  position: absolute;
-  bottom: 7px;
-  margin: 0;
-  color: #fff;
-  background-color: rgba(66, 66, 66, 0.7);
-  border-radius: 15px;
-  padding: 2px 50px;
-  font-size: 12px;
-  margin: 0;
+    position: absolute;
+    bottom: 7px;
+    margin: 0;
+    color: #fff;
+    background-color: rgba(66, 66, 66, 0.7);
+    border-radius: 15px;
+    padding: 5px;
+    font-size: 12px;
+    width: 100%;
+    max-width: 151px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: center;
 }
 
 .videoOverlay_wrap {
@@ -253,17 +276,14 @@ video{
 
 .videohidden_button {
     z-index: 101;
-    position: relative;
-    left: 0px;
-    top: 40px;
+    position: fixed;
+    left: 38%;
+    bottom: 50px;
     transform: scale(1);
     border-radius: 50%;
     background-color: #b2b2b2;
     color: white;
     height: 24px;
-
-    
-    
 }
 
 .videohidden_button:hover {
@@ -277,7 +297,7 @@ video{
     color: white;
     border-radius: 50%;
     position: fixed;
-    bottom: 60px;
+    bottom: 50px;
     right: 315px;
     transform: scale(1);   
 
@@ -397,13 +417,13 @@ video{
         left: 0%;
         overflow: auto;
         width: 182px;
+        
     }
-  ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
+
+
 
     ///////////////// big video/////////////////////
-    .bigvideo {
-        // z-index: 1;
-    }
 
     .bigvideo:hover{
         cursor: default;
@@ -414,9 +434,7 @@ video{
         width: 100%;
         height: 100%;
         top: 25px;
-        left: 0%;
-
-        
+        left: 0%;        
     }
 
     .bigvideo > p{
@@ -425,13 +443,20 @@ video{
         color: #fff;
         background-color: #424242;
         border-radius: 15px;
-        padding: 5px 54px;
+        padding: 5px;
         font-size: 12px;
         top: 80px;
         left: 30%;
+        width: 100%;
+        max-width: 151px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        text-align: center;
     }
     ////////////////////////////////////////////////////
 
+    
     /////////////////// small video ///////////////////////
     .smallvideo {
         z-index: 2;
@@ -451,9 +476,15 @@ video{
         color: #fff;
         background-color: rgba(66, 66, 66, 0.7);
         border-radius: 15px;
-        padding: 2px 20px;
+        padding: 2px;
         font-size: 12px;
         margin: 0;
+        width: 100%;
+        max-width: 91px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        text-align: center;
     }
   ////////////////////////////////////////////////////
 
@@ -485,9 +516,15 @@ video{
         color: #fff;
         background-color: rgba(66, 66, 66, 0.7);
         border-radius: 15px;
-        padding: 2px 20px;
+        padding: 2px;
         font-size: 12px;
         margin: 0;
+        width: 100%;
+        max-width: 91px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        text-align: center;
     }
 
 
@@ -503,9 +540,15 @@ video{
         color: #fff;
         background-color: rgba(66, 66, 66, 0.7);
         border-radius: 15px;
-        padding: 2px 20px;
+        padding: 2px;
         font-size: 12px;
         margin: 0;
+        width: 100%;
+        max-width: 91px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        text-align: center;
     }
     ////////////////////////////////////////////////////
 }
