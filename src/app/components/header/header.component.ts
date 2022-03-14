@@ -29,7 +29,7 @@ export class HeaderComponent implements OnInit {
     cameraOff: boolean = false;
     mute: boolean = false;
     cameraIcon = 'videocam_on';
-    muteIcon = 'volume_up';
+    muteIcon = 'mic';
     toggleIcon = 'density_medium';
 
 
@@ -96,10 +96,10 @@ export class HeaderComponent implements OnInit {
         console.log('volume_up On')
         if (this.mute) {
 
-            this.muteIcon = 'volume_up'
+            this.muteIcon = 'mic'
             this.mute = false;
         } else {
-            this.muteIcon = 'volume_off'
+            this.muteIcon = 'mic_off'
             this.mute = true;
         }
     }

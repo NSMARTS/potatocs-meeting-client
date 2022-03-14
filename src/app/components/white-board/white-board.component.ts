@@ -16,6 +16,7 @@ import { ViewInfoService } from 'src/@wb/store/view-info.service';
 import { PdfStorageService } from 'src/@wb/storage/pdf-storage.service';
 import { DrawStorageService } from 'src/@wb/storage/draw-storage.service';
 import { DataStorageService } from 'src/app/services/dataStorage/data-storage.service';
+import { DialogService } from '../auth/sign-in/dialog/dialog.service';
 
 
 
@@ -61,6 +62,7 @@ export class WhiteBoardComponent implements OnInit {
     private zoomService: ZoomService,
     private socketService: SocketService,
     private dataStorageService: DataStorageService,
+    private dialogService: DialogService,
   ) {
     this.socket = this.socketService.socket;
   }
@@ -393,7 +395,8 @@ export class WhiteBoardComponent implements OnInit {
           zoomScale: this.zoomService.setInitZoomScale()
         }
         obj.leftSideView = 'fileList';
-        alert('The pdf file has been deleted');
+        // alert('The pdf file has been deleted');
+        this.dialogService.openDialogNegative('The pdf file has been deleted.');
       }
     }
 
