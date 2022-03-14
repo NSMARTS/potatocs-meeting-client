@@ -920,8 +920,12 @@ function Participant(socketService, userId, receiveUserid, userName, participant
 
 
 	video.id = 'video-' + receiveUserid;
-	video.autoplay = true;
 	video.controls = false;
+
+    // 사파리 모바일 자동재생(전체화면 x)
+    video.autoplay = true;
+    video.loop = true;
+    video.playsInline = true;
 
 	this.getElement = function () {
 		return container;

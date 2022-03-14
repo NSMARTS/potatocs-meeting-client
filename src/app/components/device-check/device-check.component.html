@@ -21,7 +21,7 @@
                         </div> -->
 
                         <div class="video">
-                            <video #video autoplay muted [srcObject]="localStream$|async"></video>
+                            <video #video autoplay loop muted playsinline [srcObject]="localStream$|async"></video>
                         </div>
                         
 

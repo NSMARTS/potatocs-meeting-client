@@ -69,6 +69,11 @@ video{
 ///////////////// big video/////////////////////
 .bigvideo {
     z-index: 1;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 56px;
+    right: 5%;
 }
 
 .bigvideo:hover{
@@ -76,17 +81,17 @@ video{
 }
 
 .bigvideo > video{
-    position: fixed;
-    width: 61%;
-    height: 94%;
+    width: 100%;
+    height: 100%;
     top: 56px;
-    left: 14%;
+    right: 5%;
 
     ////////// 비디오 좌우반전////////////
     // transform: rotateY(180deg);
     // -webkit-transform:rotateY(180deg); /* Safari and Chrome */
     // -moz-transform:rotateY(180deg); /* Firefox */
 }
+
 
 .bigvideo > p{
     position: fixed;
@@ -429,13 +434,22 @@ video{
         cursor: default;
     }
 
-    .bigvideo > video{
+    .bigvideo{
         position: fixed;
-        width: 100%;
-        height: 100%;
+        width: 100vw;
+        height: 100vh;
         top: 25px;
         left: 0%;        
     }
+
+    .bigvideo > video{
+        width: 100%;
+        height: 100%;
+        top: 25px;
+        left: 0%;   
+        
+    }
+
 
     .bigvideo > p{
         position: fixed;
