@@ -193,5 +193,10 @@
     //     position: relative !important;
     // }
     
-
+    .chatContainer {
+        height:calc(100vh - 270px);
+        overflow: auto;
+        font-size: 13px;
+        line-height: 1.4;
+    }
 }
