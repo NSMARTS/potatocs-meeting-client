@@ -30,6 +30,7 @@
     "@types/jquery": "^3.5.6",
     "@types/socket.io-client": "^3.0.0",
     "@visurel/iconify-angular": "^11.0.0",
+    "angular-notifier": "^9.1.0",
     "animate.css": "^4.1.1",
     "bootstrap": "^5.1.1",
     "font-awesome": "^4.7.0",

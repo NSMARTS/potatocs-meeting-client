@@ -34,5 +34,20 @@
 
 
 .whiteBoardMode1 {
-    padding-top: 65px;
+    padding-top: 56px;
 }
+
+
+@media screen and (max-width: 780px) {
+    
+    // 왼쪽 사이드 바
+    .menu-items {
+        padding: 10px;
+    }
+
+    .whiteBoardMode1 {
+        padding-top: 0px;
+    }
+}
+
+

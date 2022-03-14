@@ -9,6 +9,11 @@ import { DataStorageService } from 'src/app/services/dataStorage/data-storage.se
 import { EventData } from 'src/app/services/eventBus/event.class';
 import { MeetingService } from 'src/app/services/meeting/meeting.service';
 
+
+// notifier
+import { NotifierService } from 'angular-notifier';
+
+
 @Component({
     selector: 'app-main',
     templateUrl: './main.component.html',
@@ -27,6 +32,8 @@ export class MainComponent implements OnInit {
     userId: any;
     meetingClose = false;
 
+    toggle = false;
+
     constructor(
         private eventBusService: EventBusService,
         private route: ActivatedRoute,
@@ -35,11 +42,14 @@ export class MainComponent implements OnInit {
         private meetingInfoService: MeetingInfoService,
         private socketService: SocketService,
         private meetingService: MeetingService,
+        public notifier: NotifierService,
     ) {
         this.socket = this.socketService.socket;
+        this.notifier = notifier;
     }
 
     ngOnInit(): void {
+
 
         // 실시간으로 meeitngInfo를 바라보고 있다.
         this.meetingInfoService.state$
@@ -94,8 +104,27 @@ export class MainComponent implements OnInit {
 
         })
 
-        
-        
+        this.eventBusService.on('toggle', this.unsubscribe$, () => {
+            console.log('eventBus on toggle')
+            if (this.toggle == false) {
+                this.toggle = true;
+            } else {
+                this.toggle = false
+            }
+        })
+
+
+        // 자기 자신 포함 같은 room에 있는 사람들에게 입장했다고 알림
+        this.socket.on('notifier_in', (userName)=> {
+            this.showNotification('info', `${userName} has entered.`);
+        })
+
+        // // 자기 자신 포함 같은 room에 있는 사람들에게 퇴장했다고 알림
+        this.socket.on('notifier_out', (userName)=> {
+            console.log(userName)
+            this.showNotification('info', `${userName} has left.`);
+        })
+
     }
 
 
@@ -137,4 +166,16 @@ export class MainComponent implements OnInit {
         })
     }
     /////////////////////////////////////////////////////////////
+
+
+     /**
+	 * Show a notification
+	 *
+	 * @param {string} type    Notification type
+	 * @param {string} message Notification message
+	 */
+	showNotification( type: string, message: string ): void {
+		this.notifier.notify( type, message );
+	}
+
 }

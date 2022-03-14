@@ -25,10 +25,8 @@ import { NgMaterialUIModule } from './ng-material-ui/ng-material-ui.module';
 // icon
 import { IconModule } from '@visurel/iconify-angular';
 
-
 // Config
 import { ENV } from './config/config';
-
 
 // Guard
 import { JwtModule } from '@auth0/angular-jwt';
@@ -41,10 +39,61 @@ import { DeviceCheckComponent } from './components/device-check/device-check.com
 import { MeetingChatComponent } from './components/right-sidebar/meeting-chat/meeting-chat.component';
 import { ParticipantComponent } from './components/right-sidebar/participant/participant.component';
 
+// notifier
+import { NotifierModule, NotifierOptions } from 'angular-notifier';
+
+
 
 export function tokenGetter() {
 	return localStorage.getItem(ENV.tokenName);
 }
+
+
+/**
+ * Custom angular notifier options
+ */
+ const customNotifierOptions: NotifierOptions = {
+  position: {
+        horizontal: {
+            position: 'right',
+            distance: 12
+        },
+        vertical: {
+            position: 'bottom',
+            distance: 12,
+            gap: 10
+        }
+    },
+  theme: 'material',
+  behaviour: {
+    autoHide: 5000,
+    onClick: 'hide',
+    onMouseover: 'pauseAutoHide',
+    showDismissButton: true,
+    stacking: 4
+  },
+  animations: {
+    enabled: true,
+    show: {
+      preset: 'slide',
+      speed: 300,
+      easing: 'ease'
+    },
+    hide: {
+      preset: 'fade',
+      speed: 300,
+      easing: 'ease',
+      offset: 50
+    },
+    shift: {
+      speed: 300,
+      easing: 'ease'
+    },
+    overlap: 150
+  }
+};
+
+
 
 @NgModule({
   declarations: [
@@ -78,6 +127,7 @@ export function tokenGetter() {
     HttpClientModule,
     FileUploadModule,
     ReactiveFormsModule,
+    NotifierModule.withConfig(customNotifierOptions), // notifier
     IconModule, // icon
     JwtModule.forRoot({
       config: {

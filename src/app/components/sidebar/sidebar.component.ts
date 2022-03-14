@@ -72,6 +72,7 @@ export class SidebarComponent implements OnInit {
         // Participant 모드 일 경우 sync 기능 적용 제외
 		if(this.myRole != 'Participant'){
             this.eventBusService.emit(new EventData('handleSharingClick', ''))
+
             if (this.sharing) {
                 this.shareIcon = 'videocam_on'
                 this.sharing = false;

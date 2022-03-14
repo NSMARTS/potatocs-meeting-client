@@ -3,7 +3,7 @@
 
         <ul class="nav navbar-nav main-nav">
 
-            <li>
+            <li class="class-info_wrap">
                 <div class="class-info">
                     <div class="class-name"></div>
                     <!-- <div class="student-info">
@@ -40,13 +40,13 @@
             <li class="tool-items">
                 <div class="tool-set">
 
-                    <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
+                    <!-- <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
                         <button type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' " (click)="changeTool('pointer');" mat-icon-button>
                             <mat-icon [ngClass]="(currentTool == 'pointer') && (mode == 'draw')?'active':''">
                                 radio_button_checked
                             </mat-icon>
                         </button>
-                    </div>
+                    </div> -->
 
                     <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
                         <button type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
@@ -55,13 +55,13 @@
                         </button>
                     </div>
 
-                    <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
+                    <!-- <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
                         <button type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
                             (click)="changeTool('highlighter');" mat-icon-button>
-                            <ic-icon [icon]="markerIcon" [width]="35" [height]="35" [ngClass]="(currentTool == 'highlighter') && (mode == 'draw')?'active':''"></ic-icon>
+                            <ic-icon [icon]="markerIcon" [width]="30" [height]="30" [ngClass]="(currentTool == 'highlighter') && (mode == 'draw')?'active':''"></ic-icon>
                             <span class="iconify" data-icon="mdi:marker"></span>
                         </button>
-                    </div>
+                    </div> -->
 
                     <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
                         <button type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "

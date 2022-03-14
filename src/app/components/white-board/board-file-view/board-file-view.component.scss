@@ -83,3 +83,33 @@
     pointer-events : none;
 }
 
+
+
+@media screen and (max-width: 780px) {
+    .thumbBg {
+        width: 45px;
+        height: 45px;
+    }
+    .thumbnail-container {
+        .thumb-item {
+            width: 60px;
+
+            p {
+                width: 40px;
+                font-size: 9px;
+                word-break: break-all;
+            }
+        }
+    }
+
+    .mat-raised-button {
+        font-size: 10px;
+        padding: 0;
+      
+        .mat-icon {
+            font-size: 20px;
+        }
+    }
+
+    
+}
