@@ -89,10 +89,12 @@ export class SidebarComponent implements OnInit {
         if (this.whiteBoardMode == false) {
             this.whiteBoardMode = true;
             console.log('whiteBoard Mode On')
+            this.eventBusService.emit(new EventData('toggle', ''));
             this.whiteBoardIcon = 'desktop_mac'
         } else {
             this.whiteBoardMode = false
             console.log('whiteBoard Mode Off')
+            this.eventBusService.emit(new EventData('toggle', ''));
             this.whiteBoardIcon = 'border_color'
         }
 

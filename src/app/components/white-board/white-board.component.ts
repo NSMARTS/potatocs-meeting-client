@@ -42,10 +42,15 @@ export class WhiteBoardComponent implements OnInit {
   hiddenVideoMode = false;
   dragOn = true;
 
+  currentMembersCount: any;
+
+
   private unsubscribe$ = new Subject<void>();
   private socket;
   private meetingId;
   id;
+
+  mobileWidth: any;
 
   // Left Side Bar
   leftSideView;
@@ -68,6 +73,10 @@ export class WhiteBoardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.mobileWidth = window.screen.width;
+
+
     this.dataStorageService.meetingId.subscribe((data) => {
       this.id = data
     })
@@ -118,6 +127,12 @@ export class WhiteBoardComponent implements OnInit {
     }))
 
     ////////////////////////////////////////////////
+
+    // 현재 접속 중인 참여자 수 구하기
+    this.eventBusService.on("currentMembersCount", this.unsubscribe$, (data) => {
+        console.log(data)
+        this.currentMembersCount = data;
+    })
 
 
     ////////////////////////////////////////////////////////

@@ -17,7 +17,7 @@
 
 <div class="thumbnail-container">
     <div class="thumb-item" *ngFor="let thumb of documentInfo ; let i = index;" (click)="clickPdf(thumb._id)">
-        <!-- <button mat-button class="deleteChatBtn" (click)="deleteChat(item._id, item.replyId)" *ngIf="item.chatMemberId==userId"> -->
+        <!-- <button mat-button class="deleteChatBtn" (click)="deleteChat(item._id, item.replyId)" *ngIf="item.chatMemberId==userId"></button> -->
 
         <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
             <button [ngClass]="myRole == 'Participant' ? 'participant': '' " *ngIf="i > 0 && myRole == 'Presenter'" mat-button class="deleteChatBtn" (click)="deletePdf(thumb._id)">

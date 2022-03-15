@@ -124,7 +124,6 @@ export class WebRTCComponent implements OnInit {
 
         
         this.mobileWidth = window.screen.width;
-        console.log(this.mobileWidth)
 	}
 
 	/**

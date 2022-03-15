@@ -173,6 +173,7 @@ $sidebarContainer-Width: 97px;
     }
 
     .comclass-main {
+        // overflow-y: hidden;
         width: 100% !important;
         justify-content: unset;
         height: calc(100vh - 146px) !important;

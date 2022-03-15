@@ -52,17 +52,26 @@ export class HeaderComponent implements OnInit {
 
     ngOnInit(): void {
 
+        this.eventBusService.on('toggle', this.unsubscribe$, () => {
+            if(this.toggleIcon == 'density_medium'){
+                this.toggleIcon = 'arrow_back_ios';
+            } else if(this.toggleIcon == 'arrow_back_ios') {
+                this.toggleIcon = 'density_medium';
+            }   
+        })
+
+
     }
 
     // 토글 버튼
     toggle() {
         this.eventBusService.emit(new EventData('toggle', ''));
 
-        if(this.toggleIcon == 'density_medium'){
-            this.toggleIcon = 'arrow_back_ios';
-        } else if(this.toggleIcon == 'arrow_back_ios') {
-            this.toggleIcon = 'density_medium';
-        }                       
+        // if(this.toggleIcon == 'density_medium'){
+        //     this.toggleIcon = 'arrow_back_ios';
+        // } else if(this.toggleIcon == 'arrow_back_ios') {
+        //     this.toggleIcon = 'density_medium';
+        // }                       
     }
 
 

@@ -112,10 +112,12 @@
 
     .thumb-item {
         margin-top: 10px !important;
-       
+        position: static
     }
 
     .thumbnail-container {
+        padding-bottom: 30px;
+        overflow-x: hidden;
         .thumb-item {
             width: 60px;
 
