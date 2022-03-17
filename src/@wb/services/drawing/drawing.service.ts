@@ -255,6 +255,7 @@ export class DrawingService {
         context.stroke();
         context.strokeStyle = tool.color;
         break;
+
       case 'pointer':
         context.clearRect(0, 0, sourceCanvas.width, sourceCanvas.height);
         context.globalCompositeOperation = 'source-over';
@@ -351,6 +352,43 @@ export class DrawingService {
     }
 
     switch (tool.type) {
+      case 'textarea':  
+        var text = "Input Text";
+        
+        rectangledText(points[0],points[1], text ,(points[2 * (len - 1)] - points[0]))
+
+        function rectangledText(x, y, text ,width){
+          var height = wrapText(x,y,text, width)
+          context.strokeRect(x, y, points[2 * (len - 1)] - points[0], points[2 * (len - 1) + 1] - points[1]);
+          context.stroke();
+          context.strokeStyle = 'black';
+        }
+
+        function wrapText(x,y,text,width){
+          var startingY=y;
+          var words = text.split(' ');
+          var line = '';
+          var space='';
+          var lineHeight = 20 * 1.286;
+          context.font = 20 + "px " + 'verdana';
+          context.textAlign='left';
+          context.textBaseline='top'
+          for (var n=0; n<words.length; n++) {
+            var testLine = line + space + words[n];
+            space=' ';
+            if (context.measureText(testLine).width > width) {
+              context.fillText(line,x,y);
+              line = words[n] + ' ';
+              y += lineHeight;
+              space='';
+            } else {
+              line = testLine;
+            }
+          }
+          context.fillText(line, x,y);
+          return(y+lineHeight-startingY);
+        }
+        break;
       case 'pen':
       case 'eraser':
         if (len < 3) {
