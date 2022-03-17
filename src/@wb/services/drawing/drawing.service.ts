@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { EventBusService } from '../eventBus/event-bus.service';
+import { EventData } from '../eventBus/event.class';
 
 @Injectable({
   providedIn: 'root'
@@ -6,7 +8,14 @@ import { Injectable } from '@angular/core';
 export class DrawingService {
 
   private sourceCanvas:any;
-  constructor() { }
+  textX1;
+  textY1;
+  textareaWidth;
+  points;
+  textValue;
+  constructor(
+    private eventBusService: EventBusService,
+  ) { }
   /**
      * Drawing Start
      */
@@ -77,10 +86,15 @@ export class DrawingService {
    */
   move(context, points, tool, zoomScale, sourceCanvas) {
     context.globalCompositeOperation = 'source-over';
+    context.setLineDash([]);
     this.sourceCanvas = sourceCanvas
     context.lineCap = "round";
     context.lineJoin = 'round';
-    context.lineWidth = tool.width;
+    if (tool.type != 'textarea'){
+      context.lineWidth = tool.width;
+    } else {
+      context.lineWidth = 1
+    }
     context.fillStyle = tool.color;
     context.strokeStyle = tool.color;
 
@@ -240,44 +254,6 @@ export class DrawingService {
         context.closePath();
         context.stroke();
         context.strokeStyle = tool.color;
-        
-        
-        
-        // var text = "Input Text";
-        // context.clearRect(0, 0, sourceCanvas.width, sourceCanvas.height);
-        // rectangledText(points[0],points[1], text ,(points[2 * (len - 1)] - points[0]))
-
-        // function rectangledText(x, y, text ,width){
-        //   var height = wrapText(x,y,text, width)
-        //   context.strokeRect(x, y, width, height);
-        //   context.stroke();
-        //   context.strokeStyle = 'black';
-        // }
-
-        // function wrapText(x,y,text,width){
-        //   var startingY=y;
-        //   var words = text.split(' ');
-        //   var line = '';
-        //   var space='';
-        //   var lineHeight = 20 * 1.286;
-        //   context.font = 20 + "px " + 'verdana';
-        //   context.textAlign='left';
-        //   context.textBaseline='top'
-        //   for (var n=0; n<words.length; n++) {
-        //     var testLine = line + space + words[n];
-        //     space=' ';
-        //     if (context.measureText(testLine).width > width) {
-        //       context.fillText(line,x,y);
-        //       line = words[n] + ' ';
-        //       y += lineHeight;
-        //       space='';
-        //     } else {
-        //       line = testLine;
-        //     }
-        //   }
-        //   context.fillText(line, x,y);
-        //   return(y+lineHeight-startingY);
-        // }
         break;
       case 'pointer':
         context.clearRect(0, 0, sourceCanvas.width, sourceCanvas.height);
@@ -294,18 +270,7 @@ export class DrawingService {
         context.closePath();
         document.getElementById('canvas').style.cursor = 'none'
         break;
-      // case 'highlighter':
-      //   context.globalCompositeOperation = 'multiply';
-      //   context.lineCap = "square";
-      //   context.lineJoin = 'round';
-      //   context.beginPath();
-      //   context.fillStyle = '#ff0';
-      //   context.quadraticCurveTo(points[2 * i], points[2 * i + 1], points[2 * (i + 1)], points[2 * (i + 1) + 1]);
-      //   context.fillRect(points[2 * (len - 1)]-(tool.width/2), points[2 * (len - 1) + 1]-(tool.width/2), tool.width, tool.width);
-      //   // context.fill();
-
-      //   context.closePath();
-      //   break;
+      
       // 형광펜
       case 'highlighter':
         context.globalAlpha = 0.5;
@@ -340,14 +305,27 @@ export class DrawingService {
         // eraser Marker
         this.eraserMarker(context, [points[2 * (len - 1)], points[2 * (len - 1) + 1]], tool.width);
         break;
-        
+
+      case 'textarea':
+        if (len > 3) {
+          console.log('shape moving~~~~~~')
+          context.clearRect(0, 0, sourceCanvas.width, sourceCanvas.height);
+          context.setLineDash([5, 10]);
+          context.strokeRect(points[0], points[1], (points[2 * (len - 1)] - points[0]), (points[2 * (len - 1) + 1] - points[1]));
+          // fillRect는 색이 채워지고 strokeRect은 색이 채워지지 않는다.
+          // context.fillRect(points[0], points[1], (points[2 * (len - 1)] - points[0]), (points[2 * (len - 1) + 1] - points[1]));
+          context.closePath();
+
+          context.strokeStyle = tool.color;
+        }
+        break;  
 
       default:
         break;
     }
   }
 
-  end(context, points, tool) {
+  end(context, points, tool, txt?, scale?, textareaPoints?) {
     // console.log(points)
     context.lineCap = "round";
     context.lineJoin = 'round';
@@ -366,7 +344,7 @@ export class DrawingService {
     if (tool.type === "pointer"){
       return
     } else if (tool.type === "pen" || tool.type === "line" || tool.type === "circle" ||
-    tool.type === "rectangle" || tool.type === "roundedRectangle" || tool.type === "highlighter") {
+    tool.type === "rectangle" || tool.type === "roundedRectangle" || tool.type === "highlighter"  || tool.type === "text") {
       context.globalCompositeOperation = 'source-over';
     } else {
       context.globalCompositeOperation = 'destination-out';
@@ -503,7 +481,209 @@ export class DrawingService {
         context.closePath();
         context.globalAlpha = 1
         break;
+      // 글상자 textarea 생성
+      // https://stackoverflow.com/questions/5026961/html5-canvas-ctx-filltext-wont-do-line-breaks
+      case 'textarea':
+        this.points = points
+        //  textarea 생성
+        var input = document.createElement('textarea');
+        this.textX1 = points[0]; // 처음으로 마우스로 찍은 X값 좌표
+        this.textY1 = points[1]; // 처음으로 마우스로 찍은 Y값 좌표
+        var tempX;
+        var textX2 = points[2 * (len - 1)]; // 마지막으로 찍은 X값 좌표
+        var textY2 = points[2 * (len - 1) + 1]; // 마지막으로 찍은 Y값 좌표
+        var tempY;
+        input.id = 'textarea'
+        input.style.position = 'fixed';
+        input.style.fontSize = tool.width * scale + 'px';
+       
+        
 
+        // 마우스를 좌상단 방향으로 드래그할 경우 textarea 위치가 이상하게 나옴
+        // 첫 좌표가 마지막 좌표보다 클 경우 서로 위치를 바꿔야한다.
+        if (this.textX1 > textX2) {
+          tempX = this.textX1;
+          this.textX1 = textX2;
+          textX2 = tempX;
+        }
+        if (this.textY1 > textY2) {
+          tempY = this.textY1;
+          this.textY1 = textY2;
+          textY2 = tempY;
+        }
+
+        // textarea의 가로 좌표
+        if(textareaPoints[0] > textareaPoints[2]){
+          input.style.left = textareaPoints[2] + 'px'; 
+        } else {
+          input.style.left = textareaPoints[0] + 'px'; 
+        }
+
+        // textarea의 세로 좌표
+        if(textareaPoints[1] > textareaPoints[3]){
+          input.style.top = textareaPoints[3] + 'px'; 
+        } else {
+          input.style.top = textareaPoints[1] + 'px'; 
+        }
+
+        // textarea의 넓이
+        this.textareaWidth = (textX2 - this.textX1)
+        // textarea의 길이
+        let textareaHeight = (textY2- this.textY1)
+
+        // textarea 최소 길이 높이 설정
+        if (textX2 - this.textX1 < 180 / scale) {
+          this.textareaWidth = 180 / scale
+        }
+        if (textY2 - this.textY1 < 26 / scale) {
+          textareaHeight = 26 / scale
+        }
+
+        input.style.width = this.textareaWidth * scale + 'px';
+        input.style.height = textareaHeight * scale+ 'px';
+
+
+        // body에 textarea 추가
+        document.body.appendChild(input);
+        break;
+
+      case 'text': // textarea를 생성하고나면 text모드로 자동으로 변경
+        // 이벤트 버스를 사용, 드로잉 이벤트가 끝이나면 text를 썸네일로 보낸다.
+        const eventBusService = this.eventBusService;
+
+        // textarea의 줄바꿈시 그려야할 y값 좌표가 한줄 씩 내려간다(바뀐다.).
+        // 이때 변경된 y 좌표를 담고 있는 변수 drawHeight
+        let drawHeight;
+
+        // textarea html태그 추출
+        var textInput = (<HTMLInputElement>document.getElementById('textarea'));
+        this.textValue = textInput?.value
+
+        // ****코드 리팩토링 필요
+        // textInput?.value가 있으면 textarea로 값을 가져온다('text모드에서 element가 생성된 경우')
+        // textInput?.value가 없는 경우는 zoom과 같이 textarea가 element에서 값을 가져오는게 아니라
+        // drawStorage에서 값을 불러오는 경우 사용
+        // this.textValue가 ''일 경우 문제 발생 '' 실행안하게 조건문을 넣는다.
+        if (textInput) {
+          // textarea 삭제
+          textInput.parentNode.removeChild(textInput);
+
+          // https://stackoverflow.com/questions/33771676/how-to-create-a-dynamic-drawing-text-box-in-html-canvas
+          // Draw the text onto canvas:
+          drawText(this.textValue, this.textX1, this.textY1, this.textareaWidth, scale);
+          
+          // drawStorage에 좌표랑, 텍스트 저장
+          const drawingEvent = {
+            points: this.points,
+            tool,
+            txt: this.textValue,
+          };
+          eventBusService.emit(new EventData('gen:newDrawEvent', drawingEvent));
+          
+          
+          // 초기화
+          this.textX1 = 0 
+          this.textY1 = 0
+          this.textareaWidth = 0
+          this.points = []
+
+        } else if(txt) {
+          
+          // drawStorage에서 points 좌표를 가져왔기 때문에 다시 계산
+          // 썸네일을 그리거나, zoom을 할 경우 여기서 실행된다.
+         
+          var textX1 = points[0];
+          var textY1 = points[1];
+          var tempX;
+          var textX2 = points[2 * (points.length / 2 - 1)];
+          var textY2 = points[2 * (points.length / 2 - 1) + 1];
+          var tempY;
+
+
+          // 첫 좌표가 마지막 좌표보다 클 경우
+          if (textX1 > textX2) {
+            tempX = textX1;
+            textX1 = textX2;
+            textX2 = tempX;
+          }
+          if (textY1 > textY2) {
+            tempY = textY1;
+            textY1 = textY2;
+            textY2 = tempY;
+          }
+          
+          // textarea의 넓이
+          let textareaWidth = (textX2 - textX1) 
+
+          // textarea 최소 길이 높이 설정
+          if (textareaWidth < 180 ) {
+            textareaWidth = 180 
+          }
+
+          drawText(txt, textX1, textY1, textareaWidth, scale);
+        }
+
+
+        function drawText(txt, x, y, width, scale?) {
+          context.textBaseline = 'top'; // 글씨 위치 지정
+          context.textAlign = 'left';
+          context.font = tool.width+'px Arial'; // 글씨 폰트 지정
+        
+          // txt.split("\n")은 textarea의 input값 중
+          // 줄바꿈("\n")을 기준으로 배열 생성
+          // aaa  
+          // aaa  일 경우    ['aaa','aaa','aaa'] 로 출력 
+          // aaa
+          var lines = txt?.split("\n");
+          var lineHeight = tool.width * 1.5 ; // 한줄 높이 지정
+          drawHeight = y + 7; // 줄 바꿈시 y값 좌표가 바뀐다. drawHeight는 이를 담고 있는 변수  
+          for (var i = 0; i < lines.length; i++) {
+            console.log(context.measureText(lines[i]).width * scale)
+            console.log(width)
+            // context.measureText(lines[i]).width textarea의 value의 길이
+            // 입력한 값이 textarea 넓이보다 길면 다음 줄로 내려가게 한다.
+            // 'printAt' 함수가 줄바꿈 기능을 한다.
+            // 만약 입력한 값이 textarea 넓이보다 짧으면 
+            // 'fillText' 함수로 바로 그려버린다.
+            if (context.measureText(lines[i]).width * scale > width * scale ) {
+              console.log(context.measureText(lines[i]).width)
+              printAt(context, lines[i].substr(0), x, drawHeight, lineHeight, width);
+            } else {
+              context.fillText(lines[i], x, drawHeight);
+              // 한줄 그린 후 다음 줄로 넘어가기 위해
+              // 줄 길이 만큼 y좌표에 더 한다.
+              drawHeight += lineHeight;
+            }
+          }
+
+
+        }
+
+        // textarea의 값의 길이가 textarea의 너비보다 길 경우 줄바꿈 함수
+        function printAt(context, text, x, y, lineHeight, fitWidth) {
+          // textarea의 넓이 보다 긴 한줄을 한글자씩 분해  
+          for (var idx = 1; idx <= text.length; idx++) {
+            // 분해한 글짜가 textarea보다 짧으면 함수 실행없이 
+            // 그냥 한바퀴 돈다.(분해한 글자 하나 더해진다)
+            var str = text.substr(0, idx);
+            // 분해한 글자 하나씩 더해지다가 textarea보다 길어지면
+            // canvas에 한줄 그리고 한줄 띄운다
+            if (context.measureText(str).width  > fitWidth ) {
+              // 3 이랑 6 은 아주 약간의 위치 조정
+              context.fillText(text.substr(0, idx - 1), x, y + 3);
+              drawHeight = y + lineHeight 
+              printAt(context, text.substr(idx - 1), x, drawHeight, lineHeight, fitWidth);
+              return;
+            }
+          }
+          // 마지막 줄을 canvas에 그려주고
+          // y좌표를 줄 높이 만큼 더 해준다.
+          // 3 이랑 6 은 아주 약간의 위치 조정
+          context.fillText(text, x , y + 3);
+          drawHeight = y + lineHeight
+        }
+
+        break;
       
       default:
         break;
@@ -533,7 +713,7 @@ export class DrawingService {
     // prepare scale
     thumbCtx.save();
     thumbCtx.scale(thumbScale, thumbScale);
-    this.end(thumbCtx, data.points, data.tool);
+    this.end(thumbCtx, data.points, data.tool, 1);
     thumbCtx.restore();
   }
 
@@ -627,13 +807,13 @@ export class DrawingService {
     const targetCanvas = this.dataArray[0].targetCanvas;
     const targetContext = targetCanvas.getContext("2d");
     const scale = this.dataArray[0].scale;
+    
 
-
-    if (data.tool.type == 'line' || data.tool.type == 'circle'
-        || data.tool.type == 'rectangle' || data.tool.type == 'roundedRectangle'
+    if (data.tool.type == 'line' || data.tool.type == 'circle' || data.tool.type == 'highlighter'
+        || data.tool.type == 'rectangle' || data.tool.type == 'roundedRectangle' || data.tool.type == 'text'
     ){
       // context.clearRect(0, 0, sourceCanvas.width / scale, sourceCanvas.height / scale);
-      this.end(targetContext, data.points, data.tool);
+      this.end(targetContext, data.points, data.tool, data.txt, scale);
       this.dataArray.shift();
       this.rxDrawingFunc();
       return;

@@ -5,7 +5,9 @@ import { PdfStorageService } from '../../storage/pdf-storage.service';
 import { CANVAS_CONFIG } from '../../config/config';
 import { EventData } from '../eventBus/event.class';
 import { DrawingService } from '../drawing/drawing.service';
-import { EventBusService } from '../eventBus/event-bus.service';
+
+import { EditInfoService } from 'src/@wb/store/edit-info.service';
+import { EventBusService } from 'src/@wb/services/eventBus/event-bus.service';
 
 
 @Injectable({
@@ -20,6 +22,7 @@ export class CanvasService {
 		private pdfStorageService: PdfStorageService,
 		private drawingService: DrawingService,
 		private eventBusService: EventBusService,
+		private editInfoService: EditInfoService,
 	) { }
 
 	// board-canvas clearBoard()
@@ -179,6 +182,7 @@ export class CanvasService {
 		console.log(">>>> Add Event handler:", tool, zoomScale);
 		const drawingService = this.drawingService;
 		const eventBusService = this.eventBusService;
+		const editInfoService = this.editInfoService;
 
 		const sourceCtx = sourceCanvas.getContext("2d");
 		const targetCtx = targetCanvas.getContext("2d");
@@ -186,6 +190,7 @@ export class CanvasService {
 		let oldPoint = {};
 		let newPoint = {};
 		let points:any = [];
+		let textareaPoints: any = []; // textarea를 그릴 때 사용하는 좌표
 
 		// var maxNumberOfPointsPerSocket = 100;
 		let startTime = null;
@@ -238,10 +243,16 @@ export class CanvasService {
 				isTouch = true;
 			}
 
+			// textareaPoints는 textarea를 만들때 사용 
+			if (tool.type == 'textarea') {
+				textareaPoints = [event.clientX, event.clientY]; // textarea 그릴때 사용하는 좌표 저장
+			}
+
 			oldPoint = getPoint(isTouch ? event.touches[0] : event, this, scale);
 			points = oldPoint;
 			
 			drawingService.start(sourceCtx, points, tool, sourceCanvas);
+
 			// 포인터일 경우 end가 아닌 start와 move 때 socket으로 전송
 			if(tool.type == 'pointer'){
 				eventBusService.emit(new EventData('gen:newDrawEvent', {
@@ -286,14 +297,36 @@ export class CanvasService {
 			}
 		};
 
-		function upEvent() {
+		function upEvent(event) {
 			
 			if (!isDown) return;
 			isDown = false;
 			isTouch = false;
 			sourceCtx.globalAlpha = 1
 			// 레이저 포인트일경우
-			drawingService.end(targetCtx, points, tool);
+
+			// textareaPoints는 textarea를 만들때 사용 
+			if (tool.type == 'textarea') {			
+				textareaPoints.push(event.clientX, event.clientY) 
+			}
+
+			drawingService.end(targetCtx, points, tool,'', scale, textareaPoints);
+			event.preventDefault();
+
+			if (tool.type == 'text') {
+				const editInfo = Object.assign({}, editInfoService.state);
+				editInfo.tool = 'textarea';
+				editInfoService.setEditInfo(editInfo);
+			return clear(sourceCanvas, scale);
+			}
+		
+			if (tool.type == 'textarea') {
+				const editInfo = Object.assign({}, editInfoService.state);
+				editInfo.tool = 'text';
+				editInfoService.setEditInfo(editInfo);
+			return clear(sourceCanvas, scale);
+			}
+
 			if(tool.type == 'pointer'){
 				sourceCtx.shadowColor = "";
 				sourceCtx.shadowBlur = 0;

@@ -161,6 +161,16 @@ export class BoardCanvasComponent implements OnInit, OnDestroy {
                 };
 
                 const zoomScale = this.viewInfoService.state.pageInfo.zoomScale;
+
+                // text모드에서 갑작스럽게 다른 모드로 전환할경우
+                // textarea 삭제
+                if(editInfo.tool != 'text'){
+                    var textInput = (<HTMLInputElement>document.getElementById('textarea'));
+                    if(textInput){
+                      textInput.parentNode.removeChild(textInput);
+                    }
+                }
+
                 this.canvasService.addEventHandler(this.coverCanvas, this.teacherCanvas, this.currentToolInfo, zoomScale);
             });
 

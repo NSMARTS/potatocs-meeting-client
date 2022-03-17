@@ -61,6 +61,8 @@ export class BoardNavComponent implements OnInit {
         circle: this.widthSet.circle[0],
         rectangle: this.widthSet.rectangle[0],
         roundedRectangle: this.widthSet.roundedRectangle[0],
+        textarea: this.widthSet.textarea[0],
+        text: this.widthSet.text[0],
     };
     mode: any = 'move';
     myRole: any; // 나의 역할(권한)
@@ -106,6 +108,8 @@ export class BoardNavComponent implements OnInit {
                     circle: editInfo.toolsConfig.circle.width,
                     rectangle: editInfo.toolsConfig.rectangle.width,
                     roundedRectangle: editInfo.toolsConfig.roundedRectangle.width,
+                    text: editInfo.toolsConfig.text.width,
+                    textarea: editInfo.toolsConfig.textarea.width,
                 }
             });
 
@@ -140,6 +144,7 @@ export class BoardNavComponent implements OnInit {
         editInfo.toolsConfig.circle.color = color;
         editInfo.toolsConfig.rectangle.color = color;
         editInfo.toolsConfig.roundedRectangle.color = color;
+        editInfo.toolsConfig.text.color = color;
         this.editInfoService.setEditInfo(editInfo);
     }
 
@@ -156,9 +161,14 @@ export class BoardNavComponent implements OnInit {
 
         if (editInfo.mode != 'draw') return;
 
-        const tool = editInfo.tool; // tool: 'pen', 'eraser'
-        editInfo.toolsConfig[tool].width = width;
-
+        // textarea 모드거나 text모드 상태에서 width를 수정하면 같이 바뀥다.
+        if(editInfo.tool == 'text' || editInfo.tool == 'textarea'){
+            editInfo.toolsConfig['text'].width = width;
+            editInfo.toolsConfig['textarea'].width = width;
+          } else {
+            const tool = editInfo.tool; // tool: 'pen', 'eraser', 'shape'
+            editInfo.toolsConfig[tool].width = width;
+        }
         this.editInfoService.setEditInfo(editInfo);
     }
 
@@ -181,10 +191,8 @@ export class BoardNavComponent implements OnInit {
                     currentDocNum: this.currentDocNum,
                     currentPage: this.currentPage
                 }
-
                 // 다른 사람들에게 드로우 이벤트 제거
                 this.socket.emit('clearDrawingEvents', data)
-
                 // 자기자신한테 있는 드로우 이벤트 제거
                 this.drawStorageService.clearDrawingEvents(this.currentDocNum, this.currentPage);
                 this.eventBusService.emit(new EventData('rmoveDrawEventPageRendering', ''));

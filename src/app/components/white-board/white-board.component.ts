@@ -132,7 +132,6 @@ export class WhiteBoardComponent implements OnInit {
     /////////////////////////////////////////////////////////
     // 새로운 판서 Event local 저장 + 서버 전송
     this.eventBusService.on('gen:newDrawEvent', this.unsubscribe$, async (data) => {
-
       const pageInfo = this.viewInfoService.state.pageInfo;
       // local Store 저장
       if (data.tool.type != 'pointer') {

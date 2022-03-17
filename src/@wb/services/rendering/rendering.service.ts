@@ -93,7 +93,7 @@ export class RenderingService {
       // console.log(thumbCanvas.width, viewport.width);
       for (const item of drawingEvents?.drawingEvent) {
         // Draw Service의 'end'관련 event 이용.
-        this.drawingService.end(thumbCtx, item.points, item.tool);
+        this.drawingService.end(thumbCtx, item.points, item.tool, item.txt, item.scale);
       }
       thumbCtx.restore();
     }
@@ -149,7 +149,7 @@ export class RenderingService {
     if (drawingEvents?.drawingEvent && drawingEvents?.drawingEvent.length > 0) {
       // console.log('renderBoard -------------------222222222')
       for (const item of drawingEvents?.drawingEvent) {
-        this.drawingService.end(targetCtx, item.points, item.tool);
+        this.drawingService.end(targetCtx, item.points, item.tool, item.txt, scale);
       }
     }
   }
