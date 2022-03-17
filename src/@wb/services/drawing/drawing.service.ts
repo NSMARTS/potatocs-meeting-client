@@ -255,7 +255,6 @@ export class DrawingService {
         context.stroke();
         context.strokeStyle = tool.color;
         break;
-
       case 'pointer':
         context.clearRect(0, 0, sourceCanvas.width, sourceCanvas.height);
         context.globalCompositeOperation = 'source-over';
@@ -352,43 +351,6 @@ export class DrawingService {
     }
 
     switch (tool.type) {
-      case 'textarea':  
-        var text = "Input Text";
-        
-        rectangledText(points[0],points[1], text ,(points[2 * (len - 1)] - points[0]))
-
-        function rectangledText(x, y, text ,width){
-          var height = wrapText(x,y,text, width)
-          context.strokeRect(x, y, points[2 * (len - 1)] - points[0], points[2 * (len - 1) + 1] - points[1]);
-          context.stroke();
-          context.strokeStyle = 'black';
-        }
-
-        function wrapText(x,y,text,width){
-          var startingY=y;
-          var words = text.split(' ');
-          var line = '';
-          var space='';
-          var lineHeight = 20 * 1.286;
-          context.font = 20 + "px " + 'verdana';
-          context.textAlign='left';
-          context.textBaseline='top'
-          for (var n=0; n<words.length; n++) {
-            var testLine = line + space + words[n];
-            space=' ';
-            if (context.measureText(testLine).width > width) {
-              context.fillText(line,x,y);
-              line = words[n] + ' ';
-              y += lineHeight;
-              space='';
-            } else {
-              line = testLine;
-            }
-          }
-          context.fillText(line, x,y);
-          return(y+lineHeight-startingY);
-        }
-        break;
       case 'pen':
       case 'eraser':
         if (len < 3) {
@@ -676,8 +638,6 @@ export class DrawingService {
           var lineHeight = tool.width * 1.5 ; // 한줄 높이 지정
           drawHeight = y + 7; // 줄 바꿈시 y값 좌표가 바뀐다. drawHeight는 이를 담고 있는 변수  
           for (var i = 0; i < lines.length; i++) {
-            console.log(context.measureText(lines[i]).width * scale)
-            console.log(width)
             // context.measureText(lines[i]).width textarea의 value의 길이
             // 입력한 값이 textarea 넓이보다 길면 다음 줄로 내려가게 한다.
             // 'printAt' 함수가 줄바꿈 기능을 한다.
