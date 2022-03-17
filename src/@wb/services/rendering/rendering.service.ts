@@ -93,7 +93,7 @@ export class RenderingService {
       // console.log(thumbCanvas.width, viewport.width);
       for (const item of drawingEvents?.drawingEvent) {
         // Draw Service의 'end'관련 event 이용.
-        this.drawingService.end(thumbCtx, item.points, item.tool, item.txt, item.scale);
+        this.drawingService.end(thumbCtx, item.points, item.tool, item.txt, scale);
       }
       thumbCtx.restore();
     }
