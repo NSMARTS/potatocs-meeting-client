@@ -627,7 +627,7 @@ export class DrawingService {
         function drawText(txt, x, y, width, scale?) {
           context.textBaseline = 'top'; // 글씨 위치 지정
           context.textAlign = 'left';
-          context.font = tool.width+'px Arial'; // 글씨 폰트 지정
+          context.font = tool.width+'px Verdana'; // 글씨 폰트 지정
         
           // txt.split("\n")은 textarea의 input값 중
           // 줄바꿈("\n")을 기준으로 배열 생성
@@ -711,7 +711,7 @@ export class DrawingService {
     // prepare scale
     thumbCtx.save();
     thumbCtx.scale(thumbScale, thumbScale);
-    this.end(thumbCtx, data.points, data.tool, 1);
+    this.end(thumbCtx, data.points, data.tool, data.txt , 1);
     thumbCtx.restore();
   }
 
@@ -908,7 +908,7 @@ export class DrawingService {
     // prepare scale
     thumbCtx.save();
     thumbCtx.scale(thumbScale, thumbScale);
-    this.end(thumbCtx, data.points, data.tool);
+    this.end(thumbCtx, data.points, data.tool, data.txt);
     thumbCtx.restore();
   }
 }
