@@ -395,6 +395,27 @@ video{
 ////////////////////////////////////////
 
 
+//////////////////// snackBar //////////////////////
+.entered-snackbar {
+    color: white;
+}
+
+.entered-snackbar button{
+    color: rgb(1, 132, 255);
+}
+
+.left-snackbar {
+    color: white;
+}
+
+.left-snackbar button{
+    color: rgb(255, 58, 58);
+}
+
+
+////////////////////////////////////////////////////
+
+
 
 @media screen and (max-width: 780px) {
 
