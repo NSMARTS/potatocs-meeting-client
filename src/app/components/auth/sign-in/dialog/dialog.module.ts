@@ -5,6 +5,8 @@ import { DialogComponent } from './dialog.component';
 import { ConfirmDialogComponent } from './dialog.component';
 import { PositiveDialogComponent } from './dialog.component';
 import { NegativeDialogComponent } from './dialog.component';
+import { SpinnerDialogComponent } from './dialog.component';
+
 import { NgMaterialUIModule } from 'src/app/ng-material-ui/ng-material-ui.module';
 
 
@@ -13,7 +15,8 @@ import { NgMaterialUIModule } from 'src/app/ng-material-ui/ng-material-ui.module
     DialogComponent,
     ConfirmDialogComponent,
     PositiveDialogComponent,
-    NegativeDialogComponent
+    NegativeDialogComponent,
+    SpinnerDialogComponent
   ],
   imports: [
     CommonModule,

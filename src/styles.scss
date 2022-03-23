@@ -409,12 +409,18 @@ video{
 }
 
 .left-snackbar button{
-    color: rgb(255, 58, 58);
+    color: rgb(255, 92, 92);
 }
 
 
 ////////////////////////////////////////////////////
 
+
+//////////////////// spinner //////////////////////
+.mat-progress-spinner circle, .mat-spinner circle {
+    stroke: rgb(255, 58, 58);
+}
+////////////////////////////////////////////////////
 
 
 @media screen and (max-width: 780px) {

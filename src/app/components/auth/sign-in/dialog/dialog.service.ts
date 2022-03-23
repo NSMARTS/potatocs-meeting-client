@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
-import { ConfirmDialogComponent, NegativeDialogComponent, PositiveDialogComponent } from './dialog.component';
+import { ConfirmDialogComponent, NegativeDialogComponent, PositiveDialogComponent, SpinnerDialogComponent } from './dialog.component';
 
 @Injectable({
     providedIn: 'root'
@@ -43,6 +43,19 @@ export class DialogService {
     // negative
     openDialogNegative(data) {
         const dialogRef = this.dialog.open(NegativeDialogComponent, {
+            data: {
+                content: data
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('dialog close');
+        })
+    }
+
+    // spinner
+    openDialogSpinner(data) {
+        const dialogRef = this.dialog.open(SpinnerDialogComponent, {
             data: {
                 content: data
             }
