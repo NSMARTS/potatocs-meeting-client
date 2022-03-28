@@ -50,10 +50,8 @@ export class DrawStorageService {
 
     let drawingEventSet = this.drawVarArray[docNum-1].drawingEventSet;
 
-    console.log(drawingEventSet);
     const itemIndex = drawingEventSet.findIndex((item)=> item.pageNum === pageNum );
 
-    console.log(itemIndex);
     // 현재 해당 page의 data가 없는 경우 최초 생성
     if (itemIndex<0) {
       this.drawVarArray[docNum-1].drawingEventSet.push({ pageNum: pageNum, drawingEvent: [drawingEvent] });
@@ -61,8 +59,6 @@ export class DrawStorageService {
     // 기존 data에 event 추가
     else {
       this.drawVarArray[docNum-1].drawingEventSet[itemIndex].drawingEvent.push(drawingEvent);
-
-      console.log(this.drawVarArray[docNum-1].drawingEventSet);
     };
 
 

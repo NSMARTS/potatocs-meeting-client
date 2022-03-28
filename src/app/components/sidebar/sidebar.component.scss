@@ -38,6 +38,7 @@
 }
 
 
+
 @media screen and (max-width: 780px) {
     
     // 왼쪽 사이드 바
@@ -46,7 +47,12 @@
     }
 
     .whiteBoardMode1 {
-        padding-top: 0px;
+        padding-top: 56px;
+    }
+
+    .shareBtn {
+        /* 클릭 불가능 none */
+        display: none;
     }
 }
 

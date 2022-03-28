@@ -7,6 +7,7 @@ import { EventBusService } from 'src/@wb/services/eventBus/event-bus.service';
 import { EventData } from 'src/app/services/eventBus/event.class';
 import { ParticipantsService } from 'src/app/services/participants/participants.service';
 import { SocketioService } from 'src/app/services/socketio/socketio.service';
+import { DialogService } from '../auth/sign-in/dialog/dialog.service';
 
 
 
@@ -25,11 +26,13 @@ export class HeaderComponent implements OnInit {
 
     private unsubscribe$ = new Subject<void>();
 
+    private socket;
+
     participants: any;
     cameraOff: boolean = false;
     mute: boolean = false;
     cameraIcon = 'videocam_on';
-    muteIcon = 'volume_up';
+    muteIcon = 'mic';
     toggleIcon = 'density_medium';
 
 
@@ -46,11 +49,23 @@ export class HeaderComponent implements OnInit {
         ///////////////////
         public dialog: MatDialog,
         ///////////////////
-    ) {
+		private socketService: SocketioService,
+        private dialogService: DialogService,
 
+    ) {
+        this.socket = socketService.socket;
     }
 
     ngOnInit(): void {
+
+        this.eventBusService.on('toggle', this.unsubscribe$, () => {
+            if(this.toggleIcon == 'density_medium'){
+                this.toggleIcon = 'arrow_back_ios';
+            } else if(this.toggleIcon == 'arrow_back_ios') {
+                this.toggleIcon = 'density_medium';
+            }   
+        })
+
 
     }
 
@@ -58,11 +73,11 @@ export class HeaderComponent implements OnInit {
     toggle() {
         this.eventBusService.emit(new EventData('toggle', ''));
 
-        if(this.toggleIcon == 'density_medium'){
-            this.toggleIcon = 'arrow_back_ios';
-        } else if(this.toggleIcon == 'arrow_back_ios') {
-            this.toggleIcon = 'density_medium';
-        }                       
+        // if(this.toggleIcon == 'density_medium'){
+        //     this.toggleIcon = 'arrow_back_ios';
+        // } else if(this.toggleIcon == 'arrow_back_ios') {
+        //     this.toggleIcon = 'density_medium';
+        // }                       
     }
 
 
@@ -96,12 +111,22 @@ export class HeaderComponent implements OnInit {
         console.log('volume_up On')
         if (this.mute) {
 
-            this.muteIcon = 'volume_up'
+            this.muteIcon = 'mic'
             this.mute = false;
         } else {
-            this.muteIcon = 'volume_off'
+            this.muteIcon = 'mic_off'
             this.mute = true;
         }
+    }
+
+    // 미팅 나가기 
+    meetingExit() {
+        this.dialogService.openDialogConfirm('Would you like to leave the room?').subscribe(result => {
+			if (result) {
+				this.socket.emit('participantLeft');
+                window.close();
+			}
+		});        
     }
 
 

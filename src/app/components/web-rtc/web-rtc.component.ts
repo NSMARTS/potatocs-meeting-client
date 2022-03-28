@@ -61,6 +61,9 @@ export class WebRTCComponent implements OnInit {
 	// webRTC 비디오 오버레이
 	hiddenVideoMode = false;
 	dragOn = true;
+    currentMembersCount:any;
+    mobileWidth: any;
+    
 
 
 	@ViewChild('call') public callRef: ElementRef;
@@ -118,6 +121,9 @@ export class WebRTCComponent implements OnInit {
 		// step1: socket connection & join Room & register socket listener
 		// todo: disconnect, reconnect를 위한 루틴 추가 필요
 		this.registerSocketListener();
+
+        
+        this.mobileWidth = window.screen.width;
 	}
 
 	/**
@@ -179,11 +185,11 @@ export class WebRTCComponent implements OnInit {
 
 		});
 		this.socket.on("receiveVideoAnswer", (data) => {
-			console.log(data)
+			// console.log(data)
 			this.receiveVideoResponse(data);
 		});
 		this.socket.on("iceCandidate", (data) => {
-			console.log(data)
+			// console.log(data)
 			this.participants[data.userId].rtcPeer.addIceCandidate(data.candidate, function (error) {
 				if (error) {
 					console.error("Error adding candidate: " + error);
@@ -268,6 +274,12 @@ export class WebRTCComponent implements OnInit {
 			this.handleBitrateClick(data)
 
 		})
+
+        // 현재 접속 중인 참여자 수 구하기
+        this.eventBusService.on("currentMembersCount", this.unsubscribe$, (data) => {
+            console.log(data)
+            this.currentMembersCount = data;
+        })
 
 	}
 
@@ -537,6 +549,8 @@ export class WebRTCComponent implements OnInit {
 		var participant = new Participant(this.socketService, this.userId, sender.userId, sender.name, this.participantsElement);
 		this.participants[sender.userId] = participant;
 		var video = participant.getVideoElement();
+
+        console.log(this.participants)
 
 		//--------------------------------------------
 		// 스피커 변경 크롬만 작동 중 => 나중에 다른식으로 구현
@@ -905,8 +919,12 @@ function Participant(socketService, userId, receiveUserid, userName, participant
 
 
 	video.id = 'video-' + receiveUserid;
-	video.autoplay = true;
 	video.controls = false;
+
+    // 사파리 모바일 자동재생(전체화면 x)
+    video.autoplay = true;
+    video.loop = true;
+    video.playsInline = true;
 
 	this.getElement = function () {
 		return container;

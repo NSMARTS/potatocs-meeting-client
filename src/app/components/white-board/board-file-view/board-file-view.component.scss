@@ -62,6 +62,12 @@
     opacity :0.8;
 }
 
+.pdfBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .deleteChatBtn{
     position: absolute;
     top: 0px;
@@ -86,11 +92,32 @@
 
 
 @media screen and (max-width: 780px) {
-    .thumbBg {
-        width: 45px;
-        height: 45px;
+
+    #thumb {
+        width: 45px !important;
+        height: 45px !important;
     }
+
+    .pdfBtn {
+        text-align: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .thumbBg {
+        width: 45px !important;;
+        height: 45px !important;;
+    }
+
+    .thumb-item {
+        margin-top: 10px !important;
+        position: static
+    }
+
     .thumbnail-container {
+        padding-bottom: 30px;
+        overflow-x: hidden;
         .thumb-item {
             width: 60px;
 

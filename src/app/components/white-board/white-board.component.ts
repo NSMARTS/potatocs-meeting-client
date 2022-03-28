@@ -45,7 +45,9 @@ export class WhiteBoardComponent implements OnInit {
   private socket;
   private meetingId;
   id;
-
+  mobileWidth: any;
+  currentMembersCount: any;
+  spinner: any;
   // Left Side Bar
   leftSideView;
 
@@ -66,6 +68,9 @@ export class WhiteBoardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.mobileWidth = window.screen.width;
+
     this.dataStorageService.meetingId.subscribe((data) => {
       this.id = data
     })
@@ -97,7 +102,7 @@ export class WhiteBoardComponent implements OnInit {
     ////////////////////////////////////////////////
     // 새로운 판서 Event 수신
     this.socket.on('draw:teacher', ((data: any) => {
-      console.log('<---[SOCKET] rx drawEvent :', data);
+      // console.log('<---[SOCKET] rx drawEvent :', data);
       // console.log(data.drawingEvent, data.docNum, data.pageNum)
 
       if (data.drawingEvent.tool.type != 'pointer') {
@@ -128,6 +133,12 @@ export class WhiteBoardComponent implements OnInit {
         console.log('[info] current Left Side View: ', leftSideView);
       });
     ///////////////////////////////////////////////////////
+
+    // 현재 접속 중인 참여자 수 구하기
+    this.eventBusService.on("currentMembersCount", this.unsubscribe$, (data) => {
+      console.log(data)
+      this.currentMembersCount = data;
+    })
 
     /////////////////////////////////////////////////////////
     // 새로운 판서 Event local 저장 + 서버 전송
@@ -220,6 +231,19 @@ export class WhiteBoardComponent implements OnInit {
 
     // 3. view status update
     this.updateViewInfoStore();
+
+    ///////////////////////////////////////////////////////////////////
+      /*---------------------------------------
+        pdf 업로드 시 spinner 
+      -----------------------------------------*/
+      this.eventBusService.on('spinner', this.unsubscribe$, (dialogRef) => {
+        this.spinner = dialogRef;
+    })
+
+    if (this.spinner) {
+        this.spinner.close();
+    }
+    ///////////////////////////////////////////////////////////////////
   }
 
 

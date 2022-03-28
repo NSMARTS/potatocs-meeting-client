@@ -17,7 +17,7 @@ export class SidebarComponent implements OnInit {
     video: any;
     sharing = false;
     stream: any;
-    shareIcon = 'videocam_on';
+    shareIcon = 'screen_share';
 
     whiteBoardMode = false;
     whiteBoardMode1 = false;
@@ -53,7 +53,7 @@ export class SidebarComponent implements OnInit {
 
 
         this.eventBusService.on('handleSharingCancel', this.unsubscribe$, () => {
-            this.shareIcon = 'videocam_on'
+            this.shareIcon = 'screen_share'
             this.sharing = false;
         })
 
@@ -74,11 +74,11 @@ export class SidebarComponent implements OnInit {
             this.eventBusService.emit(new EventData('handleSharingClick', ''))
 
             if (this.sharing) {
-                this.shareIcon = 'videocam_on'
+                this.shareIcon = 'screen_share'
                 this.sharing = false;
             } else {
                 this.sharing = true;
-                this.shareIcon = 'videocam_off'
+                this.shareIcon = 'stop_screen_share'
             }
         }
     }
@@ -89,10 +89,12 @@ export class SidebarComponent implements OnInit {
         if (this.whiteBoardMode == false) {
             this.whiteBoardMode = true;
             console.log('whiteBoard Mode On')
+            this.eventBusService.emit(new EventData('toggle', ''));
             this.whiteBoardIcon = 'desktop_mac'
         } else {
             this.whiteBoardMode = false
             console.log('whiteBoard Mode Off')
+            this.eventBusService.emit(new EventData('toggle', ''));
             this.whiteBoardIcon = 'border_color'
         }
 

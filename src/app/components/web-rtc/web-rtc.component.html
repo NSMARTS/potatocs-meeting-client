@@ -8,14 +8,22 @@
 <div #call id="call">
     <div #video id="video" class="video">
         
-        <div #participants id="participants" class="videoOverlay_wrap" [dragScroll]="dragOn">
-            <div [ngClass]="{'hiddenVideoMode': hiddenVideoMode === true}" class="videohidden_button" (click)="hiddenVideo()">
+        <div *ngIf="mobileWidth > 780" #participants id="participants" class="videoOverlay_wrap" [dragScroll]="dragOn" [ngStyle]="{ 'left' : (currentMembersCount >=3 ? 37+'%' : 42+'%') } ">
+            <div [ngClass]="{'hiddenVideoMode': hiddenVideoMode === true}" class="videohidden_button" (click)="hiddenVideo()" [ngStyle]="{'visibility': currentMembersCount >=2 ? 'visible' : 'hidden' ,
+                'left' : currentMembersCount >=3 ? 35+'%' : 40+'%'}" >
+                <mat-icon >arrow_forward</mat-icon>
+            </div>
+        </div>
+
+        <div *ngIf="mobileWidth <=780" #participants id="participants" class="videoOverlay_wrap" [dragScroll]="dragOn" [ngStyle]="{ 'left' : (currentMembersCount >=3 ? 25+'%' : 38+'%') } ">
+            <div [ngClass]="{'hiddenVideoMode': hiddenVideoMode === true}" class="videohidden_button" (click)="hiddenVideo()" [ngStyle]="{'visibility': currentMembersCount >=2 ? 'visible' : 'hidden' ,
+                'left' : currentMembersCount >=3 ? 35+'%' : 40+'%'}" >
                 <mat-icon >arrow_forward</mat-icon>
             </div>
         </div>
 
 
-        <div [ngClass]="{'hiddenVideoMode': hiddenVideoMode === false}"  (click)="visibleVideo()" >
+        <div [ngClass]="{'hiddenVideoMode': hiddenVideoMode === false}" (click)="visibleVideo()" >
             <mat-icon  class="visibleVideo_button">arrow_back</mat-icon>
         </div>
     </div>

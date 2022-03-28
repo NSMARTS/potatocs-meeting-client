@@ -12,6 +12,7 @@ import { MeetingService } from 'src/app/services/meeting/meeting.service';
 
 // notifier
 import { NotifierService } from 'angular-notifier';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -43,6 +44,7 @@ export class MainComponent implements OnInit {
         private socketService: SocketService,
         private meetingService: MeetingService,
         public notifier: NotifierService,
+        private snackbar: MatSnackBar,
     ) {
         this.socket = this.socketService.socket;
         this.notifier = notifier;
@@ -116,13 +118,26 @@ export class MainComponent implements OnInit {
 
         // 자기 자신 포함 같은 room에 있는 사람들에게 입장했다고 알림
         this.socket.on('notifier_in', (userName)=> {
-            this.showNotification('info', `${userName} has entered.`);
+            // this.showNotification('info', `${userName} `);
+
+            this.snackbar.open(userName,'has entered.' ,{
+                duration: 3000,
+                horizontalPosition: "right",
+                panelClass: ['entered-snackbar',],
+            });
         })
 
         // // 자기 자신 포함 같은 room에 있는 사람들에게 퇴장했다고 알림
         this.socket.on('notifier_out', (userName)=> {
-            console.log(userName)
-            this.showNotification('info', `${userName} has left.`);
+            // console.log(userName)
+            // this.showNotification('info', `${userName} has left.`);
+
+            this.snackbar.open(userName,'has left.',{
+                duration: 3000,
+                horizontalPosition: "right",
+                panelClass: ['left-snackbar',],
+                
+            });
         })
 
     }

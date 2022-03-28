@@ -129,7 +129,7 @@ export class ZoomService {
     fitToWidth(currentDoc, currentPage) {
         const containerSize = {
             // width: CANVAS_CONFIG.maxContainerWidth - CANVAS_CONFIG.sidebarContainerWidth //원본
-            width: CANVAS_CONFIG.maxContainerWidth - CANVAS_CONFIG.sidebarContainerWidth - 300, // fitToWidth 관련 (100px) / right side bar 때문에 200 줬음
+            width: CANVAS_CONFIG.maxContainerWidth - CANVAS_CONFIG.sidebarContainerWidth - 300, // fitToWidth 관련 (100px) / right side bar 때문에 300 줬음
             height: CANVAS_CONFIG.maxContainerHeight,
         };
         const pdfPage: any = this.pdfStorageService.getPdfPage(currentDoc, currentPage);

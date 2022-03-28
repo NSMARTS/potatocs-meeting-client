@@ -22,11 +22,11 @@
 
     
     <div class="textFormContainer" [ngClass]="(myRole == 'Participant') && (meetingStatus == 'Close') ? 'wrap': '' ">
-        <form [ngClass]="(myRole == 'Participant') && (meetingStatus == 'Close') ? 'participant': '' " #f="ngForm" (ngSubmit)="f.form.valid && createChat()" (keyup.enter)="createChat()" novalidate class="submit-form">
+        <form #f="ngForm" [ngClass]="(myRole == 'Participant') && (meetingStatus == 'Close') ? 'participant': '' "  (ngSubmit)="f.form.valid && createChat()" (keyup.enter)="createChat()" novalidate class="submit-form">
             <div class="chattingContainer">
                 <div class="chatInput">
-                    <textarea class="textarea-style"  type="text" [(ngModel)]="chatContent" name="first"></textarea>
-                    <button class="chatSendBtn" mat-stroked-button >send</button>
+                    <textarea class="textarea-style"  type="text" [(ngModel)]="chatContent" name="first" required></textarea>
+                    <button class="chatSendBtn" [disabled]="!f.form.valid" mat-stroked-button >send</button>
                 </div>
             </div>
         </form>

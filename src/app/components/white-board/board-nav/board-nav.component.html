@@ -40,13 +40,13 @@
             <li class="tool-items">
                 <div class="tool-set">
 
-                    <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
+                    <!-- <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
                         <button type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' " (click)="changeTool('pointer');" mat-icon-button>
                             <mat-icon [ngClass]="(currentTool == 'pointer') && (mode == 'draw')?'active':''">
                                 radio_button_checked
                             </mat-icon>
                         </button>
-                    </div>
+                    </div> -->
 
                     <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
                         <button type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
@@ -72,12 +72,12 @@
                         </button>
                     </div>
 
-                    <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
+                    <!-- <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
                         <button type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
                             (click)="changeTool('textarea');" mat-icon-button>
                             <mat-icon [ngClass]="(currentTool == 'textarea' || currentTool == 'text') && (mode == 'draw')?'active':''" >title</mat-icon>
                         </button>
-                    </div>
+                    </div> -->
                     
 
                     <div>

@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren, Output, EventEmitter } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 
 import { Subject } from 'rxjs';
@@ -11,6 +12,8 @@ import { EventData } from 'src/@wb/services/eventBus/event.class';
 import { RenderingService } from 'src/@wb/services/rendering/rendering.service';
 import { SocketService } from 'src/@wb/services/socket/socket.service';
 import { ViewInfoService } from 'src/@wb/store/view-info.service';
+import { SpinnerDialogComponent } from '../../auth/sign-in/dialog/dialog.component';
+import { DialogService } from '../../auth/sign-in/dialog/dialog.service';
 
 
 /**
@@ -33,6 +36,9 @@ export class BoardFileViewComponent implements OnInit {
         private apiService: ApiService,
         private socketService: SocketService,
         private eventBusService: EventBusService,
+
+        private dialogService: DialogService,
+        public dialog: MatDialog,
     ) {
         this.socket = this.socketService.socket;
     }
@@ -86,7 +92,7 @@ export class BoardFileViewComponent implements OnInit {
             this.eventBusService.emit(new EventData('docChange', '')) 
         })
 
-
+        
     }
 
     ngOnDestory(): void {
@@ -159,8 +165,27 @@ export class BoardFileViewComponent implements OnInit {
             return;
         }
 
+
         // @OUTPUT -> white-board component로 전달
         this.newLocalDocumentFile.emit(event.target.files[0]);
+
+
+        ///////////////////////////////////////////////////////////////////
+        /*---------------------------------------
+          pdf 업로드 시 spinner 
+        -----------------------------------------*/
+        const dialogRef = this.dialog.open(SpinnerDialogComponent, {
+            // width: '300px',
+
+            data: {
+                content: 'Upload'
+            }
+        });
+        this.eventBusService.emit(new EventData('spinner', dialogRef)) 
+        ///////////////////////////////////////////////////////////////////
+        
+
+
     }
 
   deletePdf(_id) {
@@ -171,13 +196,37 @@ export class BoardFileViewComponent implements OnInit {
     console.log(_id)
     console.log('>> click PDF : delete');
     this.apiService.deleteMeetingPdfFile({_id}).subscribe(async (data:any)=>{
-      console.log(data.message)
-      console.log(data.meetingId)
+
       // document delete 확인 후 socket room안의 모든 User에게 전송 (나 포함)
       await this.socket.emit('check:documents', data.meetingId);
     })
-    this.renderFileList()
+
+
+    ///////////////////////////////////////////////////////////////////
+    /*---------------------------------------
+        pdf 삭제 시 spinner 
+    -----------------------------------------*/
+    const dialogRef = this.dialog.open(SpinnerDialogComponent, {
+        // width: '300px',
+
+        data: {
+            content: 'Delete'
+        }
+    });
+
+
+    this.renderFileList().then(async (value) => {
+            await dialogRef.close();
+    });
+    ///////////////////////////////////////////////////////////////////
+    
     // this.viewInfoService.setViewInfo({ leftSideView: 'fileList' });
+
+    
+
+    
+
+    
   }
 
 

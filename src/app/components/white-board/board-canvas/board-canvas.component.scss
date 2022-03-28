@@ -125,3 +125,20 @@ $navbar-height: 134px;
 
 
 
+@media screen and (max-width: 780px) {
+
+    #canvas {
+        // width: auto !important;
+        // max-height: 500px !important;
+    }
+
+    // .canvas-container {
+    //     margin: 0;
+    //     width: auto !important;
+    // }
+
+    // canvas {
+    //     min-height: 500px;
+    //     min-width: 500px;
+    // }
+}

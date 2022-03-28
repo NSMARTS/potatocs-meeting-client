@@ -5,6 +5,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FileUploadModule } from 'ng2-file-upload';
 import { AppRoutingModule } from './app-routing.module';
+import { DialogModule } from './components/auth/sign-in/dialog/dialog.module';
+
+
 import { AppComponent } from './app.component';
 import { MainComponent } from './components/main/main.component';
 
@@ -129,6 +132,7 @@ export function tokenGetter() {
     ReactiveFormsModule,
     NotifierModule.withConfig(customNotifierOptions), // notifier
     IconModule, // icon
+    DialogModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,

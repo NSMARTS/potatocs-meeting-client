@@ -6,7 +6,7 @@
     // height:calc(100vh - 300px)
 }
 .chatContainer {
-    height:calc(100vh - 280px);
+    height:calc(100vh - 270px);
     overflow: auto;
     font-size: 13px;
     line-height: 1.4;
@@ -110,8 +110,8 @@
     background-color: white;
     border: 1px solid gray;
     border-radius: 3px;
-    position: fixed;
-    bottom: 10px;
+    // position: fixed;
+    // bottom: 10px;
 }.mat-button{
     float: right;
 }
@@ -189,7 +189,14 @@
 
 @media screen and (max-width: 780px) {
     
-
+    // .chattingContainer {
+    //     position: relative !important;
+    // }
     
-
+    .chatContainer {
+        height:calc(100vh - 270px);
+        overflow: auto;
+        font-size: 13px;
+        line-height: 1.4;
+    }
 }
