@@ -165,14 +165,6 @@ export class BoardFileViewComponent implements OnInit {
             return;
         }
 
-        console.log(event.target)
-        console.log(this.thumRef.toArray().length)
-        console.log(event.target.fileList)
-        console.log(event.target.files[0])
-        console.log(this.documentInfo)
-        console.log(event.target.files.fileList)
-        // console.log(this.thumRef.toArray().length)
-
 
         // @OUTPUT -> white-board component로 전달
         this.newLocalDocumentFile.emit(event.target.files[0]);
