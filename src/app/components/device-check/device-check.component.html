@@ -23,6 +23,14 @@
                         <div class="video">
                             <video #video autoplay loop muted playsinline [srcObject]="localStream$|async"></video>
                         </div>
+
+
+                        <!-- 카메라 On / Off -->
+                        <section class="example-section txRec">
+                            <!-- <mat-checkbox class="example-margin selectBox ellipsis" [(ngModel)]="isChecked" (change)="checkValue(isChecked?cameraOff : cameraOn)">Click to turn off the camera!</mat-checkbox> -->
+
+                            <mat-checkbox class="camera desc video-playing-desc subTx camera"  [(ngModel)]="isChecked" (change)="checkValue(isChecked?cameraOff : cameraOn)"> <p>Click to turn off the camera.</p> </mat-checkbox>
+                        </section>
                         
 
                         <div class="txRec ">
