@@ -3,6 +3,10 @@
   outline:none; 
 }
 
+body {
+    touch-action: manipulation;
+}
+
 
 ul {
   list-style: none
