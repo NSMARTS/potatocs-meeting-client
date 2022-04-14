@@ -805,9 +805,8 @@ export class DrawingService {
     const targetCanvas = this.dataArray[0].targetCanvas;
     const targetContext = targetCanvas.getContext("2d");
     const scale = this.dataArray[0].scale;
-    
 
-    if (data.tool.type == 'line' || data.tool.type == 'circle' || data.tool.type == 'highlighter'
+    if (data.tool.type == 'line' || data.tool.type == 'circle' 
         || data.tool.type == 'rectangle' || data.tool.type == 'roundedRectangle' || data.tool.type == 'text'
     ){
       // context.clearRect(0, 0, sourceCanvas.width / scale, sourceCanvas.height / scale);
