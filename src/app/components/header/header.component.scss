@@ -16,7 +16,6 @@ ul {
     line-height: 0;
 
     //click시 파란색 outline 방지.
-    
 }
 
 button {
@@ -31,6 +30,10 @@ button {
     display: flex;
     justify-content: center;
     margin: 0 auto;
+
+    .mat-icon-button:hover  {
+        outline: 2px solid white;
+    }
 }
 
 

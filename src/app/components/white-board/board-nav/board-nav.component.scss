@@ -156,6 +156,9 @@
                 background-color:transparent;
                 border: 0;
                 color: white;
+                :hover{
+                    color: rgb(255, 255, 0);
+                }
             }
 
             mat-icon.active {

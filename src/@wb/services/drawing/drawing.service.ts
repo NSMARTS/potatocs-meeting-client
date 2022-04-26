@@ -496,7 +496,8 @@ export class DrawingService {
         input.id = 'textarea'
         input.style.position = 'fixed';
         input.style.fontSize = tool.width * scale + 'px';
-       
+        input.style.fontFamily = 'Verdana'
+        input.style.overflow = "hidden"
         
 
         // 마우스를 좌상단 방향으로 드래그할 경우 textarea 위치가 이상하게 나옴
@@ -570,7 +571,8 @@ export class DrawingService {
 
           // https://stackoverflow.com/questions/33771676/how-to-create-a-dynamic-drawing-text-box-in-html-canvas
           // Draw the text onto canvas:
-          drawText(this.textValue, this.textX1, this.textY1, this.textareaWidth, scale);
+          console.log(this.textValue);
+          drawText(this.textValue, this.textX1+2, this.textY1+2, this.textareaWidth - 0.5, scale);
           
           // drawStorage에 좌표랑, 텍스트 저장
           const drawingEvent = {
@@ -591,9 +593,9 @@ export class DrawingService {
           
           // drawStorage에서 points 좌표를 가져왔기 때문에 다시 계산
           // 썸네일을 그리거나, zoom을 할 경우 여기서 실행된다.
-         
-          var textX1 = points[0];
-          var textY1 = points[1];
+          console.log(points[0]);
+          var textX1 = points[0] + 2;
+          var textY1 = points[1] + 2;
           var tempX;
           var textX2 = points[2 * (points.length / 2 - 1)];
           var textY2 = points[2 * (points.length / 2 - 1) + 1];
@@ -613,7 +615,7 @@ export class DrawingService {
           }
           
           // textarea의 넓이
-          let textareaWidth = (textX2 - textX1) 
+          let textareaWidth = (textX2 - textX1) - 0.5;
 
           // textarea 최소 길이 높이 설정
           if (textareaWidth < 180 ) {
