@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json --open --host 0.0.0.0 --disable-host-check --port 4300",
     "test-build": "ng build --configuration=staging --base-href=/meeting/",
+    "test-scaling-build": "ng build --configuration=autoScaling --base-href=/meeting/",
     "build": "ng build --configuration=production --base-href=/meeting/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
