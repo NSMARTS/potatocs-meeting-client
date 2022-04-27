@@ -271,6 +271,7 @@ video{
   position: absolute;
   bottom: 0px;
   left: 41%;
+  overflow: hidden;
 }
 ////////////////////////////////////////////////////
 
@@ -469,7 +470,7 @@ video{
     }
 
     .bigvideo > video{
-        width: 100%;
+        width: 100vw;
         height: 100%;
         top: 25px;
         left: 0%;   
