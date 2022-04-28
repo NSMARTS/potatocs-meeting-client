@@ -35,8 +35,8 @@
 
                         <div class="txRec ">
                             <div class="desc video-none-playing-desc error">
-                                <p *ngIf="videoDevices?.length < 1" class="subTx camera">❌ An webcam device is not exists.</p>
-                                <p *ngIf="!videoDevices[0]?.label && videoDevices[0]?.kind == 'videoinput'" class="subTx camera">❌ An webcam device is not allowed</p>
+                                <p *ngIf="videoDevices?.length < 1" class="subTx camera">❌ A webcam device is not exists.</p>
+                                <p *ngIf="!videoDevices[0]?.label && videoDevices[0]?.kind == 'videoinput'" class="subTx camera">❌ A webcam device is not allowed</p>
                             </div>
                             <p *ngIf="videoDevices?.length >= 1 && (videoDevices[0]?.label && videoDevices[0]?.kind == 'videoinput')" class="desc video-playing-desc">✅ A camera video is working normally.</p>
                         </div>
@@ -60,7 +60,7 @@
                         <div class="txRec">
                             <div class="desc error">
                                 <p class="subTx camera" *ngIf="miceDevices?.length < 1 ">❌ A microphone device is not exists.</p>
-                                <p class="subTx camera" *ngIf="!miceDevices[0]?.label && miceDevices[0]?.kind == 'audioinput'">❌ A microphone device is not exists.</p>
+                                <p class="subTx camera" *ngIf="!miceDevices[0]?.label && miceDevices[0]?.kind == 'audioinput'">❌ A microphone device is not allowed</p>
                             </div>
                             <p *ngIf="(miceDevices?.length >= 1) && (miceDevices[0]?.label && miceDevices[0]?.kind == 'audioinput')" class="desc volume-desc">
                                 ✅ The microphone device is being detected.

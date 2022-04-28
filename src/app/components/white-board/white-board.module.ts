@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 // Module
-import { MaterialModule } from 'src/app/material/material.module';
+// import { MaterialModule } from 'src/app/material/material.module';
 // Component
 import { WhiteBoardComponent } from './white-board.component';
 import { BoardNavComponent } from './board-nav/board-nav.component';
@@ -23,15 +23,15 @@ import { BoardCanvasComponent } from './board-canvas/board-canvas.component';
 		WhiteBoardComponent,
 		BoardNavComponent,
 		BoardSlideViewComponent,
-    BoardFileViewComponent,
+        BoardFileViewComponent,
 		BoardCanvasComponent,
-  	BoardFabsComponent,
+  	    BoardFabsComponent,
     // DragScrollDirective,
 
 	],
 	imports: [
 		CommonModule,
-		MaterialModule,
+		// MaterialModule,
 		FormsModule,
 	],
 	entryComponents: [

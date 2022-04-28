@@ -65,12 +65,41 @@ export class DeviceCheckComponent implements OnInit {
         this.video = this.videoRef.nativeElement;
         // 브라우저 체크
         this.browserCheck();
-
+        // 웹캠으로 부터 스트림 추출
+        this.getLocalMediaStream();
         // 컴퓨터에 연결된 장치 목록
         this.deviceCheck();
         // 컴퓨터에 연결된 장치 추가/제거 시 실시간으로 목록 수정
         this.deviceChangeCheck();
 
+        if(!this.localStream$){
+            const options = {
+            audio: this.audioDeviceExist ? {
+                    'echoCancellation': true,
+                    'noiseSuppression': true,
+                    deviceId: this.selectedMiceDevice?.id,
+                } : false,
+            video: this.videoDeviceExist ? {
+                deviceId: this.selectedVideoDevice?.id,
+                width: 320,
+                framerate: { max: 24, min: 24 }
+            } : false
+        };
+
+        console.log(options)
+        try {
+            this.webrtcService.getMediaStream(options);
+            // 브라우저가 장치의 권한 부여 시 목록 수정
+            navigator.mediaDevices.enumerateDevices().then(async (devices) => {
+                await this.convertDeviceObject(devices)
+                this.checkDevice()
+            }).catch(function (err) {
+                console.log(err);
+            });
+        } catch (e) {
+            console.log(e);
+        }
+        }
     }
 
 
@@ -83,27 +112,26 @@ export class DeviceCheckComponent implements OnInit {
         // https://levelup.gitconnected.com/share-your-screen-with-webrtc-video-call-with-webrtc-step-5-b3d7890c8747
         await navigator.mediaDevices.enumerateDevices().then(async (devices) => {
             console.log('-------------------- device list ------------------------');
+            console.log(devices)
             // 장치 목록 객체화
             this.convertDeviceObject(devices)
-            // 장치 연결, 권한 유무
-            this.checkDevice()
             console.log(this.miceDevices)
             console.log(this.videoDevices)
             console.log(this.speakerDevices)
+            // 장치 연결, 권한 유무
+            this.checkDevice()
+            
             this.selectDevice();
         }).catch(function (err) {
             console.log(err);
         });
-        this.getLocalMediaStream();
-
-
     }
 
     // 컴퓨터에 연결된 장치 추가/제거 시 실시간으로 목록 변경
     deviceChangeCheck() {
         navigator.mediaDevices.addEventListener('devicechange', async event => {
             const devices = await navigator.mediaDevices.enumerateDevices();
-            this.convertDeviceObject(devices)
+            await this.convertDeviceObject(devices)
             this.checkDevice()
             this.selectDevice();
         });
@@ -135,11 +163,11 @@ export class DeviceCheckComponent implements OnInit {
 
     // 장치의 연결 유무
     checkDevice() {
-        console.log(this.miceDevices[0]?.id)
-        if (this.miceDevices.length < 1) {
+        
+        if (!this.miceDevices[0].id) {
             this.audioDeviceExist = false
         }
-        if (this.videoDevices.length < 1) {
+        if (!this.videoDevices[0].id) {
             this.videoDeviceExist = false
         }
     }
@@ -197,26 +225,32 @@ export class DeviceCheckComponent implements OnInit {
 
     // video에 스트림 추출
     async getLocalMediaStream() {
-        // const options = { audio: true, video: true };
-        const options = {
-            audio: this.audioDeviceExist ? {
-                    'echoCancellation': true,
-                    'noiseSuppression': true,
-                    deviceId: this.selectedMiceDevice?.id,
-                } : false,
-            video: this.videoDeviceExist ? {
-                deviceId: this.selectedVideoDevice?.id,
-                width: 320,
-                framerate: { max: 24, min: 24 }
-            } : false
+        const options = { 
+                audio: {
+                'echoCancellation': true,
+                'noiseSuppression': true,
+                }, 
+                video: true 
         };
+        // const options = {
+        //     audio: this.audioDeviceExist ? {
+        //             'echoCancellation': true,
+        //             'noiseSuppression': true,
+        //             deviceId: this.selectedMiceDevice?.id,
+        //         } : false,
+        //     video: this.videoDeviceExist ? {
+        //         deviceId: this.selectedVideoDevice?.id,
+        //         width: 320,
+        //         framerate: { max: 24, min: 24 }
+        //     } : false
+        // };
 
         console.log(options)
         try {
-            await this.webrtcService.getMediaStream(options);
+            const mediaStream = await this.webrtcService.getMediaStream(options);
             // 브라우저가 장치의 권한 부여 시 목록 수정
             await navigator.mediaDevices.enumerateDevices().then(async (devices) => {
-                this.convertDeviceObject(devices)
+                await this.convertDeviceObject(devices)
                 this.checkDevice()
             }).catch(function (err) {
                 console.log(err);
