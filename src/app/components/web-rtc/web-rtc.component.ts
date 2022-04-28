@@ -28,7 +28,7 @@ export class WebRTCComponent implements OnInit {
 
 	userName: any;
 	otherName:any;
-
+    
 	userId: any;
 	name: any;
 	userData: any;
@@ -57,7 +57,7 @@ export class WebRTCComponent implements OnInit {
 	meetingInfo;
 	meetingStatus = false;
 	speakerDeviceId :any;
-
+    miceDeviceId:any;
 	// webRTC 비디오 오버레이
 	hiddenVideoMode = false;
 	dragOn = true;
@@ -202,7 +202,12 @@ export class WebRTCComponent implements OnInit {
 			console.log('on Screen Sharing')
 
 			var constraints = {
-				audio: true,
+				audio: this.audioDeviceExist ?
+                {
+                    'echoCancellation': true,
+					'noiseSuppression': true,
+                    deviceId: this.miceDeviceId
+                } : false ,
 				video: {
 				
 						width: 320,
@@ -319,6 +324,8 @@ export class WebRTCComponent implements OnInit {
 			.pipe(takeUntil(this.unsubscribe$))
 			.subscribe((devicesInfo) => {
 				console.log(devicesInfo)
+                this.audioDeviceExist = devicesInfo.audioDeviceExist;
+                
 				// 마이크 장치가 없거나 권한이 없으면
 				this.constraints = {
 					audio: devicesInfo.audioDeviceExist ? {
@@ -707,24 +714,49 @@ export class WebRTCComponent implements OnInit {
 		// window.location.href = "/home.html";
 	}
 
-	getScreenStream(callback) {
-		// if (navigator.getDisplayMedia) {
-		// 	navigator.getDisplayMedia({
+	async getScreenStream(callback) {
+	
+        if (navigator.mediaDevices.getDisplayMedia) {
+			console.log('navigator.mediaDevices.getDisplayMedia')
+            console.log(this.audioDeviceExist)
+			const mediaStream = await navigator.mediaDevices.getDisplayMedia({
+				audio: this.audioDeviceExist ? true : false ,
+                video: true
+			})
+            // 오디오 장치가 있을 경우
+            if(this.audioDeviceExist){
+                // 오디오 스트림 추출
+                const audio = await navigator.mediaDevices.getUserMedia({
+                    audio:true
+                })
+                // 오디오랑 비디오 스트림 결합
+                let screenStream = await new MediaStream( [audio.getTracks()[0], mediaStream.getTracks()[0] ])
+                if(screenStream){
+                    callback(screenStream)
+                } else {
+                    callback('cancel')
+                }
+            // 오디오 장치가 없을 경우
+            } else {
+                if(mediaStream){
+                    // 미디어 스트림만 바로 전송
+                    callback(mediaStream)
+                } else {
+                    callback('cancel')
+                }
+            }
+                
+
+		// if (navigator.mediaDevices.getDisplayMedia) {
+		// 	console.log('navigator.mediaDevices.getDisplayMedia')
+		// 	navigator.mediaDevices.getDisplayMedia({
 		// 		video: true
 		// 	}).then(screenStream => {
 		// 		callback(screenStream);
+		// 	}).catch(function (error) {
+		// 		console.log('getUserMedia error: ' + error.name, error);
+		// 		callback('cancel');
 		// 	});
-		// }
-		if (navigator.mediaDevices.getDisplayMedia) {
-			console.log('navigator.mediaDevices.getDisplayMedia')
-			navigator.mediaDevices.getDisplayMedia({
-				video: true
-			}).then(screenStream => {
-				callback(screenStream);
-			}).catch(function (error) {
-				console.log('getUserMedia error: ' + error.name, error);
-				callback('cancel');
-			});
 		} else {
 			function getScreenId(error, sourceId, screen_constraints) {
 				console.log('getScreeId fuction')

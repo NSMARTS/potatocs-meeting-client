@@ -447,7 +447,9 @@ video{
         position: absolute;
         bottom: 0px;
         left: 0%;
+        overflow: auto;
         width: 182px;
+        
     }
     ////////////////////////////////////////////////////////////
 
@@ -536,6 +538,7 @@ video{
         position: absolute;
         bottom: 0px;
         left: 40%;
+        overflow: hidden;
     }
 
     .videoOverlay_button {
