@@ -71,9 +71,12 @@ export class DeviceCheckComponent implements OnInit {
         this.deviceCheck();
         // 컴퓨터에 연결된 장치 추가/제거 시 실시간으로 목록 수정
         this.deviceChangeCheck();
+<<<<<<< HEAD
 
         
         
+=======
+>>>>>>> 1c6e82297916a2d2944ece828573128c6b7f85ac
     }
 
 
@@ -206,22 +209,10 @@ export class DeviceCheckComponent implements OnInit {
                 }, 
                 video: true 
         };
-        // const options = {
-        //     audio: this.audioDeviceExist ? {
-        //             'echoCancellation': true,
-        //             'noiseSuppression': true,
-        //             deviceId: this.selectedMiceDevice?.id,
-        //         } : false,
-        //     video: this.videoDeviceExist ? {
-        //         deviceId: this.selectedVideoDevice?.id,
-        //         width: 320,
-        //         framerate: { max: 24, min: 24 }
-        //     } : false
-        // };
 
         console.log(options)
         try {
-            const mediaStream = await this.webrtcService.getMediaStream(options);
+            await this.webrtcService.getMediaStream(options);
             // 브라우저가 장치의 권한 부여 시 목록 수정
             await navigator.mediaDevices.enumerateDevices().then(async (devices) => {
                 await this.convertDeviceObject(devices)
