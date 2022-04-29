@@ -720,7 +720,7 @@ export class WebRTCComponent implements OnInit {
 			console.log('navigator.mediaDevices.getDisplayMedia')
             console.log(this.audioDeviceExist)
 			let screenStream = await navigator.mediaDevices.getDisplayMedia({
-				audio: true,
+				// audio: true,
                 video: true
 			})
             // 오디오 장치가 있을 경우
