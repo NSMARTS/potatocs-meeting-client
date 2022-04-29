@@ -63,6 +63,12 @@ export class MeetingGuard implements CanActivate, OnInit {
 				this.meetingInfoService.setMeetingInfo(meetingInfo);
 				// this.meetingInfoService.setMeetingInfo({userData});
 
+				// meeting status 가 pending 일때
+				if( meetingInfo.status == "pending"){
+					this.dialogService.openDialogNegative("The host has not started the meeting yet.");
+					this.router.navigate(['/sign-in'], {queryParams: {params : state.url} });
+				}
+
 				console.log(meetingInfo)
 				console.log(meetingInfo.enlistedMembers)
 				const index = meetingInfo.enlistedMembers.findIndex((item) =>
