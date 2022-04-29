@@ -71,12 +71,6 @@ export class DeviceCheckComponent implements OnInit {
         this.deviceCheck();
         // 컴퓨터에 연결된 장치 추가/제거 시 실시간으로 목록 수정
         this.deviceChangeCheck();
-<<<<<<< HEAD
-
-        
-        
-=======
->>>>>>> 1c6e82297916a2d2944ece828573128c6b7f85ac
     }
 
 

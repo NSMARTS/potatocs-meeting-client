@@ -719,8 +719,8 @@ export class WebRTCComponent implements OnInit {
         if (navigator.mediaDevices.getDisplayMedia) {
 			console.log('navigator.mediaDevices.getDisplayMedia')
             console.log(this.audioDeviceExist)
-			const mediaStream = await navigator.mediaDevices.getDisplayMedia({
-				audio: this.audioDeviceExist ? true : false ,
+			let screenStream = await navigator.mediaDevices.getDisplayMedia({
+				audio: true,
                 video: true
 			})
             // 오디오 장치가 있을 경우
@@ -730,7 +730,7 @@ export class WebRTCComponent implements OnInit {
                     audio:true
                 })
                 // 오디오랑 비디오 스트림 결합
-                let screenStream = await new MediaStream( [audio.getTracks()[0], mediaStream.getTracks()[0] ])
+                screenStream = await new MediaStream( [audio.getTracks()[0], screenStream.getTracks()[0] ])
                 if(screenStream){
                     callback(screenStream)
                 } else {
@@ -738,9 +738,9 @@ export class WebRTCComponent implements OnInit {
                 }
             // 오디오 장치가 없을 경우
             } else {
-                if(mediaStream){
+                if(screenStream){
                     // 미디어 스트림만 바로 전송
-                    callback(mediaStream)
+                    callback(screenStream)
                 } else {
                     callback('cancel')
                 }
