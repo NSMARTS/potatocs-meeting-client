@@ -62,6 +62,12 @@
                                 <p class="subTx camera" *ngIf="miceDevices?.length < 1 ">❌ A microphone device is not exists.</p>
                                 <p class="subTx camera" *ngIf="!miceDevices[0]?.label && miceDevices[0]?.kind == 'audioinput'">❌ A microphone device is not allowed</p>
                             </div>
+
+                            <!-- <div id="instant">
+                                <div class="label">Mice Input:</div>
+                                <meter high="0.25" max="1" value="0" #meter></meter>
+                                <div class="value"></div>
+                            </div> -->
                             <p *ngIf="(miceDevices?.length >= 1) && (miceDevices[0]?.label && miceDevices[0]?.kind == 'audioinput')" class="desc volume-desc">
                                 ✅ The microphone device is being detected.
                             </p>

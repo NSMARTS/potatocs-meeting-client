@@ -36,7 +36,7 @@ export class DeviceCheckComponent implements OnInit {
     browserVersion: any;
 
     localStream$;
-
+    soundLevel:any;
     private unsubscribe$ = new Subject<void>();
 
 
@@ -47,7 +47,10 @@ export class DeviceCheckComponent implements OnInit {
 
 
     @ViewChild('video', { static: true }) public videoRef: ElementRef;
+    // @ViewChild('meter', { static: true }) public meterRef: ElementRef;
+
     video: any;
+    meter: any;
     constructor(
         private eventBusService: EventBusService,
         public fb: FormBuilder,
@@ -63,6 +66,7 @@ export class DeviceCheckComponent implements OnInit {
 
         this.meetingId = this.route.snapshot.params['id'];
         this.video = this.videoRef.nativeElement;
+        // this.meter = this.meterRef.nativeElement;
         // 브라우저 체크
         this.browserCheck();
         // 웹캠으로 부터 스트림 추출
@@ -197,27 +201,26 @@ export class DeviceCheckComponent implements OnInit {
     // video에 스트림 추출
     async getLocalMediaStream() {
         const options = { 
-                audio: {
+            audio: {
                 'echoCancellation': true,
                 'noiseSuppression': true,
-                }, 
-                video: true 
+                },
+            video: true 
         };
-
-        console.log(options)
         try {
             await this.webrtcService.getMediaStream(options);
+            console.log(this.localStream$)
+            
             // 브라우저가 장치의 권한 부여 시 목록 수정
-            await navigator.mediaDevices.enumerateDevices().then(async (devices) => {
-                await this.convertDeviceObject(devices)
-                this.checkDevice()
-            }).catch(function (err) {
-                console.log(err);
-            });
+            this.deviceCheck();
         } catch (e) {
             console.log(e);
         }
     }
+
+  
+
+
 
     // select에서 장치 변경 시 stream 변경
     // 권한 확인 유무 관련해서 이슈때문에 change시 새로운 함수 사용
