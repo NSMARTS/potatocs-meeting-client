@@ -51,10 +51,16 @@ export class SidebarComponent implements OnInit {
             this.myRole = myRole.role
         })
 
-
+        // 공유 중인 화면 취소하여 내 로컬 화면 출력
         this.eventBusService.on('handleSharingCancel', this.unsubscribe$, () => {
             this.shareIcon = 'screen_share'
             this.sharing = false;
+        })
+
+        // 
+        this.eventBusService.on('handleSharingStop', this.unsubscribe$, () => {
+            this.shareIcon = 'stop_screen_share'
+            this.sharing = true;
         })
 
         this.eventBusService.on('whiteBoardClick', this.unsubscribe$, () => {
@@ -69,17 +75,15 @@ export class SidebarComponent implements OnInit {
     }
 
     handleSharingClick() {
-        // Participant 모드 일 경우 sync 기능 적용 제외
+        // Participant 모드 일 경우 화면공유 기능 제외
 		if(this.myRole != 'Participant'){
             this.eventBusService.emit(new EventData('handleSharingClick', ''))
-
+            
+            // this.sharing default -> false
+            // 화면 공유 x -> 화면 공유  o
             if (this.sharing) {
-                this.shareIcon = 'screen_share'
-                this.sharing = false;
-            } else {
-                this.sharing = true;
-                this.shareIcon = 'stop_screen_share'
-            }
+                this.shareIcon = 'screen_share' // 아이콘 변경
+            } 
         }
     }
 

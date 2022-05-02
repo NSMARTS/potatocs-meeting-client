@@ -717,8 +717,8 @@ export class WebRTCComponent implements OnInit {
 	async getScreenStream(callback) {
 	
         if (navigator.mediaDevices.getDisplayMedia) {
-			console.log('navigator.mediaDevices.getDisplayMedia')
-            console.log(this.audioDeviceExist)
+			// console.log('navigator.mediaDevices.getDisplayMedia')
+            // console.log(this.audioDeviceExist)
 			let mediaStream = await navigator.mediaDevices.getDisplayMedia({
 				audio: false,
                 video: true
@@ -800,22 +800,24 @@ export class WebRTCComponent implements OnInit {
 	// 화면 공유
 	handleSharingClick() {
 		var video = this.call.querySelector('#video-' + this.userId);
-		console.log('handleSharingClick-------video')
-		console.log(video)
 
 		if (this.sharing) {
-			video.className = 'Sharing'
+            console.log(this.sharing)
+	
 			// this.sharingBtn.innerText = "Screen Sharing";
 			this.sharing = false;
 			this.socket.emit("Screen_Sharing", '');
 		} else {
 			this.getScreenStream((screenStream) => {
+                console.log(this.sharing)
 				console.log('[ screenStream ]', screenStream)
+                // 화면 공유 된 상태 [종료 아이콘으로 변경]
+                this.eventBusService.emit(new EventData('handleSharingStop', ''))
 				if (screenStream == 'cancel') {
+                    // 화면 공유 버튼을 클릭 후 화면 공유 종료 시 [화면 공유 아이콘으로 변경]
 					this.eventBusService.emit(new EventData('handleSharingCancel', ''))
-
+                    
 				} else if (screenStream != null) {
-					video.className = 'Sharing'
 					this.screenStream = screenStream;
 					video = screenStream;
 					// this.sharingBtn.innerText = "Stop Sharing";

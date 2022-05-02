@@ -48,6 +48,7 @@ video{
   bottom: 0%;
   display: flex;
   z-index: 47;
+  overflow: hidden;
 }
 
 #participants::-webkit-scrollbar{
@@ -81,10 +82,10 @@ video{
 
 .bigvideo > video{
     position: fixed;
-    width: 61%;
-    height: 94%;
+    width: calc(100vw - 412px);
+    height: calc(100vh - 56px);
     top: 56px;
-    left: 14%;
+    left: 106px;
 
     ////////// 비디오 좌우반전////////////
     // transform: rotateY(180deg);

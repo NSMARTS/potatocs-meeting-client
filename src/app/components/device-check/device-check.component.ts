@@ -36,7 +36,7 @@ export class DeviceCheckComponent implements OnInit {
     browserVersion: any;
 
     localStream$;
-    soundLevel:any;
+    soundLevel: any;
     private unsubscribe$ = new Subject<void>();
 
 
@@ -69,10 +69,13 @@ export class DeviceCheckComponent implements OnInit {
         // this.meter = this.meterRef.nativeElement;
         // 브라우저 체크
         this.browserCheck();
-        // 웹캠으로 부터 스트림 추출
-        this.getLocalMediaStream();
+
         // 컴퓨터에 연결된 장치 목록
         this.deviceCheck();
+
+        // 웹캠으로 부터 스트림 추출
+        this.getLocalMediaStream();
+
         // 컴퓨터에 연결된 장치 추가/제거 시 실시간으로 목록 수정
         this.deviceChangeCheck();
     }
@@ -95,7 +98,7 @@ export class DeviceCheckComponent implements OnInit {
             console.log(this.speakerDevices)
             // 장치 연결, 권한 유무
             this.checkDevice()
-            
+
             this.selectDevice();
         }).catch(function (err) {
             console.log(err);
@@ -138,13 +141,8 @@ export class DeviceCheckComponent implements OnInit {
 
     // 장치의 연결 유무
     checkDevice() {
-        
-        if (!this.miceDevices[0].id) {
-            this.audioDeviceExist = false
-        }
-        if (!this.videoDevices[0].id) {
-            this.videoDeviceExist = false
-        }
+        this.miceDevices[0].id ? this.audioDeviceExist = true : this.videoDeviceExist = false
+        this.videoDevices[0].id ? this.videoDeviceExist = true : this.videoDeviceExist = false
     }
 
     // select 창에서 장치를 선택하거나, 목록이 바뀌었을 경우 실행 
@@ -177,13 +175,13 @@ export class DeviceCheckComponent implements OnInit {
 
     // device check 화면에서 카메라 On / Off 유무
     checkValue(event: any) {
-        if(event == false) {
+        if (event == false) {
             this.videoDeviceExist = false;
             // 로컬 미디어 스트림 변경
             this.getLocalMediaStream();
             // web-rtc 컴포넌트에 있는 비디오 스트림 설정 변경
             this.selectDevice();
-        } else {           
+        } else {
             this.videoDeviceExist = true;
             this.getLocalMediaStream();
             this.selectDevice();
@@ -200,17 +198,25 @@ export class DeviceCheckComponent implements OnInit {
 
     // video에 스트림 추출
     async getLocalMediaStream() {
-        const options = { 
-            audio: {
-                'echoCancellation': true,
-                'noiseSuppression': true,
-                },
-            video: true 
+        const options = {
+
+            audio: 
+                this.audioDeviceExist ? {
+                    'echoCancellation': true,
+                    'noiseSuppression': true,
+                    deviceId: this.selectedMiceDevice?.id,
+                } : false,
+            video: 
+                this.videoDeviceExist ? {
+                    deviceId: this.selectedVideoDevice?.id,
+                    width: 320,
+                    framerate: { max: 24, min: 24 }
+                } : false
         };
         try {
             await this.webrtcService.getMediaStream(options);
             console.log(this.localStream$)
-            
+
             // 브라우저가 장치의 권한 부여 시 목록 수정
             this.deviceCheck();
         } catch (e) {
@@ -218,7 +224,7 @@ export class DeviceCheckComponent implements OnInit {
         }
     }
 
-  
+
 
 
 
@@ -232,8 +238,7 @@ export class DeviceCheckComponent implements OnInit {
                     'echoCancellation': true,
                     'noiseSuppression': true,
                     deviceId: this.selectedMiceDevice?.id,
-                } :
-                    false,
+                } : false,
             video: this.videoDeviceExist ? {
                 deviceId: this.selectedVideoDevice?.id,
                 width: 320,
