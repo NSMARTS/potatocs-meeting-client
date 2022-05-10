@@ -429,14 +429,18 @@ export class WhiteBoardComponent implements OnInit {
 
   // hiddenVideo 버튼 클릭 시 오버레이 비디오 숨기기
   hiddenVideo() {
+      console.log(this.hiddenVideoMode)
     if (this.hiddenVideoMode == false) {
       this.hiddenVideoMode = true;
+      console.log(this.hiddenVideoMode)
     }
   }
 
   visibleVideo() {
+    console.log(this.hiddenVideoMode)
     if (this.hiddenVideoMode == true) {
       this.hiddenVideoMode = false;
+      console.log(this.hiddenVideoMode)
     }
   }
 }

@@ -5,6 +5,7 @@
 
 body {
     touch-action: manipulation;
+    overflow: hidden;
 }
 
 
@@ -39,21 +40,17 @@ video{
   
   
 
-////////////////// participants ///////////////////
+////////////////// webRTC participants ///////////////////
 #participants{
-  position: fixed;
-//   overflow: auto;
-//   overflow-x: hidden;
-  left: 40%;
-  bottom: 0%;
-  display: flex;
-  z-index: 47;
-  overflow: hidden;
+    bottom: 0%;
+    overflow: auto;
+    max-width: 600px;
+    
 }
 
 #participants::-webkit-scrollbar{
     width: 10px;
-    height: 10px
+    height: 10px;
 }
 #participants::-webkit-scrollbar-thumb{
     background: linear-gradient(#bfc8e1, #bfc8e1);
@@ -82,10 +79,10 @@ video{
 
 .bigvideo > video{
     position: fixed;
-    width: calc(100vw - 412px);
-    height: calc(100vh - 56px);
+    width: calc(100vw - 414px);
+    height: calc(100vh - 66px);  // 비디오 오버레이 스크롤 바 안보이는 이슈 때문에 height 56px 에서 +10 더함.
     top: 56px;
-    left: 106px;
+    left: 107px;
 
     ////////// 비디오 좌우반전////////////
     // transform: rotateY(180deg);
@@ -168,45 +165,40 @@ video{
 
 
 
-///////////////// 비디오 오버레이 컨테이너 ///////////////
+///////////////// 화이트보드 비디오 오버레이 컨테이너 ///////////////
 .videoOverlay_container {
-  display: flex;
-  flex-direction: row;
-  position: absolute;
-  bottom: 0px;
-  left: 0%;
-  overflow: auto;
-  width: 300px;
+    display: flex;
+    flex-direction: row;
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    /* z-index: 9999; */
+    transform: translate(-50%, -4%);
+    max-width: 600px;
+    overflow: auto;
+    // margin-left: 271px;
+}
+
+.videoOverlay_container::-webkit-scrollbar{
+    width: 10px;
+    height: 10px
+}
+.videoOverlay_container::-webkit-scrollbar-thumb{
+    background: linear-gradient(#bfc8e1, #bfc8e1);
+    border-radius: 5px;
+}
+.videoOverlay_container::-webkit-scrollbar-track{
+    background: grey;
+    border-radius: 5px;
+}
+.videoOverlay_container::-webkit-scrollbar-corner{
+    background: #282828;
 }
 ////////////////////////////////////////////////////////////
 
 
 
-///////////////// 스크롤바 꾸미기 ///////////////
-#participants {
-  width: 325px;
-//   overflow:hidden
-}
-
-
-#videoOverlay_container {
-  overflow:hidden
-}
-
-// .videoOverlay_container::-webkit-scrollbar {
-//   height: 5px;
-// }
-// .videoOverlay_container::-webkit-scrollbar-thumb {
-//   background-color: #3f51b5;
-// }
-// .videoOverlay_container::-webkit-scrollbar-track {
-//   background-color: rgb(235, 235, 235);
-// }
-////////////////////////////////////////////////////
-
-
-
-///////////////// 내 로컬 비디오 오버레이 ///////////////
+///////////////// 화이트보드 비디오 내 로컬 비디오 오버레이 ///////////////
 .videoOverlay {
   pointer-events: none;
 }
@@ -238,7 +230,7 @@ video{
 
 
 
-/////////// 상대방 비디오 오버레이 //////////////////
+/////////// 화이트보드 비디오 상대방 비디오 오버레이 //////////////////
 .receiveVideoOverlay {
   pointer-events: none;
 }
@@ -266,30 +258,21 @@ video{
     text-align: center;
 }
 
-.videoOverlay_wrap {
-  display: flex;
-  flex-direction: row;
-  position: absolute;
-  bottom: 0px;
-  left: 41%;
-//   overflow: hidden;
-}
 ////////////////////////////////////////////////////
 
 
 
 
-
+/////////// 비디오 숨김 / 보이기 버튼 //////////////////
 .videohidden_button {
     z-index: 101;
-    position: fixed;
-    left: 38%;
-    bottom: 50px;
-    transform: scale(1);
-    border-radius: 50%;
     background-color: #b2b2b2;
     color: white;
-    height: 24px;
+    border-radius: 50%;
+    position: fixed;
+    bottom: 50px;
+    right: 315px;
+    transform: scale(1); 
 }
 
 .videohidden_button:hover {
@@ -318,49 +301,10 @@ video{
 .hiddenVideo {
   display: none;
 }
+////////////////////////////////////////////////////
 
 
 
-///////////////// notifier css ///////////////
-/* Add application styles & imports to this file! */
-@import "~angular-notifier/styles";
-
-// html {
-// 	width: 100%;
-// 	height: 100%;
-// }
-
-// body {
-// 	width: 100%;
-// 	height: 100%;
-// 	margin: 0;
-// 	box-sizing: border-box;
-// 	font-family: "Roboto", "Tahoma", "Trebuchet MS", "Arial", "Helvetica", sans-serif;
-// 	font-size: 14px;
-// }
-
-// * {
-// 	box-sizing: inherit;
-// }
-
-// /* APP */
-
-// .app {
-// 	display: block;
-// 	padding: 30px;
-// }
-
-// /* HEADINGS */
-
-// h1 {
-// 	font-size: 30px;
-// 	padding-bottom: 10px;
-// }
-
-// h2 {
-// 	margin-top: 40px;
-// 	font-size: 18px;
-// }
 
 /* BUTTONS */
 
@@ -429,35 +373,20 @@ video{
 ////////////////////////////////////////////////////
 
 
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 @media screen and (max-width: 780px) {
 
-    // display none
-    .videohidden_button{
-        display: none;
-    }
 
     #participants {
-        width: 182px;
-        left: 40%;
+        max-width: 182px;
+        left: 42%;
     }
-
-    ///////////////// 비디오 오버레이 컨테이너 ///////////////
-    .videoOverlay_container {
-        display: flex;
-        flex-direction: row;
-        position: absolute;
-        bottom: 0px;
-        left: 0%;
-        overflow: auto;
-        width: 182px;
-        
-    }
-    ////////////////////////////////////////////////////////////
-
 
 
     ///////////////// big video/////////////////////
-
     .bigvideo:hover{
         cursor: default;
     }
@@ -477,7 +406,6 @@ video{
         left: 0%;   
         
     }
-
 
     .bigvideo > p{
         position: fixed;
@@ -531,15 +459,27 @@ video{
   ////////////////////////////////////////////////////
 
 
+  ///////////////// 화이트보드 비디오 오버레이 컨테이너 ///////////////
+  .videoOverlay_container {
+    display: flex;
+    flex-direction: row;
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    /* z-index: 9999; */
+    transform: translate(-37%, -4%);
+    max-width: 182px;
+    overflow: auto;
+    
+    }
 
-    /////////////////// 화이트보드쪽 비디오 오버레이 ///////////////////////
     .videoOverlay_wrap {
         display: flex;
         flex-direction: row;
         position: absolute;
         bottom: 0px;
-        left: 40%;
-        overflow: hidden;
+        // left: 40%;
+        overflow: auto;
     }
 
     .videoOverlay_button {
@@ -593,5 +533,31 @@ video{
         overflow: hidden;
         text-align: center;
     }
+    ////////////////////////////////////////////////////////////
+
+
+    ///////////////// 비디오 숨김 / 보이기 버튼 /////////////////////
+    .videohidden_button {
+        z-index: 101;
+        background-color: #b2b2b2;
+        color: white;
+        border-radius: 50%;
+        position: fixed;
+        bottom: 40px;
+        right: 20px;
+        transform: scale(1); 
+    }
+
+    .visibleVideo_button {
+        z-index: 101;
+        background-color: #b2b2b2;
+        color: white;
+        border-radius: 50%;
+        position: fixed;
+        bottom: 40px;
+        right: 20px;
+        transform: scale(1); 
+    }
     ////////////////////////////////////////////////////
+
 }

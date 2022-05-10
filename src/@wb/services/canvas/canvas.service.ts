@@ -86,9 +86,9 @@ export class CanvasService {
 	 *
 	 */
 	setCanvasSize(pdfNum, pageNum, zoomScale, canvasContainer, coverCanvas, rxCoverCanvas, teacherCanvas, bgCanvas) {
-    console.log(`>>> set Canvas Size: pdfNum:${pdfNum}, pageNum:${pageNum}`)
+        console.log(`>>> set Canvas Size: pdfNum:${pdfNum}, pageNum:${pageNum}`)
 
-    const pdfPage = this.pdfStorageService.getPdfPage(pdfNum, pageNum);
+        const pdfPage = this.pdfStorageService.getPdfPage(pdfNum, pageNum);
 		const canvasFullSize = pdfPage.getViewport({scale:zoomScale * CANVAS_CONFIG.CSS_UNIT});
 		canvasFullSize.width = Math.round(canvasFullSize.width);
 		canvasFullSize.height = Math.round(canvasFullSize.height);

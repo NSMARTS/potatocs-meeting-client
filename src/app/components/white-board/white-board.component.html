@@ -34,46 +34,32 @@
 				<app-board-fabs></app-board-fabs>
 			</div>
 		</div>
-
 	</div>
 
 	<!----------------------------------------------------------------
 		board-fabs
 	--------------------------------------------------------------- -->
 
-	<!-- <div [ngClass]="{'hiddenVideoMode': hiddenVideoMode === true}" class="videoOverlay_wrap">
-		<div class="videoOverlay_button" (click)="hiddenVideo()">
-			<mat-icon >arrow_forward</mat-icon>
-		</div>
-		
-		<div id="videoOverlay_container" class="videoOverlay_container" [dragScroll]="dragOn">
-		</div>
-	</div> -->
-
-
-    <div *ngIf="mobileWidth > 780" [ngClass]="{'hiddenVideoMode': hiddenVideoMode === true}" class="videoOverlay_wrap">
-		<div class="videoOverlay_button" (click)="hiddenVideo()">
-			<mat-icon >arrow_forward</mat-icon>
-		</div>
-		
-		<div id="videoOverlay_container" class="videoOverlay_container" [dragScroll]="dragOn">
+	<div [ngClass]="{'hiddenVideoMode': hiddenVideoMode === true}">
+		<div  id="videoOverlay_container" [ngStyle]="{'visibility': hiddenVideoMode === false ? 'visible' : 'hidden'}" class="videoOverlay_container" [dragScroll]="dragOn">
 		</div>
 	</div>
 
-    <div *ngIf="mobileWidth <=780" [ngStyle]="{ 'left' : (currentMembersCount >=2 ? 33+'%' : 45+'%') } " [ngClass]="{'hiddenVideoMode': hiddenVideoMode === true}" class="videoOverlay_wrap">
-		<div class="videoOverlay_button" (click)="hiddenVideo()">
-			<mat-icon >arrow_forward</mat-icon>
-		</div>
-		
-		<div id="videoOverlay_container" class="videoOverlay_container" [dragScroll]="dragOn">
-		</div>
-	</div>
+    <!-- <div id="videoOverlay_container" class="videoOverlay_container" [dragScroll]="dragOn">
+		</div> -->
 
 
 
-	<div [ngClass]="{'hiddenVideoMode': hiddenVideoMode === false}" (click)="visibleVideo()" >
-		<mat-icon class="visibleVideo_button">arrow_back</mat-icon>
-	</div>
+    <div [ngClass]="{'hiddenVideoMode': hiddenVideoMode === true}" (click)="hiddenVideo()" >
+        <mat-icon class="visibleVideo_button">arrow_forward</mat-icon>
+        
+    </div>
+
+
+    <div [ngClass]="{'hiddenVideoMode': hiddenVideoMode === false}" (click)="visibleVideo()" >
+        <mat-icon class="visibleVideo_button">arrow_back</mat-icon>
+    </div>
+    
 
 </div>
 

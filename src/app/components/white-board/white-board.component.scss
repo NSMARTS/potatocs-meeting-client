@@ -105,13 +105,14 @@ $sidebarContainer-Width: 97px;
 
     .videoOverlay_button {
         position: relative;
-        bottom: 55px;
-        right: 25px;
+        /* bottom: 55px; */
+        /* right: 25px; */
         transform: scale(1);
         border-radius: 50%;
         background-color: #b2b2b2;
         line-height: 0;
         color: white;
+        margin-right: 20px;
     }
     
     .videoOverlay_button:hover {
@@ -127,9 +128,9 @@ $sidebarContainer-Width: 97px;
     background-color: #b2b2b2;
     color: white;
     border-radius: 50%;
-    position: fixed;
-    bottom: 50px;
-    right: 315px;
+    // position: fixed;
+    // bottom: 50px;
+    // right: 315px;
     transform: scale(1);     
 
 }
