@@ -10,10 +10,10 @@
 
         <div class="btnContent">
             <!-- Mice mute On/Off -->
-            <button *ngIf="muteIcon == 'mic'" class="btn" mat-icon-button #muteBtn (click)="handleMuteClick()" matTooltip="Microphone Off" [matTooltipShowDelay]="300">
+            <button *ngIf="muteIcon == 'mic'" class="btn" mat-icon-button #muteBtn (click)="handleMuteClick()" matTooltip="Mute My Audio" [matTooltipShowDelay]="300">
                 <mat-icon>{{muteIcon}}</mat-icon>
             </button>
-            <button *ngIf="muteIcon == 'mic_off'" class="btn" mat-icon-button #muteBtn (click)="handleMuteClick()" matTooltip="Microphone On" [matTooltipShowDelay]="300">
+            <button *ngIf="muteIcon == 'mic_off'" class="btn" mat-icon-button #muteBtn (click)="handleMuteClick()" matTooltip="UnMute My Audio" [matTooltipShowDelay]="300">
                 <mat-icon>{{muteIcon}}</mat-icon>
             </button>
 

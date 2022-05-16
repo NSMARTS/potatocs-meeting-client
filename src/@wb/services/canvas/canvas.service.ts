@@ -98,7 +98,7 @@ export class CanvasService {
 			- deviceScale은 고려하지 않음
 		-------------------------------------*/
 		const containerSize = {
-			width: Math.min(CANVAS_CONFIG.maxContainerWidth, canvasFullSize.width),
+			width: Math.min(CANVAS_CONFIG.maxContainerWidth - 400, canvasFullSize.width), // 좌측 sidebar width만큼 빼야 zoonIn 시 왼쪽이 전부 보임
 			height: Math.min(CANVAS_CONFIG.maxContainerHeight, canvasFullSize.height)
 		};
 
