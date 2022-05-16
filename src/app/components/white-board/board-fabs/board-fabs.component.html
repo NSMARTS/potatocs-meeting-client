@@ -5,16 +5,16 @@
 	------------------------------------------ -->
 	<div class="floating-fabs-container">
 		<button mat-icon-button class="md-fab md-raised md-mini" style="margin-top:20px;" (click)="clickZoom('fitToWidth')">
-			<mat-icon >fullscreen</mat-icon>
+			<mat-icon matTooltip="Fit To Width" [matTooltipShowDelay]="300" matTooltipPosition="right">fullscreen</mat-icon>
 		</button>
 		<button mat-icon-button class="md-fab md-raised md-mini" (click)="clickZoom('fitToPage')">
-			<mat-icon >fit_screen</mat-icon>
+			<mat-icon matTooltip="Fit To Page" [matTooltipShowDelay]="300" matTooltipPosition="right">fit_screen</mat-icon>
 		</button>
 		<button mat-icon-button class="md-fab md-raised md-mini" style="margin-top:20px;" (click)="clickZoom('zoomIn')">
-			<mat-icon >add</mat-icon>
+			<mat-icon matTooltip="Zoom In" [matTooltipShowDelay]="300" matTooltipPosition="right">add</mat-icon>
 		</button>
 		<button mat-icon-button class="md-fab md-raised md-mini" (click)="clickZoom('zoomOut')">
-			<mat-icon >remove</mat-icon>
+			<mat-icon matTooltip="Zoom Out" [matTooltipShowDelay]="300" matTooltipPosition="right">remove</mat-icon>
 		</button>
 	</div>
 

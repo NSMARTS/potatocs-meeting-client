@@ -1,4 +1,4 @@
-<div class="enlistedMembers">
+<div class="enlistedMembers" [ngClass]="{'whiteBoardMode': whiteBoardMode === true}">
     <ul>
         <li class="enlistedMember_wrap" *ngFor="let currentMember of currentMembers; let i = index">
             <div>

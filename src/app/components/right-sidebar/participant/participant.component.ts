@@ -27,6 +27,8 @@ export class ParticipantComponent implements OnInit {
     public myRole;
     public meetingStatus = false;
 
+    whiteBoardMode = false;
+
     @ViewChildren('enlistedMember_span') public enlistedMember_spanRef: QueryList<ElementRef>;
 
     constructor(
@@ -72,6 +74,16 @@ export class ParticipantComponent implements OnInit {
             this.meetingStatus = true;
         })
         /////////////////////////////////////////////////////////////
+
+
+        this.eventBusService.on('whiteBoardClick', this.unsubscribe$, () => {
+            console.log('eventBus on whiteBoardClick')
+            if (this.whiteBoardMode == false) {
+                this.whiteBoardMode = true;
+            } else {
+                this.whiteBoardMode = false
+            }
+        })
     }
 
 

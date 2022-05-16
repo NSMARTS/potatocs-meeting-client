@@ -9,7 +9,7 @@
     ul {
         padding: 0;
         height: calc(100vh - 104px);
-        overflow: scroll;
+        overflow-y: scroll;
     }
 
 
@@ -26,6 +26,10 @@
         background-color: #bebebe;
         border: 1px solid #e2e2e2;
     }
+}
+
+.whiteBoardMode {
+    height: calc(100vh - 156px);
 }
 
 

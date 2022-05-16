@@ -33,13 +33,18 @@
 }
 
 .whiteBoardMode {
-    padding-top: 134px;
+    padding-top: 123px;
     width: 300px;
+
+    .enlistedMembers {
+        height: calc(100vh - 156px);
+    }
+    
 
     ul {
         padding: 0;
         height: calc(100vh - 170px);
-        overflow: scroll;
+        overflow-y: scroll;
     }
 }
 

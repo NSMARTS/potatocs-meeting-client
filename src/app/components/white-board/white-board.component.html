@@ -51,13 +51,12 @@
 
 
     <div [ngClass]="{'hiddenVideoMode': hiddenVideoMode === true}" (click)="hiddenVideo()" >
-        <mat-icon class="visibleVideo_button">arrow_forward</mat-icon>
-        
+        <mat-icon class="visibleVideo_button" matTooltip="Hide Participant Screen" [matTooltipShowDelay]="300" matTooltipPosition="right">arrow_forward</mat-icon>
     </div>
 
 
     <div [ngClass]="{'hiddenVideoMode': hiddenVideoMode === false}" (click)="visibleVideo()" >
-        <mat-icon class="visibleVideo_button">arrow_back</mat-icon>
+        <mat-icon class="visibleVideo_button" matTooltip="Show Participant Screen" [matTooltipShowDelay]="300" matTooltipPosition="right">arrow_back</mat-icon>
     </div>
     
 
