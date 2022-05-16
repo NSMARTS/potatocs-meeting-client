@@ -43,7 +43,7 @@ video{
 ////////////////// webRTC participants ///////////////////
 #participants{
     bottom: 0%;
-    overflow: overlay;
+    overflow: auto;
     max-width: 600px;
     
 }
@@ -80,7 +80,7 @@ video{
 .bigvideo > video{
     position: fixed;
     width: calc(100vw - 414px);
-    height: calc(100vh - 56px);  // 비디오 오버레이 스크롤 바 안보이는 이슈 때문에 height 56px 에서 +10 더함.
+    height: calc(100vh - 66px);  // 비디오 오버레이 스크롤 바 안보이는 이슈 때문에 height 56px 에서 +10 더함.
     top: 56px;
     left: 107px;
 
