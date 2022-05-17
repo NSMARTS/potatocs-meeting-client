@@ -49,14 +49,14 @@
                     </div> -->
 
                     <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
-                        <button matTooltip="Pen" [matTooltipShowDelay]="300" type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
+                        <button matTooltip="Pen" [matTooltipShowDelay]="300" matTooltipTouchGestures="off" type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
                             (click)="changeTool('pen');" mat-icon-button>
                             <mat-icon [ngClass]="(currentTool == 'pen') && (mode == 'draw')?'active':''" >draw</mat-icon>
                         </button>
                     </div>
 
                     <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
-                        <button matTooltip="Highlighter" [matTooltipShowDelay]="300" type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
+                        <button matTooltip="Highlighter" [matTooltipShowDelay]="300" matTooltipTouchGestures="off" type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
                             (click)="changeTool('highlighter');" mat-icon-button>
                             <ic-icon [icon]="markerIcon" [width]="30" [height]="30" [ngClass]="(currentTool == 'highlighter') && (mode == 'draw')?'active':''" ></ic-icon>
                             <span class="iconify" data-icon="mdi:marker"></span>
@@ -64,7 +64,7 @@
                     </div>
 
                     <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
-                        <button  matTooltip="Eraser" [matTooltipShowDelay]="300" type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
+                        <button  matTooltip="Eraser" [matTooltipShowDelay]="300" matTooltipTouchGestures="off" type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
                             (click)="changeTool('eraser');" mat-icon-button>
                             <!-- <mat-icon [ngClass]="(currentTool == 'eraser') && (mode == 'draw')?'active':''">crop_square
                             </mat-icon> -->
@@ -81,14 +81,14 @@
                     
 
                     <div>
-                        <button matTooltip="Drag to Scroll" [matTooltipShowDelay]="300" type="button" (click)="changeMode('move');" mat-icon-button>
+                        <button matTooltip="Drag to Scroll" [matTooltipShowDelay]="300" matTooltipTouchGestures="off" type="button" (click)="changeMode('move');" mat-icon-button>
                             <mat-icon [ngClass]="(mode == 'move')?'active':''" > open_with </mat-icon>
                         </button>
                     </div>
 
 
                     <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
-                        <button  matTooltip="Shape" [matTooltipShowDelay]="300" type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' " (click)="changeTool('line');" mat-icon-button mat-button
+                        <button  matTooltip="Shape" [matTooltipShowDelay]="300" matTooltipTouchGestures="off" type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' " (click)="changeTool('line');" mat-icon-button mat-button
                         [matMenuTriggerFor]="shapeMemu">
                         <!-- <mat-icon
                             [ngClass]="(currentTool == 'line' || currentTool == 'circle'  ||currentTool == 'rectangle' || currentTool == 'roundedRectangle' ) && (mode == 'draw')?'active':''">
@@ -101,17 +101,17 @@
                     <mat-menu #shapeMemu="matMenu" class="menuCustomize">
                         <div fxFlex fxLayout="row">
 
-                            <div (click)="changeTool('line');"  matTooltip="Shape" [matTooltipShowDelay]="300">
+                            <div (click)="changeTool('line');"  matTooltip="Shape" [matTooltipShowDelay]="300" matTooltipTouchGestures="off">
                                 <button mat-menu-item [ngClass]="(currentTool == 'line') && (mode == 'draw')?'active':''">
                                     <mat-icon>remove</mat-icon>
                                 </button>
                             </div>
-                            <div (click)="changeTool('circle');"  matTooltip="Shape" [matTooltipShowDelay]="300">
+                            <div (click)="changeTool('circle');"  matTooltip="Shape" [matTooltipShowDelay]="300" matTooltipTouchGestures="off">
                                 <button mat-menu-item [ngClass]="(currentTool == 'circle') && (mode == 'draw')?'active':''">
                                     <mat-icon>panorama_fish_eye</mat-icon>
                                 </button>
                             </div>
-                            <div (click)="changeTool('rectangle');"  matTooltip="Shape" [matTooltipShowDelay]="300">
+                            <div (click)="changeTool('rectangle');"  matTooltip="Shape" [matTooltipShowDelay]="300" matTooltipTouchGestures="off">
                                 <button mat-menu-item [ngClass]="(currentTool == 'rectangle') && (mode == 'draw')?'active':''">
                                     <mat-icon>crop_din</mat-icon>
                                 </button>
