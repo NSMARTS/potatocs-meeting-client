@@ -39,18 +39,10 @@ export class DeviceCheckComponent implements OnInit {
     soundLevel: any;
     private unsubscribe$ = new Subject<void>();
 
-
-    // @ViewChild('video') public videoRef: ElementRef;
-    // get video(): HTMLVideoElement {
-    // 	return this.videoRef.nativeElement;
-    // }
-
-
     @ViewChild('video', { static: true }) public videoRef: ElementRef;
-    // @ViewChild('meter', { static: true }) public meterRef: ElementRef;
 
     video: any;
-    meter: any;
+
     constructor(
         private eventBusService: EventBusService,
         public fb: FormBuilder,
@@ -63,27 +55,29 @@ export class DeviceCheckComponent implements OnInit {
     }
 
     ngOnInit() {
-
         this.meetingId = this.route.snapshot.params['id'];
+
         this.video = this.videoRef.nativeElement;
-        // this.meter = this.meterRef.nativeElement;
+        
         // 브라우저 체크
         this.browserCheck();
-
-        // 컴퓨터에 연결된 장치 목록
-        this.deviceCheck();
-
+        
         // 웹캠으로 부터 스트림 추출
         this.getLocalMediaStream();
-
+        
+        // 컴퓨터에 연결된 장치 목록
+        this.deviceCheck();
+        
+        // 오디오 스트림 바
+        this.extractAudioStream();
+        
         // 컴퓨터에 연결된 장치 추가/제거 시 실시간으로 목록 수정
         this.deviceChangeCheck();
     }
 
-
-
     // 컴퓨터에 연결된 장치 목록
     async deviceCheck() {
+        // console.log(this.instantMeter)
         // https://developer.mozilla.org/ko/docs/Web/API/MediaDevices/enumerateDevices
         // https://webrtc.org/getting-started/media-devices#using-promises
         // https://simpl.info/getusermedia/sources/
@@ -147,7 +141,7 @@ export class DeviceCheckComponent implements OnInit {
 
     // select 창에서 장치를 선택하거나, 목록이 바뀌었을 경우 실행 
     selectDevice() {
-        console.log('-------------device Change ---------------')
+        console.log('-------------demvice Change ---------------')
         this.devicesInfo = {
             selectedVideoDeviceId: this.selectedVideoDevice?.id,
             selectedMiceDeviceId: this.selectedMiceDevice?.id,
@@ -159,8 +153,6 @@ export class DeviceCheckComponent implements OnInit {
         this.devicesInfoService.setDevicesInfo(this.devicesInfo);
         this.changeMediaStream();
 
-        console.log(this.video)
-        console.log(this.selectedSpeakerDevice);
         if (typeof this.video.sinkId !== 'undefined') {
             this.video.setSinkId(this.selectedSpeakerDevice?.id).then(() => {
                 console.log('succes speaker device')
@@ -196,34 +188,25 @@ export class DeviceCheckComponent implements OnInit {
     // video에 스트림 추출
     async getLocalMediaStream() {
         const options = {
-
-            audio: 
-                this.audioDeviceExist ? {
-                    'echoCancellation': true,
-                    'noiseSuppression': true,
-                    deviceId: this.selectedMiceDevice?.id,
-                } : false,
-            video: 
-                this.videoDeviceExist ? {
-                    deviceId: this.selectedVideoDevice?.id,
-                    width: 320,
-                    framerate: { max: 24, min: 24 }
-                } : false
+            audio: {
+                'echoCancellation': true,
+                'noiseSuppression': true,
+                deviceId: this.selectedMiceDevice?.id
+            },
+            video: {
+                deviceId: this.selectedVideoDevice?.id,
+                width: 320,
+                framerate: { max: 24, min: 24 }
+            }
         };
         try {
             await this.webrtcService.getMediaStream(options);
-            console.log(this.localStream$)
-
             // 브라우저가 장치의 권한 부여 시 목록 수정
             this.deviceCheck();
         } catch (e) {
             console.log(e);
         }
     }
-
-
-
-
 
     // select에서 장치 변경 시 stream 변경
     // 권한 확인 유무 관련해서 이슈때문에 change시 새로운 함수 사용
@@ -242,7 +225,6 @@ export class DeviceCheckComponent implements OnInit {
                 framerate: { max: 24, min: 24 }
             } : false
         };
-
         console.log(options)
         try {
             await this.webrtcService.getMediaStream(options);
@@ -251,6 +233,40 @@ export class DeviceCheckComponent implements OnInit {
         }
     }
 
+    extractAudioStream() {
+        const constraints = {
+            audio: true,
+            video: false
+        };
+
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then(this.handleSuccess)
+            .catch(this.handleError);
+    }
+
+    handleSuccess(stream) {
+        // Put variables in global scope to make them available to the
+        // browser console.
+        const AudioContext = window.AudioContext
+        let audioContext = new AudioContext();
+        const soundMeter = new SoundMeter(audioContext);
+
+        soundMeter.connectToSource(stream, function (e) {
+
+            if (e) {
+                alert(e);
+                return;
+            }
+            setInterval(() => {
+                (<HTMLInputElement>document.getElementById("instantMeter")).value = soundMeter.instant.toFixed(2);
+            }, 10);
+        });
+
+    }
+
+    handleError(error) {
+        console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
+    }
 
     // 브라우저 체크
     browserCheck() {
@@ -303,3 +319,42 @@ export class DeviceCheckComponent implements OnInit {
 
 
 }
+
+function SoundMeter(context) {
+    this.context = context;
+    this.instant = 0.0;
+    this.script = context.createScriptProcessor(2048, 1, 1);
+    const that = this;
+    this.script.onaudioprocess = function (event) {
+        const input = event.inputBuffer.getChannelData(0);
+        let i;
+        let sum = 0.0;
+        let clipcount = 0;
+        for (i = 0; i < input.length; ++i) {
+            sum += input[i] * input[i];
+            if (Math.abs(input[i]) > 0.99) {
+                clipcount += 1;
+            }
+        }
+        that.instant = (Math.sqrt(sum / input.length)) * 3;
+        console.log(that.instant)
+    };
+}
+
+SoundMeter.prototype.connectToSource = function (stream, callback) {
+    console.log('SoundMeter connecting');
+    try {
+        this.mic = this.context.createMediaStreamSource(stream);
+        this.mic.connect(this.script);
+        // necessary to make sample run, but should not be.
+        this.script.connect(this.context.destination);
+        if (typeof callback !== 'undefined') {
+            callback(null);
+        }
+    } catch (e) {
+        console.error(e);
+        if (typeof callback !== 'undefined') {
+            callback(e);
+        }
+    }
+};

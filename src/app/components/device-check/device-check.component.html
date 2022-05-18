@@ -58,6 +58,12 @@
                             </select>
                         </div>                        
                         <div class="txRec">
+
+                            <div id="instant">
+                                <div class="label">Sound Input:</div>
+                                <meter high="0.25" max="1" value="0" id="instantMeter"></meter>
+                                <div class="value"></div>
+                            </div>
                             <div class="desc error">
                                 <p class="subTx camera" *ngIf="miceDevices?.length < 1 ">❌ A microphone device is not exists.</p>
                                 <p class="subTx camera" *ngIf="!miceDevices[0]?.label && miceDevices[0]?.kind == 'audioinput'">❌ A microphone device is not allowed</p>

@@ -212,3 +212,27 @@ video {
     }
 
 }
+
+
+div#meters > div {
+    margin: 0 0 1em 0;
+  }
+  
+  div#meters div.label {
+    display: inline-block;
+    font-weight: 400;
+    margin: 0 0.5em 0 0;
+    width: 3.5em;
+  }
+  
+  div#meters div.value {
+    display: inline-block;
+  }
+  
+  meter {
+    width: 100%;
+  }
+  
+  meter#instant {
+  color: #0f9d58;
+  }
