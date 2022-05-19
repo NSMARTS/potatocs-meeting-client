@@ -34,7 +34,7 @@ export class DeviceCheckComponent implements OnInit {
 
     browserInfo: any;
     browserVersion: any;
-
+    soundMeterInterval:any;
     localStream$;
     soundLevel: any;
     private unsubscribe$ = new Subject<void>();
@@ -187,17 +187,30 @@ export class DeviceCheckComponent implements OnInit {
 
     // video에 스트림 추출
     async getLocalMediaStream() {
+        // const options = {
+        //     audio: {
+        //         'echoCancellation': true,
+        //         'noiseSuppression': true,
+        //         deviceId: this.selectedMiceDevice?.id
+        //     },
+        //     video: {
+        //         deviceId: this.selectedVideoDevice?.id,
+        //         width: 320,
+        //         framerate: { max: 24, min: 24 }
+        //     }
+        // };
         const options = {
-            audio: {
-                'echoCancellation': true,
-                'noiseSuppression': true,
-                deviceId: this.selectedMiceDevice?.id
-            },
-            video: {
+            audio:
+                this.audioDeviceExist ? {
+                    'echoCancellation': true,
+                    'noiseSuppression': true,
+                    deviceId: this.selectedMiceDevice?.id,
+                } : false,
+            video: this.videoDeviceExist ? {
                 deviceId: this.selectedVideoDevice?.id,
                 width: 320,
                 framerate: { max: 24, min: 24 }
-            }
+            } : false
         };
         try {
             await this.webrtcService.getMediaStream(options);
@@ -233,15 +246,17 @@ export class DeviceCheckComponent implements OnInit {
         }
     }
 
-    extractAudioStream() {
+    async extractAudioStream() {
         const constraints = {
             audio: true,
             video: false
         };
 
         navigator.mediaDevices.getUserMedia(constraints)
-            .then(this.handleSuccess)
-            .catch(this.handleError);
+            .then(res => this.handleSuccess(res))
+            .then(result => this.deviceCheck())
+            .catch(error => this.handleError(error));
+            
     }
 
     handleSuccess(stream) {
@@ -250,18 +265,20 @@ export class DeviceCheckComponent implements OnInit {
         const AudioContext = window.AudioContext
         let audioContext = new AudioContext();
         const soundMeter = new SoundMeter(audioContext);
-
+        
+        const that = this;
         soundMeter.connectToSource(stream, function (e) {
 
             if (e) {
                 alert(e);
                 return;
             }
-            setInterval(() => {
-                (<HTMLInputElement>document.getElementById("instantMeter")).value = soundMeter.instant.toFixed(2);
+            that.soundMeterInterval = setInterval(() => {
+                (<HTMLInputElement>document.getElementById("instantMeter")).value = soundMeter.slow.toFixed(2);
             }, 10);
         });
 
+        
     }
 
     handleError(error) {
@@ -317,12 +334,21 @@ export class DeviceCheckComponent implements OnInit {
         return this.browserInfo = browser;
     }
 
-
+    ngOnDestroy() {
+        clearInterval(this.soundMeterInterval);
+        // unsubscribe all subscription
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
+    
+    }
 }
+
+
 
 function SoundMeter(context) {
     this.context = context;
     this.instant = 0.0;
+    this.slow = 0.0;
     this.script = context.createScriptProcessor(2048, 1, 1);
     const that = this;
     this.script.onaudioprocess = function (event) {
@@ -337,7 +363,7 @@ function SoundMeter(context) {
             }
         }
         that.instant = (Math.sqrt(sum / input.length)) * 3;
-        console.log(that.instant)
+        that.slow = 0.7 * that.slow + 0.3 * that.instant;
     };
 }
 
