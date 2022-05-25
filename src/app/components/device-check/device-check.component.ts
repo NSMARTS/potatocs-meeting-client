@@ -141,7 +141,7 @@ export class DeviceCheckComponent implements OnInit {
 
     // 장치의 연결 유무
     checkDevice() {
-        this.miceDevices[0].id ? this.audioDeviceExist = true : this.videoDeviceExist = false
+        this.miceDevices[0].id ? this.audioDeviceExist = true : this.audioDeviceExist = false
         this.videoDevices[0].id ? this.videoDeviceExist = true : this.videoDeviceExist = false
     }
 
