@@ -44,6 +44,7 @@ import { ParticipantComponent } from './components/right-sidebar/participant/par
 
 // notifier
 import { NotifierModule, NotifierOptions } from 'angular-notifier';
+// import { WhiteBoardModule } from './components/white-board/white-board.module';
 
 
 
@@ -133,6 +134,7 @@ export function tokenGetter() {
     NotifierModule.withConfig(customNotifierOptions), // notifier
     IconModule, // icon
     DialogModule,
+    // WhiteBoardModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,

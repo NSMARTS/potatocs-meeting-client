@@ -19,7 +19,7 @@
 
             <li class="drawing-config">
                 <div class="color-set animated">
-                    <div *ngFor="let item of colorList; let i = index" (click)="changeColor(item.color)" [matTooltip]="item.color | titlecase" [matTooltipShowDelay]="300" matTooltipTouchGestures="off">
+                    <div *ngFor="let item of colorList; let i = index" (click)="changeColor(item.color)">
                         <i [ngClass]="(currentColor == item.color) ? 'fa fa-check-circle':'fa fa-circle'"
                             [style.color]="item.color"></i>
                     </div>
@@ -28,7 +28,7 @@
                     <!----------------------------
                          Width 선택 부분 (현재 3종)
                     ----------------------------- -->
-                    <div *ngFor="let item of widthSet[currentTool]; let i = index" (click)="changeWidth(item);" matTooltip="Size" [matTooltipShowDelay]="300" matTooltipTouchGestures="off">
+                    <div *ngFor="let item of widthSet[currentTool]; let i = index" (click)="changeWidth(item);">
                         <i class="far"
                             [ngClass]="(currentWidth[currentTool]==item)?'fa fa-check-circle':'fa fa-circle'">
                         </i>
@@ -49,14 +49,14 @@
                     </div> -->
 
                     <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
-                        <button matTooltip="Pen" [matTooltipShowDelay]="300" matTooltipTouchGestures="off" type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
+                        <button type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
                             (click)="changeTool('pen');" mat-icon-button>
                             <mat-icon [ngClass]="(currentTool == 'pen') && (mode == 'draw')?'active':''" >draw</mat-icon>
                         </button>
                     </div>
 
                     <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
-                        <button matTooltip="Highlighter" [matTooltipShowDelay]="300" matTooltipTouchGestures="off" type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
+                        <button type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
                             (click)="changeTool('highlighter');" mat-icon-button>
                             <ic-icon [icon]="markerIcon" [width]="30" [height]="30" [ngClass]="(currentTool == 'highlighter') && (mode == 'draw')?'active':''" ></ic-icon>
                             <span class="iconify" data-icon="mdi:marker"></span>
@@ -64,7 +64,7 @@
                     </div>
 
                     <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
-                        <button  matTooltip="Eraser" [matTooltipShowDelay]="300" matTooltipTouchGestures="off" type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
+                        <button type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
                             (click)="changeTool('eraser');" mat-icon-button>
                             <!-- <mat-icon [ngClass]="(currentTool == 'eraser') && (mode == 'draw')?'active':''">crop_square
                             </mat-icon> -->
@@ -81,14 +81,14 @@
                     
 
                     <div>
-                        <button matTooltip="Drag to Scroll" [matTooltipShowDelay]="300" matTooltipTouchGestures="off" type="button" (click)="changeMode('move');" mat-icon-button>
+                        <button type="button" (click)="changeMode('move');" mat-icon-button>
                             <mat-icon [ngClass]="(mode == 'move')?'active':''" > open_with </mat-icon>
                         </button>
                     </div>
 
 
                     <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
-                        <button  matTooltip="Shape" [matTooltipShowDelay]="300" matTooltipTouchGestures="off" type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' " (click)="changeTool('line');" mat-icon-button mat-button
+                        <button type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' " (click)="changeTool('line');" mat-icon-button mat-button
                         [matMenuTriggerFor]="shapeMemu">
                         <!-- <mat-icon
                             [ngClass]="(currentTool == 'line' || currentTool == 'circle'  ||currentTool == 'rectangle' || currentTool == 'roundedRectangle' ) && (mode == 'draw')?'active':''">
@@ -101,17 +101,17 @@
                     <mat-menu #shapeMemu="matMenu" class="menuCustomize">
                         <div fxFlex fxLayout="row">
 
-                            <div (click)="changeTool('line');"  matTooltip="Shape" [matTooltipShowDelay]="300" matTooltipTouchGestures="off">
+                            <div (click)="changeTool('line');">
                                 <button mat-menu-item [ngClass]="(currentTool == 'line') && (mode == 'draw')?'active':''">
                                     <mat-icon>remove</mat-icon>
                                 </button>
                             </div>
-                            <div (click)="changeTool('circle');"  matTooltip="Shape" [matTooltipShowDelay]="300" matTooltipTouchGestures="off">
+                            <div (click)="changeTool('circle');">
                                 <button mat-menu-item [ngClass]="(currentTool == 'circle') && (mode == 'draw')?'active':''">
                                     <mat-icon>panorama_fish_eye</mat-icon>
                                 </button>
                             </div>
-                            <div (click)="changeTool('rectangle');"  matTooltip="Shape" [matTooltipShowDelay]="300" matTooltipTouchGestures="off">
+                            <div (click)="changeTool('rectangle');">
                                 <button mat-menu-item [ngClass]="(currentTool == 'rectangle') && (mode == 'draw')?'active':''">
                                     <mat-icon>crop_din</mat-icon>
                                 </button>

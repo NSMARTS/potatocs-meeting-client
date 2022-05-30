@@ -165,24 +165,34 @@ export class BoardFileViewComponent implements OnInit {
             return;
         }
 
+        // 파일 유효성 검사
+        const ext = (files[0].name).substring((files[0].name).lastIndexOf('.') + 1);
+        if (ext.toLowerCase() != 'pdf') {
+            this.dialogService.openDialogNegative(`Please, upload the '.pdf' file.`);
+        } else {
 
-        // @OUTPUT -> white-board component로 전달
-        this.newLocalDocumentFile.emit(event.target.files[0]);
+            // @OUTPUT -> white-board component로 전달
+            this.newLocalDocumentFile.emit(event.target.files[0]);
+
+            ///////////////////////////////////////////////////////////////////
+            /*---------------------------------------
+            pdf 업로드 시 spinner 
+            -----------------------------------------*/
+            const dialogRef = this.dialog.open(SpinnerDialogComponent, {
+                // width: '300px',
+
+                data: {
+                    content: 'Upload'
+                }
+            });
+            this.eventBusService.emit(new EventData('spinner', dialogRef))
+            ///////////////////////////////////////////////////////////////////
+        }
 
 
-        ///////////////////////////////////////////////////////////////////
-        /*---------------------------------------
-          pdf 업로드 시 spinner 
-        -----------------------------------------*/
-        const dialogRef = this.dialog.open(SpinnerDialogComponent, {
-            // width: '300px',
 
-            data: {
-                content: 'Upload'
-            }
-        });
-        this.eventBusService.emit(new EventData('spinner', dialogRef))
-        ///////////////////////////////////////////////////////////////////
+
+        
 
 
 
@@ -194,10 +204,10 @@ export class BoardFileViewComponent implements OnInit {
         // https://webisfree.com/2016-06-15/[%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8]-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%B2%84%EB%B8%94%EB%A7%81-%EC%A0%9C%EA%B1%B0%EB%B0%A9%EB%B2%95-stoppropagation()
 
         event.stopPropagation();
-        
+
         this.dialogService.openDialogConfirm('Are you sure you want to delete it?').subscribe(result => {
             if (result) {
-                
+
                 console.log(_id)
                 console.log('>> click PDF : delete');
                 this.apiService.deleteMeetingPdfFile({ _id }).subscribe(async (data: any) => {
@@ -230,13 +240,6 @@ export class BoardFileViewComponent implements OnInit {
         ///////////////////////////////////////////////////////////////////
 
         // this.viewInfoService.setViewInfo({ leftSideView: 'fileList' });
-
-
-
-
-
-
     }
-
 
 }
