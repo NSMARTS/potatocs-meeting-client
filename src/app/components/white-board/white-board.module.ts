@@ -13,6 +13,8 @@ import { BoardFabsComponent } from './board-fabs/board-fabs.component';
 
 // Canvas comp
 import { BoardCanvasComponent } from './board-canvas/board-canvas.component';
+import { NgMaterialUIModule } from 'src/app/ng-material-ui/ng-material-ui.module';
+import { IconModule } from '@visurel/iconify-angular';
 
 // import { DragScrollDirective } from 'src/app/services/directives/drag-scroll.directive';
 
@@ -26,13 +28,14 @@ import { BoardCanvasComponent } from './board-canvas/board-canvas.component';
         BoardFileViewComponent,
 		BoardCanvasComponent,
   	    BoardFabsComponent,
-    // DragScrollDirective,
+    	// DragScrollDirective,
 
 	],
 	imports: [
 		CommonModule,
-		// MaterialModule,
+		NgMaterialUIModule,
 		FormsModule,
+		IconModule
 	],
 	entryComponents: [
 	]

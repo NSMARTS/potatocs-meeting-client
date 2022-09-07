@@ -54,7 +54,7 @@ export class BoardFileViewComponent implements OnInit {
 
     private socket;
     meetingId: any;
-    myRole:any = 'Presenter'; // 나의 역할(권한)
+    myRole: any = 'Presenter'; // 나의 역할(권한)
 
     documentInfo = [];
 
@@ -73,7 +73,7 @@ export class BoardFileViewComponent implements OnInit {
                 this.renderFileList();
             });
 
-        
+
 
         /*-------------------------------------------
             role에 따라 권한 설정
@@ -89,10 +89,10 @@ export class BoardFileViewComponent implements OnInit {
         this.socket.on('sync:docChange', (docId) => {
             this.viewInfoService.changeToThumbnailView(docId);
 
-            this.eventBusService.emit(new EventData('docChange', '')) 
+            this.eventBusService.emit(new EventData('docChange', ''))
         })
 
-        
+
     }
 
     ngOnDestory(): void {
@@ -144,7 +144,7 @@ export class BoardFileViewComponent implements OnInit {
         }
 
         // Participant 모드 일 경우 sync 기능 적용 제외
-        if(this.myRole != 'Participant'){
+        if (this.myRole != 'Participant') {
             this.socket.emit('sync:doc', data)
         }
         //////////////////////////////////////////////////////////
@@ -165,69 +165,81 @@ export class BoardFileViewComponent implements OnInit {
             return;
         }
 
+        // 파일 유효성 검사
+        const ext = (files[0].name).substring((files[0].name).lastIndexOf('.') + 1);
+        if (ext.toLowerCase() != 'pdf') {
+            this.dialogService.openDialogNegative(`Please, upload the '.pdf' file.`);
+        } else {
 
-        // @OUTPUT -> white-board component로 전달
-        this.newLocalDocumentFile.emit(event.target.files[0]);
+            // @OUTPUT -> white-board component로 전달
+            this.newLocalDocumentFile.emit(event.target.files[0]);
+
+            ///////////////////////////////////////////////////////////////////
+            /*---------------------------------------
+            pdf 업로드 시 spinner 
+            -----------------------------------------*/
+            const dialogRef = this.dialog.open(SpinnerDialogComponent, {
+                // width: '300px',
+
+                data: {
+                    content: 'Upload'
+                }
+            });
+            this.eventBusService.emit(new EventData('spinner', dialogRef))
+            ///////////////////////////////////////////////////////////////////
+        }
 
 
-        ///////////////////////////////////////////////////////////////////
-        /*---------------------------------------
-          pdf 업로드 시 spinner 
-        -----------------------------------------*/
-        const dialogRef = this.dialog.open(SpinnerDialogComponent, {
-            // width: '300px',
 
-            data: {
-                content: 'Upload'
-            }
-        });
-        this.eventBusService.emit(new EventData('spinner', dialogRef)) 
-        ///////////////////////////////////////////////////////////////////
+
         
+
 
 
     }
 
-  deletePdf(_id) {
-    // thumbnail-container(div) 안에 delete(button)이 존재
-    // 2개의 엘리먼트가 동시에 이벤트 발생하는것을 막는 함수 (이벤트 버블링 이슈)
-    // https://webisfree.com/2016-06-15/[%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8]-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%B2%84%EB%B8%94%EB%A7%81-%EC%A0%9C%EA%B1%B0%EB%B0%A9%EB%B2%95-stoppropagation()
-    event.stopPropagation();
-    console.log(_id)
-    console.log('>> click PDF : delete');
-    this.apiService.deleteMeetingPdfFile({_id}).subscribe(async (data:any)=>{
+    deletePdf(_id) {
+        // thumbnail-container(div) 안에 delete(button)이 존재
+        // 2개의 엘리먼트가 동시에 이벤트 발생하는것을 막는 함수 (이벤트 버블링 이슈)
+        // https://webisfree.com/2016-06-15/[%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8]-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%B2%84%EB%B8%94%EB%A7%81-%EC%A0%9C%EA%B1%B0%EB%B0%A9%EB%B2%95-stoppropagation()
 
-      // document delete 확인 후 socket room안의 모든 User에게 전송 (나 포함)
-      await this.socket.emit('check:documents', data.meetingId);
-    })
+        event.stopPropagation();
 
+        this.dialogService.openDialogConfirm('Are you sure you want to delete it?').subscribe(result => {
+            if (result) {
 
-    ///////////////////////////////////////////////////////////////////
-    /*---------------------------------------
-        pdf 삭제 시 spinner 
-    -----------------------------------------*/
-    const dialogRef = this.dialog.open(SpinnerDialogComponent, {
-        // width: '300px',
+                console.log(_id)
+                console.log('>> click PDF : delete');
+                this.apiService.deleteMeetingPdfFile({ _id }).subscribe(async (data: any) => {
 
-        data: {
-            content: 'Delete'
-        }
-    });
+                    // document delete 확인 후 socket room안의 모든 User에게 전송 (나 포함)
+                    await this.socket.emit('check:documents', data.meetingId);
+                })
 
 
-    this.renderFileList().then(async (value) => {
-            await dialogRef.close();
-    });
-    ///////////////////////////////////////////////////////////////////
-    
-    // this.viewInfoService.setViewInfo({ leftSideView: 'fileList' });
+                ///////////////////////////////////////////////////////////////////
+                /*---------------------------------------
+                    pdf 삭제 시 spinner 
+                -----------------------------------------*/
+                const dialogRef = this.dialog.open(SpinnerDialogComponent, {
+                    // width: '300px',
 
-    
+                    data: {
+                        content: 'Delete'
+                    }
+                });
 
-    
 
-    
-  }
+                this.renderFileList().then(async (value) => {
+                    await dialogRef.close();
+                });
+            }
+        });
 
+
+        ///////////////////////////////////////////////////////////////////
+
+        // this.viewInfoService.setViewInfo({ leftSideView: 'fileList' });
+    }
 
 }
