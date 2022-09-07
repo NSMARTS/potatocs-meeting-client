@@ -4,16 +4,16 @@
         <ul class="menu-items">
             <li>
                 <!-- whiteBoard / video call -->
-                <button *ngIf="whiteBoardIcon == 'border_color'" #whiteBoardMode class="btn" mat-icon-button (click)="whiteBoardClick()" matTooltip="White Board" [matTooltipShowDelay]="300" matTooltipPosition="right" matTooltipTouchGestures="off">
+                <button *ngIf="whiteBoardIcon == 'border_color'" #whiteBoardMode class="btn" mat-icon-button (click)="whiteBoardClick()">
                     <mat-icon>{{whiteBoardIcon}}</mat-icon>
                 </button>
-                <button *ngIf="whiteBoardIcon == 'desktop_mac'" #whiteBoardMode class="btn" mat-icon-button (click)="whiteBoardClick()" matTooltip="Video Call" [matTooltipShowDelay]="300" matTooltipPosition="right" matTooltipTouchGestures="off">
+                <button *ngIf="whiteBoardIcon == 'desktop_mac'" #whiteBoardMode class="btn" mat-icon-button (click)="whiteBoardClick()">
                     <mat-icon>{{whiteBoardIcon}}</mat-icon>
                 </button>
             </li>
             <li class="shareBtn" [ngClass]="myRole == 'Participant' ? 'wrap': '' " >
                 <!-- sharing video -->
-                <button [ngClass]="myRole == 'Participant' ? 'participant': '' " #sharingBtn class="btn" mat-icon-button (click)="handleSharingClick()" matTooltip="Share Screen" [matTooltipShowDelay]="300" matTooltipPosition="right" matTooltipTouchGestures="off">
+                <button [ngClass]="myRole == 'Participant' ? 'participant': '' " #sharingBtn class="btn" mat-icon-button (click)="handleSharingClick()">
                     <mat-icon>{{shareIcon}}</mat-icon>
                 </button>           
                 <!-- <mat-icon>videocam_off</mat-icon> -->

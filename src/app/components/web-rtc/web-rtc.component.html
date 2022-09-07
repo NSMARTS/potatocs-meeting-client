@@ -18,11 +18,11 @@
 
         <!-- 비디오 오버레이 숨기기 / 보이기 버튼 -->
         <div [ngClass]="{'hiddenVideoMode': hiddenVideoMode === true}" (click)="hiddenVideo()" >
-            <mat-icon class="videohidden_button" matTooltip="Hide Participant Screen" [matTooltipShowDelay]="300" matTooltipPosition="right">arrow_forward</mat-icon>
+            <mat-icon class="videohidden_button">arrow_forward</mat-icon>
         </div>
 
         <div [ngClass]="{'hiddenVideoMode': hiddenVideoMode === false}" (click)="visibleVideo()">
-            <mat-icon class="visibleVideo_button" matTooltip="Show Participant Screen" [matTooltipShowDelay]="300" matTooltipPosition="right">arrow_back</mat-icon>
+            <mat-icon class="visibleVideo_button">arrow_back</mat-icon>
         </div>
     </div>
 </div>

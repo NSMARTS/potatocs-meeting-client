@@ -165,6 +165,11 @@ export class BoardFileViewComponent implements OnInit {
             return;
         }
 
+        if (files[0].size > 12000000) {
+            this.dialogService.openDialogNegative(`This file is too large. Maximum file size is 12MB.`);
+            return;
+        }
+
         // 파일 유효성 검사
         const ext = (files[0].name).substring((files[0].name).lastIndexOf('.') + 1);
         if (ext.toLowerCase() != 'pdf') {

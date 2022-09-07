@@ -56,8 +56,10 @@
                                     {{miceDevice?.label}}
                                 </option>
                             </select>
-                        </div>                        
-                        <div class="txRec">
+                        </div>
+                        <!-- txRec 오디오 스트림바 -->
+                                           
+                        <!-- <div class="txRec">
 
                             <div id="instant">
                                 <div class="label">Sound Input:</div>
@@ -69,15 +71,12 @@
                                 <p class="subTx camera" *ngIf="!miceDevices[0]?.label && miceDevices[0]?.kind == 'audioinput'">❌ A microphone device is not allowed</p>
                             </div>
 
-                            <!-- <div id="instant">
-                                <div class="label">Mice Input:</div>
-                                <meter high="0.25" max="1" value="0" #meter></meter>
-                                <div class="value"></div>
-                            </div> -->
+                            
                             <p *ngIf="(miceDevices?.length >= 1) && (miceDevices[0]?.label && miceDevices[0]?.kind == 'audioinput')" class="desc volume-desc">
                                 ✅ The microphone device is being detected.
                             </p>
-                        </div>
+                        </div> -->
+                       
                             <!-- <div class="audio">
                                 <div class="audioinput-volume">
                                     <div class="volume">
