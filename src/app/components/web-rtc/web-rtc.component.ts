@@ -806,7 +806,7 @@ export class WebRTCComponent implements OnInit {
 	
 			// this.sharingBtn.innerText = "Screen Sharing";
 			this.sharing = false;
-			this.socket.emit("Screen_Sharing", '');
+			this.socket.emit("", '');
 		} else {
 			this.getScreenStream((screenStream) => {
                 console.log(this.sharing)

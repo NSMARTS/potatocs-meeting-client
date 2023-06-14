@@ -51,14 +51,15 @@
                     <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
                         <button type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
                             (click)="changeTool('pen');" mat-icon-button>
-                            <mat-icon [ngClass]="(currentTool == 'pen') && (mode == 'draw')?'active':''" >draw</mat-icon>
+                            <mat-icon [ngClass]="(currentTool == 'pen') && (mode == 'draw')?'active':''">draw</mat-icon>
                         </button>
                     </div>
 
                     <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
                         <button type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
                             (click)="changeTool('highlighter');" mat-icon-button>
-                            <ic-icon [icon]="markerIcon" [width]="30" [height]="30" [ngClass]="(currentTool == 'highlighter') && (mode == 'draw')?'active':''" ></ic-icon>
+                            <ic-icon [icon]="markerIcon" [width]="30" [height]="30"
+                                [ngClass]="(currentTool == 'highlighter') && (mode == 'draw')?'active':''"></ic-icon>
                             <span class="iconify" data-icon="mdi:marker"></span>
                         </button>
                     </div>
@@ -68,56 +69,62 @@
                             (click)="changeTool('eraser');" mat-icon-button>
                             <!-- <mat-icon [ngClass]="(currentTool == 'eraser') && (mode == 'draw')?'active':''">crop_square
                             </mat-icon> -->
-                            <ic-icon [icon]="eraserIcon" [width]="40" [height]="40" [ngClass]="(currentTool == 'eraser') && (mode == 'draw')?'active':''"></ic-icon>
+                            <ic-icon [icon]="eraserIcon" [width]="40" [height]="40"
+                                [ngClass]="(currentTool == 'eraser') && (mode == 'draw')?'active':''"></ic-icon>
                         </button>
                     </div>
 
                     <!-- <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
                         <button type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
                             (click)="changeTool('textarea');" mat-icon-button>
-                            <mat-icon [ngClass]="(currentTool == 'textarea' || currentTool == 'text') && (mode == 'draw')?'active':''" >title</mat-icon>
+                            <mat-icon
+                                [ngClass]="(currentTool == 'textarea' || currentTool == 'text') && (mode == 'draw')?'active':''">title</mat-icon>
                         </button>
                     </div> -->
-                    
+
 
                     <div>
                         <button type="button" (click)="changeMode('move');" mat-icon-button>
-                            <mat-icon [ngClass]="(mode == 'move')?'active':''" > open_with </mat-icon>
+                            <mat-icon [ngClass]="(mode == 'move')?'active':''"> open_with </mat-icon>
                         </button>
                     </div>
 
 
                     <div [ngClass]="myRole == 'Participant' ? 'wrap': '' ">
-                        <button type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' " (click)="changeTool('line');" mat-icon-button mat-button
-                        [matMenuTriggerFor]="shapeMemu">
-                        <!-- <mat-icon
+                        <button type="button" [ngClass]="myRole == 'Participant' ? 'participant': '' "
+                            (click)="changeTool('line');" mat-icon-button mat-button [matMenuTriggerFor]="shapeMemu">
+                            <!-- <mat-icon
                             [ngClass]="(currentTool == 'line' || currentTool == 'circle'  ||currentTool == 'rectangle' || currentTool == 'roundedRectangle' ) && (mode == 'draw')?'active':''">
                             star_border_purple500 </mat-icon> -->
                             <!-- interests -->
-                            <ic-icon [icon]="shapeOutlineIcon" [width]="40" [height]="40" [ngClass]="(currentTool == 'line' || currentTool == 'circle'  ||currentTool == 'rectangle' || currentTool == 'roundedRectangle' ) && (mode == 'draw')?'active':''"></ic-icon>
+                            <ic-icon [icon]="shapeOutlineIcon" [width]="40" [height]="40"
+                                [ngClass]="(currentTool == 'line' || currentTool == 'circle'  ||currentTool == 'rectangle' || currentTool == 'roundedRectangle' ) && (mode == 'draw')?'active':''"></ic-icon>
                         </button>
                     </div>
-                    
+
                     <mat-menu #shapeMemu="matMenu" class="menuCustomize">
                         <div fxFlex fxLayout="row">
 
                             <div (click)="changeTool('line');">
-                                <button mat-menu-item [ngClass]="(currentTool == 'line') && (mode == 'draw')?'active':''">
+                                <button mat-menu-item
+                                    [ngClass]="(currentTool == 'line') && (mode == 'draw')?'active':''">
                                     <mat-icon>remove</mat-icon>
                                 </button>
                             </div>
                             <div (click)="changeTool('circle');">
-                                <button mat-menu-item [ngClass]="(currentTool == 'circle') && (mode == 'draw')?'active':''">
+                                <button mat-menu-item
+                                    [ngClass]="(currentTool == 'circle') && (mode == 'draw')?'active':''">
                                     <mat-icon>panorama_fish_eye</mat-icon>
                                 </button>
                             </div>
                             <div (click)="changeTool('rectangle');">
-                                <button mat-menu-item [ngClass]="(currentTool == 'rectangle') && (mode == 'draw')?'active':''">
+                                <button mat-menu-item
+                                    [ngClass]="(currentTool == 'rectangle') && (mode == 'draw')?'active':''">
                                     <mat-icon>crop_din</mat-icon>
                                 </button>
                             </div>
                         </div>
-                        
+
                         <!-- 버그 수정중 -->
                         <!-- <button type="button" (click)="changeTool('roundedRectangle');" mat-icon-button>
                             <mat-icon [ngClass]="(currentTool == 'roundedRectangle') && (mode == 'draw')?'active':''">
