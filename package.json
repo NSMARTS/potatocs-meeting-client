@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --proxy-config proxy.conf.json --open --host 0.0.0.0 --disable-host-check --output-hashing=all --port 4300",
+    "start": "ng serve --proxy-config proxy.conf.json --open --host 0.0.0.0 --disable-host-check  --port 4300",
     "test-potatocs-build": "ng build --configuration=staging --base-href=/meeting/ --output-hashing=all",
     "test-potatocs-lb-build": "ng build --configuration=test-potatocs-lb --base-href=/meeting --output-hashing=all",
     "potatcs-build": "ng build --configuration=production --base-href=/meeting/ --output-hashing=all ",

@@ -26,7 +26,7 @@ export class MeetingChatComponent implements OnInit, AfterViewChecked {
     public userName;
     public chatContent;
 
-    meetingStatus:any;
+    meetingStatus: any;
     myChat = false;
     myRole: any;
 
@@ -85,15 +85,15 @@ export class MeetingChatComponent implements OnInit, AfterViewChecked {
         })
 
 
-        this.eventBusService.on('whiteBoardClick',this.unsubscribe$, () => {
+        this.eventBusService.on('whiteBoardClick', this.unsubscribe$, () => {
             console.log('eventBus on whiteBoardClick')
             if (this.whiteBoardMode == false) {
-              this.whiteBoardMode = true;
+                this.whiteBoardMode = true;
             } else {
-              this.whiteBoardMode = false
+                this.whiteBoardMode = false
             }
-          })
-      
+        })
+
     }
 
     // 마지막 채팅에 스크롤 focus
@@ -101,7 +101,7 @@ export class MeetingChatComponent implements OnInit, AfterViewChecked {
         this.scrollToBottom();
     }
 
-    ngOnDestory(): void {
+    ngOnDestroy(): void {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }
@@ -110,7 +110,7 @@ export class MeetingChatComponent implements OnInit, AfterViewChecked {
 
     // 채팅 생성
     createChat() {
-        
+
         const data = {
             meetingTitle: this.meetingTitle,
             meetingId: this.meetingId,
@@ -153,14 +153,14 @@ export class MeetingChatComponent implements OnInit, AfterViewChecked {
             // 채팅을 지운 뒤 db에 있는 채팅정보 다시 불러오기
             await this.getMeetingChat();
             console.log(this.meetingId);
-            
+
             // 내가 지우면 같은 room의 다른 사람도 실시간으로 채팅 삭제
             this.socket.emit('deleteChat', this.meetingId);
 
-            },
+        },
             (err: any) => {
-              console.log(err);
-        })
+                console.log(err);
+            })
     }
 
 

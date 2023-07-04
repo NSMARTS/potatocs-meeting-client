@@ -20,7 +20,7 @@ export class ParticipantComponent implements OnInit {
     participants = []; // 현재 접속 중인 참여자
 
     meetingInfo;
-    
+
     public meetingId;
     public userId;
     public currentMembers;
@@ -41,7 +41,7 @@ export class ParticipantComponent implements OnInit {
     }
 
 
-    
+
     ngOnInit(): void {
         // 실시간으로 meeitngInfo를 바라보고 있다.
         this.meetingInfoService.state$
@@ -58,7 +58,7 @@ export class ParticipantComponent implements OnInit {
         // DB currentMembers 정보 (online, role) 가져오기
         this.getParticipantState();
         /////////////////////////////////////////////////////////////
-        
+
 
         /////////////////////////////////////////////////////////////
         // 자신의 role 업데이트 시 자신을 제외한 같은 room (meetingId로 판단)에 있는 사람들 role 업데이트
@@ -87,7 +87,7 @@ export class ParticipantComponent implements OnInit {
     }
 
 
-    ngOnDestory(): void {
+    ngOnDestroy(): void {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }
@@ -135,7 +135,7 @@ export class ParticipantComponent implements OnInit {
                 // DB currentMembers 정보 (online, role) 가져오기
                 this.getParticipantState();
             })
-            
+
             // 참여자가 나가면 role: 'Presenter'로 초기화
             const userRoleData = {
                 meetingId: this.meetingId,
@@ -143,7 +143,7 @@ export class ParticipantComponent implements OnInit {
                 role: 'Presenter'
             }
 
-            this.meetingService.getRoleUpdate(userRoleData).subscribe(() => {            
+            this.meetingService.getRoleUpdate(userRoleData).subscribe(() => {
             })
         })
         /////////////////////////////////////////////////////////////
@@ -153,11 +153,11 @@ export class ParticipantComponent implements OnInit {
         // 새로고침 시 role: Presenter로 초기화
         const userRoleData = {
             meetingId: this.meetingId,
-            userId: this.userId ,
+            userId: this.userId,
             role: 'Presenter'
         }
 
-        this.meetingService.getRoleUpdate(userRoleData).subscribe(() => {            
+        this.meetingService.getRoleUpdate(userRoleData).subscribe(() => {
             this.getParticipantState();
         })
         /////////////////////////////////////////////////////////////
@@ -206,7 +206,7 @@ export class ParticipantComponent implements OnInit {
             // 현재 접속 중인 참여자 수 구하기
             var currentMembersCount: number = 0;
             this.currentMembers.forEach((currentMembers) => {
-                if(currentMembers.online == true){
+                if (currentMembers.online == true) {
                     currentMembersCount += 1; // online: true일 경우 ++
                 }
             });
@@ -240,7 +240,7 @@ export class ParticipantComponent implements OnInit {
             this.currentMembers.forEach((element, index) => {
                 if (element.member_id == this.userId) {
                     const data = {
-                        role : element.role
+                        role: element.role
                     }
                     this.myRole = data;
 
